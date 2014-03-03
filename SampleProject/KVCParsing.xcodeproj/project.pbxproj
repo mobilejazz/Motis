@@ -1,0 +1,321 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		D25BB62E18C4EC1E0019799F /* NSObject+KVCParsing.m in Sources */ = {isa = PBXBuildFile; fileRef = D25BB62D18C4EC1E0019799F /* NSObject+KVCParsing.m */; };
+		D2C3463718959EF2005B6B5C /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D2C3463618959EF2005B6B5C /* Foundation.framework */; };
+		D2C3463918959EF2005B6B5C /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D2C3463818959EF2005B6B5C /* CoreGraphics.framework */; };
+		D2C3463B18959EF2005B6B5C /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D2C3463A18959EF2005B6B5C /* UIKit.framework */; };
+		D2C3464118959EF2005B6B5C /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = D2C3463F18959EF2005B6B5C /* InfoPlist.strings */; };
+		D2C3464318959EF2005B6B5C /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = D2C3464218959EF2005B6B5C /* main.m */; };
+		D2C3464718959EF2005B6B5C /* MJAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = D2C3464618959EF2005B6B5C /* MJAppDelegate.m */; };
+		D2C3464918959EF2005B6B5C /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D2C3464818959EF2005B6B5C /* Images.xcassets */; };
+		D2C3466A1895A05F005B6B5C /* MJVideo.m in Sources */ = {isa = PBXBuildFile; fileRef = D2C346691895A05F005B6B5C /* MJVideo.m */; };
+		D2C3466D1895A22D005B6B5C /* MJUser.m in Sources */ = {isa = PBXBuildFile; fileRef = D2C3466C1895A22D005B6B5C /* MJUser.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		D25BB62C18C4EC1E0019799F /* NSObject+KVCParsing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSObject+KVCParsing.h"; path = "../../NSObject+KVCParsing.h"; sourceTree = "<group>"; };
+		D25BB62D18C4EC1E0019799F /* NSObject+KVCParsing.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSObject+KVCParsing.m"; path = "../../NSObject+KVCParsing.m"; sourceTree = "<group>"; };
+		D2C3463318959EF2005B6B5C /* KVCParsing.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = KVCParsing.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		D2C3463618959EF2005B6B5C /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		D2C3463818959EF2005B6B5C /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		D2C3463A18959EF2005B6B5C /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		D2C3463E18959EF2005B6B5C /* KVCParsing-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "KVCParsing-Info.plist"; sourceTree = "<group>"; };
+		D2C3464018959EF2005B6B5C /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		D2C3464218959EF2005B6B5C /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		D2C3464418959EF2005B6B5C /* KVCParsing-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "KVCParsing-Prefix.pch"; sourceTree = "<group>"; };
+		D2C3464518959EF2005B6B5C /* MJAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MJAppDelegate.h; sourceTree = "<group>"; };
+		D2C3464618959EF2005B6B5C /* MJAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MJAppDelegate.m; sourceTree = "<group>"; };
+		D2C3464818959EF2005B6B5C /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		D2C3464F18959EF2005B6B5C /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
+		D2C346681895A05F005B6B5C /* MJVideo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MJVideo.h; sourceTree = "<group>"; };
+		D2C346691895A05F005B6B5C /* MJVideo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MJVideo.m; sourceTree = "<group>"; };
+		D2C3466B1895A22D005B6B5C /* MJUser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MJUser.h; sourceTree = "<group>"; };
+		D2C3466C1895A22D005B6B5C /* MJUser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MJUser.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		D2C3463018959EF2005B6B5C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D2C3463918959EF2005B6B5C /* CoreGraphics.framework in Frameworks */,
+				D2C3463B18959EF2005B6B5C /* UIKit.framework in Frameworks */,
+				D2C3463718959EF2005B6B5C /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		D2C3462A18959EF2005B6B5C = {
+			isa = PBXGroup;
+			children = (
+				D2C3463C18959EF2005B6B5C /* KVCParsing */,
+				D2C3463518959EF2005B6B5C /* Frameworks */,
+				D2C3463418959EF2005B6B5C /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		D2C3463418959EF2005B6B5C /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				D2C3463318959EF2005B6B5C /* KVCParsing.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		D2C3463518959EF2005B6B5C /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				D2C3463618959EF2005B6B5C /* Foundation.framework */,
+				D2C3463818959EF2005B6B5C /* CoreGraphics.framework */,
+				D2C3463A18959EF2005B6B5C /* UIKit.framework */,
+				D2C3464F18959EF2005B6B5C /* XCTest.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		D2C3463C18959EF2005B6B5C /* KVCParsing */ = {
+			isa = PBXGroup;
+			children = (
+				D2C3464518959EF2005B6B5C /* MJAppDelegate.h */,
+				D2C3464618959EF2005B6B5C /* MJAppDelegate.m */,
+				D25BB62C18C4EC1E0019799F /* NSObject+KVCParsing.h */,
+				D25BB62D18C4EC1E0019799F /* NSObject+KVCParsing.m */,
+				D2C346681895A05F005B6B5C /* MJVideo.h */,
+				D2C346691895A05F005B6B5C /* MJVideo.m */,
+				D2C3466B1895A22D005B6B5C /* MJUser.h */,
+				D2C3466C1895A22D005B6B5C /* MJUser.m */,
+				D2C3464818959EF2005B6B5C /* Images.xcassets */,
+				D2C3463D18959EF2005B6B5C /* Supporting Files */,
+			);
+			path = KVCParsing;
+			sourceTree = "<group>";
+		};
+		D2C3463D18959EF2005B6B5C /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				D2C3463E18959EF2005B6B5C /* KVCParsing-Info.plist */,
+				D2C3463F18959EF2005B6B5C /* InfoPlist.strings */,
+				D2C3464218959EF2005B6B5C /* main.m */,
+				D2C3464418959EF2005B6B5C /* KVCParsing-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		D2C3463218959EF2005B6B5C /* KVCParsing */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D2C3465F18959EF2005B6B5C /* Build configuration list for PBXNativeTarget "KVCParsing" */;
+			buildPhases = (
+				D2C3462F18959EF2005B6B5C /* Sources */,
+				D2C3463018959EF2005B6B5C /* Frameworks */,
+				D2C3463118959EF2005B6B5C /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = KVCParsing;
+			productName = KVCParsing;
+			productReference = D2C3463318959EF2005B6B5C /* KVCParsing.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		D2C3462B18959EF2005B6B5C /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				CLASSPREFIX = MJ;
+				LastUpgradeCheck = 0500;
+				ORGANIZATIONNAME = "Mobile Jazz";
+			};
+			buildConfigurationList = D2C3462E18959EF2005B6B5C /* Build configuration list for PBXProject "KVCParsing" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = D2C3462A18959EF2005B6B5C;
+			productRefGroup = D2C3463418959EF2005B6B5C /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				D2C3463218959EF2005B6B5C /* KVCParsing */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		D2C3463118959EF2005B6B5C /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D2C3464118959EF2005B6B5C /* InfoPlist.strings in Resources */,
+				D2C3464918959EF2005B6B5C /* Images.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		D2C3462F18959EF2005B6B5C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D2C3464318959EF2005B6B5C /* main.m in Sources */,
+				D25BB62E18C4EC1E0019799F /* NSObject+KVCParsing.m in Sources */,
+				D2C3464718959EF2005B6B5C /* MJAppDelegate.m in Sources */,
+				D2C3466A1895A05F005B6B5C /* MJVideo.m in Sources */,
+				D2C3466D1895A22D005B6B5C /* MJUser.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		D2C3463F18959EF2005B6B5C /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				D2C3464018959EF2005B6B5C /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		D2C3465D18959EF2005B6B5C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		D2C3465E18959EF2005B6B5C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				ENABLE_NS_ASSERTIONS = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		D2C3466018959EF2005B6B5C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "KVCParsing/KVCParsing-Prefix.pch";
+				INFOPLIST_FILE = "KVCParsing/KVCParsing-Info.plist";
+				PRODUCT_NAME = KVCParsing;
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		D2C3466118959EF2005B6B5C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "KVCParsing/KVCParsing-Prefix.pch";
+				INFOPLIST_FILE = "KVCParsing/KVCParsing-Info.plist";
+				PRODUCT_NAME = KVCParsing;
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		D2C3462E18959EF2005B6B5C /* Build configuration list for PBXProject "KVCParsing" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D2C3465D18959EF2005B6B5C /* Debug */,
+				D2C3465E18959EF2005B6B5C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D2C3465F18959EF2005B6B5C /* Build configuration list for PBXNativeTarget "KVCParsing" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D2C3466018959EF2005B6B5C /* Debug */,
+				D2C3466118959EF2005B6B5C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = D2C3462B18959EF2005B6B5C /* Project object */;
+}
