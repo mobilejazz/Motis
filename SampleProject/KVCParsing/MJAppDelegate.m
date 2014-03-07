@@ -65,9 +65,9 @@
     // Create an instance of a KVC paraseable object
     MJVideo *video = [[MJVideo alloc] init];
     
-    NSLog(@"Video before parsing: %@", video.extendedObjectDescription);
-    [video parseValuesForKeysWithDictionary:receivedJSONDict];
-    NSLog(@"Video after parsing: %@", video.extendedObjectDescription);
+    NSLog(@"Video before parsing: %@", video.mj_extendedObjectDescription);
+    [video mj_parseValuesForKeysWithDictionary:receivedJSONDict];
+    NSLog(@"Video after parsing: %@", video.mj_extendedObjectDescription);
 }
 
 @end

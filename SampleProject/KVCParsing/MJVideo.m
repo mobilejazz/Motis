@@ -24,7 +24,7 @@
     NSString *_asdf;
 }
 
-- (NSDictionary*)mappingForKVCParsing
+- (NSDictionary*)mj_mappingForKVCParsing
 {
     static NSDictionary *mapping = nil;
     
@@ -39,7 +39,7 @@
                                       };
         
         
-        NSDictionary *superMapping = [super mappingForKVCParsing];
+        NSDictionary *superMapping = [super mj_mappingForKVCParsing];
         
         NSMutableDictionary *theMapping = [NSMutableDictionary dictionary];
         
@@ -59,7 +59,7 @@
     if ([*ioValue isKindOfClass:[NSDictionary class]])
     {
         MJUser *user = [[MJUser alloc] init];
-        [user parseValuesForKeysWithDictionary:*ioValue];
+        [user mj_parseValuesForKeysWithDictionary:*ioValue];
         
         *ioValue = user;
     }

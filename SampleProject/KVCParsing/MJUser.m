@@ -20,7 +20,7 @@
 
 @implementation MJUser
 
-- (NSDictionary*)mappingForKVCParsing
+- (NSDictionary*)mj_mappingForKVCParsing
 {
     static NSDictionary *mapping = nil;
     
@@ -32,7 +32,7 @@
                                       };
         
         
-        NSDictionary *superMapping = [super mappingForKVCParsing];
+        NSDictionary *superMapping = [super mj_mappingForKVCParsing];
         
         NSMutableDictionary *theMapping = [NSMutableDictionary dictionary];
         

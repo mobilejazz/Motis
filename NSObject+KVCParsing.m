@@ -21,19 +21,19 @@ static char const * const validatesKVCParsingKey = "MJKVCParsing_validatesKVCPar
 
 @implementation NSObject (KVCParsing)
 
-- (void)setValidatesKVCParsing:(BOOL)validateKVCParsing
+- (void)setMj_validatesKVCParsing:(BOOL)validateKVCParsing
 {
     objc_setAssociatedObject(self, validatesKVCParsingKey, @(validateKVCParsing), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
-- (BOOL)validatesKVCParsing
+- (BOOL)mj_validatesKVCParsing
 {
     NSNumber *value = objc_getAssociatedObject(self, validatesKVCParsingKey);
     
     if (!value)
     {
         BOOL defaultValue = YES;
-        self.validatesKVCParsing = defaultValue;
+        self.mj_validatesKVCParsing = defaultValue;
         return defaultValue;
     }
     
@@ -42,21 +42,21 @@ static char const * const validatesKVCParsingKey = "MJKVCParsing_validatesKVCPar
 
 #pragma mark Public Methods
 
-- (NSDictionary*)mappingForKVCParsing
+- (NSDictionary*)mj_mappingForKVCParsing
 {
     // Subclasses may override, always adding super to the mapping!
     return @{};
 }
 
-- (void)parseValue:(id)value forKey:(NSString *)key
+- (void)mj_parseValue:(id)value forKey:(NSString *)key
 {
-    NSString *mappedKey = [self MJ_mapKey:key];
+    NSString *mappedKey = [self mj_mapKey:key];
     
     NSError *error = nil;
     BOOL validated = YES;
     
-    if (self.validatesKVCParsing)
-        validated =[self validateValue:&value forKey:mappedKey parseKey:key error:&error];
+    if (self.mj_validatesKVCParsing)
+        validated =[self mj_validateValue:&value forKey:mappedKey parseKey:key error:&error];
     
     if (validated)
     {
@@ -71,24 +71,24 @@ static char const * const validatesKVCParsingKey = "MJKVCParsing_validatesKVCPar
     }
 }
 
-- (void)parseValuesForKeysWithDictionary:(NSDictionary *)keyedValues
+- (void)mj_parseValuesForKeysWithDictionary:(NSDictionary *)keyedValues
 {
     for (NSString *key in keyedValues)
     {
         id value = keyedValues[key];
-        [self parseValue:value forKey:key];
+        [self mj_parseValue:value forKey:key];
     }
 }
 
-- (BOOL)validateValue:(inout __autoreleasing id *)ioValue forKey:(NSString *)inKey parseKey:(NSString*)parseKey error:(out NSError *__autoreleasing *)outError
+- (BOOL)mj_validateValue:(inout __autoreleasing id *)ioValue forKey:(NSString *)inKey parseKey:(NSString*)parseKey error:(out NSError *__autoreleasing *)outError
 {
     return [self validateValue:ioValue forKey:inKey error:outError];
 }
 
-- (NSString*)extendedObjectDescription
+- (NSString*)mj_extendedObjectDescription
 {
     NSString *description = self.description;
-    NSArray *keys = [[self mappingForKVCParsing] allValues];
+    NSArray *keys = [[self mj_mappingForKVCParsing] allValues];
     if (keys.count > 0)
     {
         NSDictionary *keyValues = [self dictionaryWithValuesForKeys:keys];
@@ -99,9 +99,9 @@ static char const * const validatesKVCParsingKey = "MJKVCParsing_validatesKVCPar
 
 #pragma mark Private Methods
 
-- (NSString*)MJ_mapKey:(NSString*)key
+- (NSString*)mj_mapKey:(NSString*)key
 {
-    NSString *mappedKey = [[self mappingForKVCParsing] valueForKey:key];
+    NSString *mappedKey = [[self mj_mappingForKVCParsing] valueForKey:key];
     
     if (mappedKey)
         return mappedKey;
