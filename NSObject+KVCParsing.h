@@ -29,33 +29,20 @@
 /**
  * If YES, parsing values will trigger KVC-validation. Default value is YES.
  */
-@property (nonatomic, readwrite) BOOL validatesKVCParsing;
-
-/**
- * If YES the `-description` method will display the values for the keys specified in method `mappingForKVCParsing`. Default is NO.
- * @return YES if active, NO otherwise.
- */
-+ (BOOL)extendObjectDescription;
-
-/**
- * Enable or disable the extendedObjectDescription.
- * @param extendedObjectDescription YES to activate, NO to desactivate
- * @discussion By enabling the extendedObjectDescription, this category implements a swizzeling from the existing `-description` method to a customized one. Subclasses won't be able to override the description method.
- */
-+ (void)setExtendObjectDescription:(BOOL)extendObjectDescription;
+@property (nonatomic, readwrite) BOOL mjz_validatesKVCParsing;
 
 /**
  * Returns the extended object description.
  * @return The custom extended object description.
  */
-- (NSString*)extendedObjectDescription;
+- (NSString*)mjz_extendedObjectDescription;
 
 /**
  * Returns the mapping to be used in the parsing. The default value is an empty dictionary.
  * @return the mapping in a dictionary.
  * @discussion Subclasses might override this method and specify a custom mapping dictionary. As a good practice, always add the [super mappingForKVCParsing] dictionary inside the custom dictionary.
  */
-- (NSDictionary*)mappingForKVCParsing;
+- (NSDictionary*)mjz_mappingForKVCParsing;
 
 /**
  * Parse and set the value for the given key. This method validates the value.
@@ -63,14 +50,14 @@
  * @param key The key of the attribute to set the value.
  * @discussion This method will check if the key is mappable using the dictionary specified in `mappingForKVCParsing`. Once the key mapped, this method will call the KVC method `setValue:forKey` to set the value. If value is nil or [NSNull null], the method will invoke instead `setNilValueForKey:`.
  */
-- (void)parseValue:(id)value forKey:(NSString *)key;
+- (void)mjz_parseValue:(id)value forKey:(NSString *)key;
 
 /**
  * Parse and set the key-values of the dictionary. This method will fire validation for each value.
  * @param dictionary The dictionary to parse and set.
  * @discussion This method will call for each dictionary pair key-value the method `parseValue:forKey:`.
  */
-- (void)parseValuesForKeysWithDictionary:(NSDictionary *)dictionary;
+- (void)mjz_parseValuesForKeysWithDictionary:(NSDictionary *)dictionary;
 
 /**
  * As an extended KVC feature, this method is called to fire the KVC validation automatically (you should not call it). This method calls the KVC validation method `validateValue:forKey:error`. Subclasses may override and use the `parseKey` (the not mapped key) for its own purpuses.
@@ -81,6 +68,6 @@
  * @return YES, if value is valid or validated. NO if value not valid.
  * @discussion It is recomended to validate your attributes using overriding the KVC method `validate<Key>:error:` for each attribute to validate.
  */
-- (BOOL)validateValue:(inout __autoreleasing id *)ioValue forKey:(NSString *)inKey parseKey:(NSString*)parseKey error:(out NSError *__autoreleasing *)outError;
+- (BOOL)mjz_validateValue:(inout __autoreleasing id *)ioValue forKey:(NSString *)inKey parseKey:(NSString*)parseKey error:(out NSError *__autoreleasing *)outError;
 
 @end
