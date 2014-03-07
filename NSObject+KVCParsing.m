@@ -18,9 +18,6 @@
 #import <objc/runtime.h>
 
 static char const * const validatesKVCParsingKey = "MJKVCParsing_validatesKVCParsing";
-static char const * const extendedObjectDescriptionKey = "MJKVCParsing_extendedObjectDescription";
-
-static BOOL __extendedObjectDescription = NO;
 
 @implementation NSObject (KVCParsing)
 
@@ -44,34 +41,6 @@ static BOOL __extendedObjectDescription = NO;
 }
 
 #pragma mark Public Methods
-
-+ (BOOL)extendObjectDescription
-{
-    return __extendedObjectDescription;
-}
-
-+ (void)setExtendObjectDescription:(BOOL)extendedObjectDescription
-{
-    @synchronized(self)
-    {
-        if (__extendedObjectDescription == extendedObjectDescription)
-            return;
-        
-        __extendedObjectDescription = extendedObjectDescription;
-        
-        Method original = class_getInstanceMethod(self, @selector(description));
-        Method swizzle = class_getInstanceMethod(self, @selector(MJ_extendedDescription));
-        method_exchangeImplementations(original, swizzle);
-    }
-}
-
-- (NSString*)extendedObjectDescription
-{
-    if (__extendedObjectDescription)
-        return self.description;
-    else
-        return [self MJ_extendedDescription];
-}
 
 - (NSDictionary*)mappingForKVCParsing
 {
@@ -116,17 +85,15 @@ static BOOL __extendedObjectDescription = NO;
     return [self validateValue:ioValue forKey:inKey error:outError];
 }
 
-- (NSString*)MJ_extendedDescription
+- (NSString*)extendedObjectDescription
 {
-    NSString *description = __extendedObjectDescription ? [self MJ_extendedDescription] : self.description;
-    
+    NSString *description = self.description;
     NSArray *keys = [[self mappingForKVCParsing] allValues];
     if (keys.count > 0)
     {
         NSDictionary *keyValues = [self dictionaryWithValuesForKeys:keys];
         return [NSString stringWithFormat:@"%@ - Mapped Values: %@", description, [keyValues description]];
     }
-    
     return description;
 }
 

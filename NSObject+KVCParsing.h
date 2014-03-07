@@ -32,19 +32,6 @@
 @property (nonatomic, readwrite) BOOL validatesKVCParsing;
 
 /**
- * If YES the `-description` method will display the values for the keys specified in method `mappingForKVCParsing`. Default is NO.
- * @return YES if active, NO otherwise.
- */
-+ (BOOL)extendObjectDescription;
-
-/**
- * Enable or disable the extendedObjectDescription.
- * @param extendedObjectDescription YES to activate, NO to desactivate
- * @discussion By enabling the extendedObjectDescription, this category implements a swizzeling from the existing `-description` method to a customized one. Subclasses won't be able to override the description method.
- */
-+ (void)setExtendObjectDescription:(BOOL)extendObjectDescription;
-
-/**
  * Returns the extended object description.
  * @return The custom extended object description.
  */
