@@ -41,9 +41,6 @@
 
 - (void)performKVCParsingTest
 {
-    // From the NSObject+KVCParsing category, requesting the extended object description for all objects.
-    [NSObject setExtendObjectDescription:YES];
-    
     // Defining a JSONDictionary
     NSDictionary *JSONDict = @{@"video_id": @42,
                                @"view_count": @723,
@@ -68,9 +65,9 @@
     // Create an instance of a KVC paraseable object
     MJVideo *video = [[MJVideo alloc] init];
     
-    NSLog(@"Video before parsing: %@", video.description);
+    NSLog(@"Video before parsing: %@", video.extendedObjectDescription);
     [video parseValuesForKeysWithDictionary:receivedJSONDict];
-    NSLog(@"Video after parsing: %@", video.description);
+    NSLog(@"Video after parsing: %@", video.extendedObjectDescription);
 }
 
 @end
