@@ -48,7 +48,7 @@
  * Parse and set the value for the given key. This method validates the value.
  * @param value The value to parse and set.
  * @param key The key of the attribute to set the value.
- * @discussion This method will check if the key is mappable using the dictionary specified in `mappingForKVCParsing`. Once the key mapped, this method will call the KVC method `setValue:forKey` to set the value. If value is nil or [NSNull null], the method will invoke instead `setNilValueForKey:`.
+ * @discussion This method will check if the key is mappable using the dictionary specified in `mappingForKVCParsing`. Once the key mapped, this method will call the KVC method `setValue:forKey` to set the value. If value is nil or [NSNull null], the method will invoke instead `setNilValueForKey:`. If value is an array, `mjz_parseArrayValue:forKey:parseKey:` will be invoked for each object.
  */
 - (void)mjz_parseValue:(id)value forKey:(NSString *)key;
 
@@ -69,5 +69,17 @@
  * @discussion It is recomended to validate your attributes using overriding the KVC method `validate<Key>:error:` for each attribute to validate.
  */
 - (BOOL)mjz_validateValue:(inout __autoreleasing id *)ioValue forKey:(NSString *)inKey parseKey:(NSString*)parseKey error:(out NSError *__autoreleasing *)outError;
+
+@end
+
+@interface NSObject(KVCParsing_Subclassing)
+
+/**
+ Subclasses may override to parse the objects of array values. The default implementation returns the given object.
+ @param arrayKey The name of the key in which the containing array will be assigned.
+ @param arrayOriginalKey The original key, before mapping.
+ @return The given object or a parsed object.
+ **/
+- (id)mjz_parseArrayObject:(id)object arrayKey:(NSString *)arrayKey arrayOriginalKey:(NSString*)arrayOriginalKey;
 
 @end

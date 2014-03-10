@@ -55,8 +55,28 @@ static char const * const validatesKVCParsingKey = "MJKVCParsing_validatesKVCPar
     NSError *error = nil;
     BOOL validated = YES;
     
+    if ([value isKindOfClass:NSArray.class])
+    {
+        __block NSMutableArray *modifiedArray = nil;
+        [value enumerateObjectsUsingBlock:^(id object, NSUInteger idx, BOOL *stop) {
+            id parsedArrayObject = [self mjz_parseArrayObject:object arrayKey:mappedKey arrayOriginalKey:key];
+            if (parsedArrayObject != object)
+            {
+                if (!modifiedArray)
+                {
+                    modifiedArray = [value mutableCopy];
+                }
+                [modifiedArray replaceObjectAtIndex:idx withObject:parsedArrayObject];
+            }
+        }];
+        if (modifiedArray)
+        {
+            value = modifiedArray;
+        }
+    }
+    
     if (self.mjz_validatesKVCParsing)
-        validated =[self mjz_validateValue:&value forKey:mappedKey parseKey:key error:&error];
+        validated = [self mjz_validateValue:&value forKey:mappedKey parseKey:key error:&error];
     
     if (validated)
     {
@@ -107,6 +127,15 @@ static char const * const validatesKVCParsingKey = "MJKVCParsing_validatesKVCPar
         return mappedKey;
     
     return key;
+}
+
+@end
+
+@implementation NSObject(KVCParsing_Subclassing)
+
+- (id)mjz_parseArrayObject:(id)object arrayKey:(NSString *)arrayKey arrayOriginalKey:(NSString*)arrayOriginalKey
+{
+    return object;
 }
 
 @end
