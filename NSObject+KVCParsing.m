@@ -18,25 +18,22 @@
 #import <objc/runtime.h>
 
 static char const * const validatesKVCParsingKey = "MJKVCParsing_validatesKVCParsing";
-static char const * const extendedObjectDescriptionKey = "MJKVCParsing_extendedObjectDescription";
-
-static BOOL __extendedObjectDescription = NO;
 
 @implementation NSObject (KVCParsing)
 
-- (void)setValidatesKVCParsing:(BOOL)validateKVCParsing
+- (void)setMjz_validatesKVCParsing:(BOOL)validateKVCParsing
 {
     objc_setAssociatedObject(self, validatesKVCParsingKey, @(validateKVCParsing), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
-- (BOOL)validatesKVCParsing
+- (BOOL)mjz_validatesKVCParsing
 {
     NSNumber *value = objc_getAssociatedObject(self, validatesKVCParsingKey);
     
     if (!value)
     {
         BOOL defaultValue = YES;
-        self.validatesKVCParsing = defaultValue;
+        self.mjz_validatesKVCParsing = defaultValue;
         return defaultValue;
     }
     
@@ -45,49 +42,41 @@ static BOOL __extendedObjectDescription = NO;
 
 #pragma mark Public Methods
 
-+ (BOOL)extendObjectDescription
-{
-    return __extendedObjectDescription;
-}
-
-+ (void)setExtendObjectDescription:(BOOL)extendedObjectDescription
-{
-    @synchronized(self)
-    {
-        if (__extendedObjectDescription == extendedObjectDescription)
-            return;
-        
-        __extendedObjectDescription = extendedObjectDescription;
-        
-        Method original = class_getInstanceMethod(self, @selector(description));
-        Method swizzle = class_getInstanceMethod(self, @selector(MJ_extendedDescription));
-        method_exchangeImplementations(original, swizzle);
-    }
-}
-
-- (NSString*)extendedObjectDescription
-{
-    if (__extendedObjectDescription)
-        return self.description;
-    else
-        return [self MJ_extendedDescription];
-}
-
-- (NSDictionary*)mappingForKVCParsing
+- (NSDictionary*)mjz_mappingForKVCParsing
 {
     // Subclasses may override, always adding super to the mapping!
     return @{};
 }
 
-- (void)parseValue:(id)value forKey:(NSString *)key
+- (void)mjz_parseValue:(id)value forKey:(NSString *)key
 {
-    NSString *mappedKey = [self MJ_mapKey:key];
+    NSString *mappedKey = [self mjz_mapKey:key];
     
     NSError *error = nil;
     BOOL validated = YES;
     
-    if (self.validatesKVCParsing)
-        validated =[self validateValue:&value forKey:mappedKey parseKey:key error:&error];
+    if ([value isKindOfClass:NSArray.class])
+    {
+        __block NSMutableArray *modifiedArray = nil;
+        [value enumerateObjectsUsingBlock:^(id object, NSUInteger idx, BOOL *stop) {
+            id parsedArrayObject = [self mjz_parseArrayObject:object arrayKey:mappedKey arrayOriginalKey:key];
+            if (parsedArrayObject != object)
+            {
+                if (!modifiedArray)
+                {
+                    modifiedArray = [value mutableCopy];
+                }
+                [modifiedArray replaceObjectAtIndex:idx withObject:parsedArrayObject];
+            }
+        }];
+        if (modifiedArray)
+        {
+            value = modifiedArray;
+        }
+    }
+    
+    if (self.mjz_validatesKVCParsing)
+        validated = [self mjz_validateValue:&value forKey:mappedKey parseKey:key error:&error];
     
     if (validated)
     {
@@ -102,44 +91,51 @@ static BOOL __extendedObjectDescription = NO;
     }
 }
 
-- (void)parseValuesForKeysWithDictionary:(NSDictionary *)keyedValues
+- (void)mjz_parseValuesForKeysWithDictionary:(NSDictionary *)keyedValues
 {
     for (NSString *key in keyedValues)
     {
         id value = keyedValues[key];
-        [self parseValue:value forKey:key];
+        [self mjz_parseValue:value forKey:key];
     }
 }
 
-- (BOOL)validateValue:(inout __autoreleasing id *)ioValue forKey:(NSString *)inKey parseKey:(NSString*)parseKey error:(out NSError *__autoreleasing *)outError
+- (BOOL)mjz_validateValue:(inout __autoreleasing id *)ioValue forKey:(NSString *)inKey parseKey:(NSString*)parseKey error:(out NSError *__autoreleasing *)outError
 {
     return [self validateValue:ioValue forKey:inKey error:outError];
 }
 
-- (NSString*)MJ_extendedDescription
+- (NSString*)mjz_extendedObjectDescription
 {
-    NSString *description = __extendedObjectDescription ? [self MJ_extendedDescription] : self.description;
-    
-    NSArray *keys = [[self mappingForKVCParsing] allValues];
+    NSString *description = self.description;
+    NSArray *keys = [[self mjz_mappingForKVCParsing] allValues];
     if (keys.count > 0)
     {
         NSDictionary *keyValues = [self dictionaryWithValuesForKeys:keys];
         return [NSString stringWithFormat:@"%@ - Mapped Values: %@", description, [keyValues description]];
     }
-    
     return description;
 }
 
 #pragma mark Private Methods
 
-- (NSString*)MJ_mapKey:(NSString*)key
+- (NSString*)mjz_mapKey:(NSString*)key
 {
-    NSString *mappedKey = [[self mappingForKVCParsing] valueForKey:key];
+    NSString *mappedKey = [[self mjz_mappingForKVCParsing] valueForKey:key];
     
     if (mappedKey)
         return mappedKey;
     
     return key;
+}
+
+@end
+
+@implementation NSObject(KVCParsing_Subclassing)
+
+- (id)mjz_parseArrayObject:(id)object arrayKey:(NSString *)arrayKey arrayOriginalKey:(NSString*)arrayOriginalKey
+{
+    return object;
 }
 
 @end

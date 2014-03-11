@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
 
   s.name         = "KVCParsing"
-  s.version      = "1.0.0"
+  s.version      = "1.0.1"
   s.summary      = "Easy JSON parsing using Cocoa's KeyValueCoding"
 
   s.description  = <<-DESC
@@ -18,7 +18,7 @@ Pod::Spec.new do |s|
   s.license      = { :type => 'Apache License, Version 2.0', :file => 'LICENSE' }
   s.author             = { "Mobile Jazz" => "info@mobilejazz.cat" }
   s.social_media_url = "http://twitter.com/mobilejazzcat"
-  s.source       = { :git => "https://github.com/mobilejazz/KVCParsing.git", :tag => "1.0.0" }
+  s.source       = { :git => "https://github.com/mobilejazz/KVCParsing.git", :tag => "1.0.1" }
   s.source_files = 'NSObject+KVCParsing.{h,m}'
   s.framework  = 'Foundation'
   s.requires_arc = true
