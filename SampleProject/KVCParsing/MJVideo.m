@@ -52,6 +52,11 @@
     return mapping;
 }
 
++ (KVCParsingMappingClearance)mjz_mappingClearanceForKVCParsing
+{
+    return KVCParsingMappingClearanceRestricted;
+}
+
 - (void)mjz_restrictedValue:(id)value forUndefinedMappingKey:(NSString *)key
 {
     NSLog(@"[WARNING]: Undefined mapping key: <%@> value: <%@>. Value has not been setted.", key, [value description]);

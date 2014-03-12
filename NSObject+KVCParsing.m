@@ -25,7 +25,15 @@
 #define KVCPLog(format, ...)
 #endif
 
-@interface NSObject (KVCParsing_Validation_Private)
+
+// ------------------------------------------------------------------------------------------------------------------------------------------------------------------ //
+// ------------------------------------------------------------------------------------------------------------------------------------------------------------------ //
+// ------------------------------------------------------------------------------------------------------------------------------------------------------------------ //
+
+
+#pragma mark - KVCParsing_Private
+
+@interface NSObject (KVCParsing_Private)
 
 /**
  * Return YES if the value has been automatically validated. The newer value is setted in the pointer.
@@ -48,9 +56,12 @@
 @end
 
 
-#pragma mark - KVCParsing
+// ------------------------------------------------------------------------------------------------------------------------------------------------------------------ //
+// ------------------------------------------------------------------------------------------------------------------------------------------------------------------ //
+// ------------------------------------------------------------------------------------------------------------------------------------------------------------------ //
 
-static char const * const kKVCParsingAllowGenericKVCAccessorsInMappingKey = "MJKVCParsing_allowGenericKVCAccessorsInMapping";
+
+#pragma mark - KVCParsing
 
 @implementation NSObject (KVCParsing)
 
@@ -66,60 +77,59 @@ static char const * const kKVCParsingAllowGenericKVCAccessorsInMappingKey = "MJK
         return;
     }
     
-    NSError *error = nil;
-    BOOL validated = YES;
-    
-    if (self.mjz_validatesKVCParsing)
+    if ([value isKindOfClass:NSArray.class])
     {
-        if ([value isKindOfClass:NSArray.class])
-        {
-            __block NSMutableArray *modifiedArray = nil;
+        __block NSMutableArray *modifiedArray = nil;
+        
+        [value enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(id object, NSUInteger idx, BOOL *stop) {
             
-            [value enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(id object, NSUInteger idx, BOOL *stop) {
-                
-                id validatedObject = object;
-                
-                if (self.mjz_automaticKVCParsingValidationEnabled)
-                {
-                    Class typeClass = self.mjz_arrayClassTypeMappingForAutomaticKVCParsingValidation[mappedKey];
-                    if (typeClass)
-                        [self mjz_validateAutomaticallyValue:&validatedObject toClass:typeClass];
-                }
-                
-                BOOL validated = [self mjz_validateArrayObject:&validatedObject arrayKey:mappedKey arrayOriginalKey:key];
-                
-                if (validated)
-                {
-                    if (validatedObject != object)
-                    {
-                        if (!modifiedArray)
-                            modifiedArray = [value mutableCopy];
-                        
-                        [modifiedArray replaceObjectAtIndex:idx withObject:validatedObject];
-                    }
-                }
-                else
+            id validatedObject = object;
+            
+            NSError *error = nil;
+            BOOL validated = [self mjz_validateArrayObject:&validatedObject forArrayKey:mappedKey error:&error];
+            
+            // Automatic validation only if the value has not been manually validated
+            if (object == validatedObject)
+            {
+                Class typeClass = self.mjz_arrayClassTypeMappingForAutomaticKVCParsingValidation[mappedKey];
+                if (typeClass)
+                    [self mjz_validateAutomaticallyValue:&validatedObject toClass:typeClass];
+            }
+            
+            if (validated)
+            {
+                if (validatedObject != object)
                 {
                     if (!modifiedArray)
                         modifiedArray = [value mutableCopy];
                     
-                    [modifiedArray removeObjectAtIndex:idx];
+                    [modifiedArray replaceObjectAtIndex:idx withObject:validatedObject];
                 }
-            }];
-            if (modifiedArray)
-            {
-                value = modifiedArray;
             }
+            else
+            {
+                if (!modifiedArray)
+                    modifiedArray = [value mutableCopy];
+                
+                [modifiedArray removeObjectAtIndex:idx];
+                
+                [self mjz_invalidValue:validatedObject forArrayKey:mappedKey error:error];
+            }
+        }];
+        if (modifiedArray)
+        {
+            value = modifiedArray;
         }
-        
-        // TODO: Automatic validation must be done before or after manual validation?
-        // TODO: Automatic validation should be done if value is an array?
-        
-        if (self.mjz_automaticKVCParsingValidationEnabled)
-            [self mjz_validateAutomaticallyValue:&value forKey:mappedKey];
-        
-        validated = [self mjz_validateValue:&value forKey:mappedKey originalKey:key error:&error];
     }
+
+    id originalValue = value;
+    
+    NSError *error = nil;
+    BOOL validated = [self validateValue:&value forKey:mappedKey error:&error];
+    
+    // Automatic validation only if the value has not been manually validated
+    if (originalValue == value)
+        [self mjz_validateAutomaticallyValue:&value forKey:mappedKey];
     
     if (validated)
     {
@@ -130,8 +140,7 @@ static char const * const kKVCParsingAllowGenericKVCAccessorsInMappingKey = "MJK
     }
     else
     {
-        // Nothing to do. Value is not setted.
-        KVCPLog(@"Value for Key <%@>  is not valid in class %@. Error: %@", key, [self.class description], error);
+        [self mjz_invalidValue:value forKey:mappedKey error:error];
     }
 }
 
@@ -142,31 +151,6 @@ static char const * const kKVCParsingAllowGenericKVCAccessorsInMappingKey = "MJK
         id value = keyedValues[key];
         [self mjz_parseValue:value forKey:key];
     }
-}
-
-- (void)setMjz_allowGenericKVCAccessorsInMapping:(BOOL)allowGenericKVCAccessorsInMapping
-{
-    objc_setAssociatedObject(self, kKVCParsingAllowGenericKVCAccessorsInMappingKey, @(allowGenericKVCAccessorsInMapping), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
-
-- (BOOL)mjz_allowGenericKVCAccessorsInMapping
-{
-    NSNumber *value = objc_getAssociatedObject(self, kKVCParsingAllowGenericKVCAccessorsInMappingKey);
-    
-    if (!value)
-    {
-        BOOL defaultValue = NO;
-        self.mjz_allowGenericKVCAccessorsInMapping = defaultValue;
-        return defaultValue;
-    }
-    
-    return [value boolValue];
-}
-
-- (NSDictionary*)mjz_mappingForKVCParsing
-{
-    // Subclasses must override, always adding super to the mapping!
-    return @{};
 }
 
 - (NSString*)mjz_extendedObjectDescription
@@ -181,11 +165,6 @@ static char const * const kKVCParsingAllowGenericKVCAccessorsInMappingKey = "MJK
     return description;
 }
 
-- (void)mjz_parseValue:(id)value forUndefinedMappingKey:(NSString*)key
-{
-    // Subclasses may override.
-}
-
 #pragma mark Private Methods
 
 - (NSString*)mjz_mapKey:(NSString*)key
@@ -195,7 +174,7 @@ static char const * const kKVCParsingAllowGenericKVCAccessorsInMappingKey = "MJK
     if (mappedKey)
         return mappedKey;
     
-    if (self.mjz_allowGenericKVCAccessorsInMapping)
+    if ([self.class mjz_mappingClearanceForKVCParsing] == KVCParsingMappingClearanceOpen)
         return key;
     
     return nil;
@@ -204,51 +183,26 @@ static char const * const kKVCParsingAllowGenericKVCAccessorsInMappingKey = "MJK
 @end
 
 
-#pragma mark - KVCParsing_Validation
+// ------------------------------------------------------------------------------------------------------------------------------------------------------------------ //
+// ------------------------------------------------------------------------------------------------------------------------------------------------------------------ //
+// ------------------------------------------------------------------------------------------------------------------------------------------------------------------ //
 
-static char const * const kKVCParsingValidatesKVCParsingKey = "MJKVCParsing_validatesKVCParsing";
-static char const * const kKVCParsingAutomaticKVCparsingValidationEnabledKey = "MJKVCParsing_automaticKVCParsingValidationEnabled";
 
-@implementation NSObject (KVCParsing_Validation)
+#pragma mark - KVCParsing_Subclassing
 
-#pragma mark Public Methods
+@implementation NSObject (KVCParsing_Subclassing)
 
-- (void)setMjz_validatesKVCParsing:(BOOL)validateKVCParsing
+
+- (NSDictionary*)mjz_mappingForKVCParsing
 {
-    objc_setAssociatedObject(self, kKVCParsingValidatesKVCParsingKey, @(validateKVCParsing), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    // Subclasses must override, always adding super to the mapping!
+    return @{};
 }
 
-- (BOOL)mjz_validatesKVCParsing
++ (KVCParsingMappingClearance)mjz_mappingClearanceForKVCParsing
 {
-    NSNumber *value = objc_getAssociatedObject(self, kKVCParsingValidatesKVCParsingKey);
-    
-    if (!value)
-    {
-        BOOL defaultValue = YES;
-        self.mjz_validatesKVCParsing = defaultValue;
-        return defaultValue;
-    }
-    
-    return [value boolValue];
-}
-
-- (void)setMjz_automaticKVCParsingValidationEnabled:(BOOL)automaticKVCParsingValidationEnabled
-{
-    objc_setAssociatedObject(self, kKVCParsingAutomaticKVCparsingValidationEnabledKey, @(automaticKVCParsingValidationEnabled), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
-
-- (BOOL)mjz_automaticKVCParsingValidationEnabled
-{
-    NSNumber *value = objc_getAssociatedObject(self, kKVCParsingAutomaticKVCparsingValidationEnabledKey);
-    
-    if (!value)
-    {
-        BOOL defaultValue = YES;
-        self.mjz_automaticKVCParsingValidationEnabled = defaultValue;
-        return defaultValue;
-    }
-    
-    return [value boolValue];
+    // Subclasses might override.
+    return KVCParsingMappingClearanceOpen;
 }
 
 - (NSDictionary*)mjz_arrayClassTypeMappingForAutomaticKVCParsingValidation
@@ -257,26 +211,41 @@ static char const * const kKVCParsingAutomaticKVCparsingValidationEnabledKey = "
     return @{};
 }
 
-- (NSSet*)mjz_disabledClassTypesForAutomaticKVCParsingValidation
-{
-    // Subclasses might override.
-    return [NSSet set];
-}
-
-- (BOOL)mjz_validateValue:(inout __autoreleasing id *)ioValue forKey:(NSString *)inKey originalKey:(NSString*)originalKey error:(out NSError *__autoreleasing *)outError
-{
-    return [self validateValue:ioValue forKey:inKey error:outError];
-}
-
-- (BOOL)mjz_validateArrayObject:(inout __autoreleasing id *)ioValue arrayKey:(NSString *)arrayKey arrayOriginalKey:(NSString*)arrayOriginalKey;
+- (BOOL)mjz_validateArrayObject:(inout __autoreleasing id *)ioValue forArrayKey:(NSString *)arrayKey error:(out NSError *__autoreleasing *)outError
 {
     // Subclasses might override.
     return YES;
 }
 
+- (void)mjz_parseValue:(id)value forUndefinedMappingKey:(NSString*)key
+{
+    // Subclasses might override.
+    KVCPLog(@"Undefined Mapping Key <%@> in class %@.", key, [self.class description]);
+}
+
+- (void)mjz_invalidValue:(id)value forKey:(NSString *)key error:(NSError*)error
+{
+    // Subclasses might override.
+    KVCPLog(@"Value for Key <%@> is not valid in class %@. Error: %@", key, [self.class description], error);
+}
+
+- (void)mjz_invalidValue:(id)value forArrayKey:(NSString *)key error:(NSError*)error
+{
+    // Subclasses might override.
+    KVCPLog(@"Item for ArrayKey <%@> is not valid in class %@. Error: %@", key, [self.class description], error);
+}
+
 @end
 
-@implementation NSObject (KVCParsing_Validation_Private)
+
+// ------------------------------------------------------------------------------------------------------------------------------------------------------------------ //
+// ------------------------------------------------------------------------------------------------------------------------------------------------------------------ //
+// ------------------------------------------------------------------------------------------------------------------------------------------------------------------ //
+
+
+#pragma mark - KVCParsing_Private
+
+@implementation NSObject (KVCParsing_Private)
 
 - (BOOL)mjz_validateAutomaticallyValue:(inout __autoreleasing id *)ioValue forKey:(NSString*)key
 {
@@ -389,18 +358,8 @@ static char const * const kKVCParsingAutomaticKVCparsingValidationEnabledKey = "
 
 - (BOOL)mjz_validateAutomaticallyValue:(inout __autoreleasing id *)ioValue toClass:(Class)typeClass
 {
-    // ----------
-    // Check if the receiver type (typeClass) can be automatically validated:
-    
-//    if ([[self mjz_disabledClassTypesForAutomaticParsing] containsObject:typeClass])
-//        return NO;
-    
-    NSArray *forbidenClasses = [[self mjz_disabledClassTypesForAutomaticKVCParsingValidation] allObjects];
-    for (Class forbidenClass in forbidenClasses)
-    {
-        if ([typeClass isSubclassOfClass:forbidenClass])
-            return NO;
-    }
+    if ([*ioValue isKindOfClass:typeClass])
+        return YES;
     
     // ----------
     // Start checking the type of the receiver (typeClass) with the type of the container (*ioValue)
@@ -417,6 +376,7 @@ static char const * const kKVCParsingAutomaticKVCparsingValidationEnabledKey = "
         if ([*ioValue isKindOfClass:NSNumber.class])
         {
             *ioValue = [NSDate dateWithTimeIntervalSince1970:[*ioValue doubleValue]];
+            return YES;
         }
         else if ([*ioValue isKindOfClass:NSString.class])
         {

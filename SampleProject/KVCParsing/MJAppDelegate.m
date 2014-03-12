@@ -82,10 +82,6 @@
     // Setting any value for testing purposes.
     video.privateVideoKey = @"my_private_key";
     
-    // By setting the following property to YES, any JSON attribute that maps a object property will be setted.
-    // In our example, we only allow parsing properties defined in the mapping.
-//    video.mjz_allowGenericKVCAccessorsInMapping = YES;
-    
     NSLog(@"BEFORE parsing: %@", video.mjz_extendedObjectDescription);
     NSLog(@"video.privateVideoKey: %@",[video.privateVideoKey description]);
     
