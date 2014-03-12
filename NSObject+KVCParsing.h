@@ -137,12 +137,12 @@
  * Return a mapping between the array property name to the contained object class type.
  * For example: @{@"myArrayPropertyName": User.class, ... };
  **/
-- (NSDictionary*)mjz_arrayTypeMappingForKVCParsing;
+- (NSDictionary*)mjz_arrayClassTypeMappingForAutomaticKVCParsingValidation;
 
 /**
  * Returns a set of Class items. Each class type included in this set won't be parsed automatically. Default value returns an empty set.
  **/
-- (NSSet*)mjz_disabledClassTypesForAutomaticParsing;
+- (NSSet*)mjz_disabledClassTypesForAutomaticKVCParsingValidation;
 
 /** ---------------------------------------------- **
  * @name Manual Validation

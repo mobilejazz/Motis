@@ -60,7 +60,7 @@
 #pragma mark KVCParsing Validation
 
 // Automatic array validation mapping
-- (NSDictionary*)mjz_arrayTypeMappingForKVCParsing
+- (NSDictionary*)mjz_arrayClassTypeMappingForAutomaticKVCParsingValidation
 {
     static NSDictionary *mapping = nil;
     

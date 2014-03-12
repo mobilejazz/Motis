@@ -81,7 +81,7 @@ static char const * const kKVCParsingAllowGenericKVCAccessorsInMappingKey = "MJK
                 
                 if (self.mjz_automaticKVCParsingValidationEnabled)
                 {
-                    Class typeClass = self.mjz_arrayTypeMappingForKVCParsing[mappedKey];
+                    Class typeClass = self.mjz_arrayClassTypeMappingForAutomaticKVCParsingValidation[mappedKey];
                     if (typeClass)
                         [self mjz_validateAutomaticallyValue:&validatedObject toClass:typeClass];
                 }
@@ -251,13 +251,13 @@ static char const * const kKVCParsingAutomaticKVCparsingValidationEnabledKey = "
     return [value boolValue];
 }
 
-- (NSDictionary*)mjz_arrayTypeMappingForKVCParsing
+- (NSDictionary*)mjz_arrayClassTypeMappingForAutomaticKVCParsingValidation
 {
     // Subclasses might override.
     return @{};
 }
 
-- (NSSet*)mjz_disabledClassTypesForAutomaticParsing
+- (NSSet*)mjz_disabledClassTypesForAutomaticKVCParsingValidation
 {
     // Subclasses might override.
     return [NSSet set];
@@ -395,7 +395,7 @@ static char const * const kKVCParsingAutomaticKVCparsingValidationEnabledKey = "
 //    if ([[self mjz_disabledClassTypesForAutomaticParsing] containsObject:typeClass])
 //        return NO;
     
-    NSArray *forbidenClasses = [[self mjz_disabledClassTypesForAutomaticParsing] allObjects];
+    NSArray *forbidenClasses = [[self mjz_disabledClassTypesForAutomaticKVCParsingValidation] allObjects];
     for (Class forbidenClass in forbidenClasses)
     {
         if ([typeClass isSubclassOfClass:forbidenClass])
