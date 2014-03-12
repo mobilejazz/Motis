@@ -44,13 +44,27 @@
     // Defining a JSONDictionary
     NSDictionary *JSONDict = @{@"video_id": @42,
                                @"view_count": @723,
-                               @"title": @"Flirting with Mobile Jazz",
-                               @"description": @"Lorem ipsum sir dolor amet.",
+                               @"title": @"Dancing worldwide",
+                               @"description": @"Dancing worldwide is the awesomest video ever!",
                                @"last_view_time": @1390767064.0,
-                               @"uploader":@{@"user_name":@"vilanovi",
+                               @"uploader":@{@"user_name":@"Joan",
                                              @"user_id": @7,
                                              @"followers": @209
-                                             }
+                                             },
+                               @"users_cast":@[@{@"user_name":@"Stefan",
+                                                 @"user_id": @19,
+                                                 @"followers": @1209
+                                                 },
+                                               @{@"user_name":@"Hermes",
+                                                 @"user_id": @23,
+                                                 @"followers": @1455
+                                                 },
+                                               @{@"user_name":@"Jordi",
+                                                 @"user_id": @14,
+                                                 @"followers": @452
+                                                 },
+                                               ],
+                               @"privateVideoKey": @(1234), // <-- simulating an unexpected attribute in the JSON
                                };
     
     // Converting the dictionary to real JSON data
@@ -65,9 +79,20 @@
     // Create an instance of a KVC paraseable object
     MJVideo *video = [[MJVideo alloc] init];
     
-    NSLog(@"Video before parsing: %@", video.mjz_extendedObjectDescription);
+    // Setting any value for testing purposes.
+    video.privateVideoKey = @"my_private_key";
+    
+    // By setting the following property to YES, any JSON attribute that maps a object property will be setted.
+    // In our example, we only allow parsing properties defined in the mapping.
+//    video.mjz_allowGenericKVCAccessorsInMapping = YES;
+    
+    NSLog(@"BEFORE parsing: %@", video.mjz_extendedObjectDescription);
+    NSLog(@"video.privateVideoKey: %@",[video.privateVideoKey description]);
+    
     [video mjz_parseValuesForKeysWithDictionary:receivedJSONDict];
-    NSLog(@"Video after parsing: %@", video.mjz_extendedObjectDescription);
+    
+    NSLog(@"AFTER parsing: %@", video.mjz_extendedObjectDescription);
+    NSLog(@"video.privateVideoKey: %@",[video.privateVideoKey description]);
 }
 
 @end

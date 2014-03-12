@@ -18,7 +18,7 @@
 
 @interface MJUser : NSObject
 
-@property (nonatomic, assign) NSInteger userId;
+@property (nonatomic, assign) CGFloat userId;
 @property (nonatomic, strong) NSString *username;
 @property (nonatomic, assign) NSInteger followers;
 
