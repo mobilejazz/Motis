@@ -256,88 +256,10 @@
     NSString * typeString = [NSString stringWithUTF8String:type];
     NSArray * attributes = [typeString componentsSeparatedByString:@","];
     NSString * typeAttribute = [attributes objectAtIndex:0];
-    NSString * propertyType = [typeAttribute substringFromIndex:1];
-    const char * rawPropertyType = [propertyType UTF8String];
     
-    if (strcmp(rawPropertyType, @encode(unsigned)) == 0)
-    {
-        KVCPLog(@"%@ --> UNSIGNED", key);
-        if ([*ioValue isKindOfClass:NSString.class])
-        {
-            *ioValue = [NSNumber numberWithUnsignedInt:[*ioValue unsignedIntValue]];
-            return YES;
-        }
-    }
-    else if (strcmp(rawPropertyType, @encode(unsigned long)) == 0)
-    {
-        KVCPLog(@"%@ --> UNSIGNED LONG", key);
-        if ([*ioValue isKindOfClass:NSString.class])
-        {
-            *ioValue = [NSNumber numberWithUnsignedLong:[*ioValue unsignedLongValue]];
-            return YES;
-        }
-    }
-    else if (strcmp(rawPropertyType, @encode(unsigned long long)) == 0)
-    {
-        KVCPLog(@"%@ --> UNSIGNED LONG LONG", key);
-        if ([*ioValue isKindOfClass:NSString.class])
-        {
-            *ioValue = [NSNumber numberWithUnsignedLongLong:[*ioValue unsignedLongLongValue]];
-            return YES;
-        }
-    }
-    if (strcmp(rawPropertyType, @encode(int)) == 0)
-    {
-        KVCPLog(@"%@ --> INT", key);
-        if ([*ioValue isKindOfClass:NSString.class])
-        {
-            *ioValue = [NSNumber numberWithInt:[*ioValue intValue]];
-            return YES;
-        }
-    }
-    else if (strcmp(rawPropertyType, @encode(long)) == 0)
-    {
-        KVCPLog(@"%@ --> LONG", key);
-        if ([*ioValue isKindOfClass:NSString.class])
-        {
-            *ioValue = [NSNumber numberWithLong:[*ioValue longValue]];
-            return YES;
-        }
-    }
-    else if (strcmp(rawPropertyType, @encode(long long)) == 0)
-    {
-        KVCPLog(@"%@ --> LONG LONG", key);
-        if ([*ioValue isKindOfClass:NSString.class])
-        {
-            *ioValue = [NSNumber numberWithLongLong:[*ioValue longLongValue]];
-            return YES;
-        }
-    }
-    else if (strcmp(rawPropertyType, @encode(float)) == 0)
-    {
-        KVCPLog(@"%@ --> FLOAT", key);
-        if ([*ioValue isKindOfClass:NSString.class])
-        {
-            *ioValue = [NSNumber numberWithFloat:[*ioValue floatValue]];
-            return YES;
-        }
-    }
-    else if (strcmp(rawPropertyType, @encode(double)) == 0)
-    {
-        KVCPLog(@"%@ --> DOBULE", key);
-        if ([*ioValue isKindOfClass:NSString.class])
-        {
-            *ioValue = [NSNumber numberWithDouble:[*ioValue doubleValue]];
-            return YES;
-        }
-    }
-    else if (strcmp(rawPropertyType, @encode(id)) == 0)
-    {
-        KVCPLog(@"%@ --> ID", key);
-        // Unknown object. Cannot validate.
-        return NO;
-    }
-    else if ([typeAttribute hasPrefix:@"T@"] && [typeAttribute length] > 1)
+    // Basic types are already handled by the system.
+
+    if ([typeAttribute hasPrefix:@"T@"] && [typeAttribute length] > 1)
     {
         NSString * typeClassName = [typeAttribute substringWithRange:NSMakeRange(3, [typeAttribute length]-4)]; // <-- turns @"NSDate" into NSDate
         Class typeClass = NSClassFromString(typeClassName);
@@ -358,43 +280,86 @@
 
 - (BOOL)mjz_validateAutomaticallyValue:(inout __autoreleasing id *)ioValue toClass:(Class)typeClass
 {
+    // If types match, just return
     if ([*ioValue isKindOfClass:typeClass])
         return YES;
     
-    // ----------
-    // Start checking the type of the receiver (typeClass) with the type of the container (*ioValue)
+    // Otherwise, lets try to fit the desired class type
+    // Because *ioValue comes frome a JSON deserialization, it can only be a string, number, array or dictionary.
     
-    if ([typeClass isSubclassOfClass:NSDictionary.class] ||
-        [typeClass isSubclassOfClass:NSArray.class] ||
-        [typeClass isSubclassOfClass:NSSet.class])
+    if ([*ioValue isKindOfClass:NSString.class])
     {
-        // Cannot do anything.
-        return NO;
-    }
-    else if ([typeClass isSubclassOfClass:NSDate.class])
-    {
-        if ([*ioValue isKindOfClass:NSNumber.class])
-        {
-            *ioValue = [NSDate dateWithTimeIntervalSince1970:[*ioValue doubleValue]];
-            return YES;
-        }
-        else if ([*ioValue isKindOfClass:NSString.class])
-        {
-            // TODO: Parse standard JSON format into date.
-        }
-    }
-    else if ([typeClass isSubclassOfClass:NSURL.class])
-    {
-        if ([*ioValue isKindOfClass:NSString.class])
+        if ([typeClass isSubclassOfClass:NSURL.class])
         {
             *ioValue = [NSURL URLWithString:*ioValue];
             return YES;
         }
+        else if ([typeClass isSubclassOfClass:NSData.class])
+        {
+            *ioValue = [[NSData alloc] initWithBase64EncodedString:*ioValue options:NSDataBase64DecodingIgnoreUnknownCharacters];
+            return YES;
+        }
+        else if ([typeClass isSubclassOfClass:NSNumber.class])
+        {
+            static NSNumberFormatter *numberFormatter = nil;
+            static dispatch_once_t onceToken;
+            dispatch_once(&onceToken, ^{
+                NSNumberFormatter *numberFormatter = [[NSNumberFormatter alloc] init];
+                numberFormatter.numberStyle = NSNumberFormatterDecimalStyle;
+            });
+            *ioValue = [numberFormatter numberFromString:*ioValue];
+            return YES;
+        }
     }
-    else
+    else if ([*ioValue isKindOfClass:NSNumber.class])
     {
-        // if container is a NSDictionary, parse the new object using the same technique.
-        if ([*ioValue isKindOfClass:NSDictionary.class])
+        if ([typeClass isSubclassOfClass:NSDate.class])
+        {
+            *ioValue = [NSDate dateWithTimeIntervalSince1970:[*ioValue doubleValue]];
+            return YES;
+        }
+        else if ([typeClass isSubclassOfClass:NSString.class])
+        {
+            *ioValue = [*ioValue stringValue];
+            return YES;
+        }
+    }
+    else if ([*ioValue isKindOfClass:NSArray.class])
+    {
+        if ([typeClass isSubclassOfClass:NSMutableArray.class])
+        {
+            *ioValue = [NSMutableArray arrayWithArray:*ioValue];
+            return YES;
+        }
+        else if ([typeClass isSubclassOfClass:NSMutableSet.class])
+        {
+            *ioValue = [NSMutableSet setWithArray:*ioValue];
+            return YES;
+        }
+        else if ([typeClass isSubclassOfClass:NSSet.class])
+        {
+            *ioValue = [NSSet setWithArray:*ioValue];
+            return YES;
+        }
+        else if ([typeClass isSubclassOfClass:NSMutableOrderedSet.class])
+        {
+            *ioValue = [NSMutableOrderedSet orderedSetWithArray:*ioValue];
+            return YES;
+        }
+        else if ([typeClass isSubclassOfClass:NSOrderedSet.class])
+        {
+            *ioValue = [NSOrderedSet orderedSetWithArray:*ioValue];
+            return YES;
+        }
+    }
+    else if ([*ioValue isKindOfClass:NSDictionary.class])
+    {
+        if ([typeClass isSubclassOfClass:NSMutableDictionary.class])
+        {
+            *ioValue = [NSMutableDictionary dictionaryWithDictionary:*ioValue];
+            return YES;
+        }
+        else if ([typeClass isSubclassOfClass:NSObject.class])
         {
             id instance = [[typeClass alloc] init];
             [instance mjz_parseValuesForKeysWithDictionary:*ioValue];

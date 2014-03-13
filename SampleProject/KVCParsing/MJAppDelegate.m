@@ -42,7 +42,7 @@
 - (void)performKVCParsingTest
 {
     // Defining a JSONDictionary
-    NSDictionary *JSONDict = @{@"video_id": @42,
+    NSDictionary *JSONDict = @{@"video_id": @"42",
                                @"view_count": @723,
                                @"title": @"Dancing worldwide",
                                @"description": @"Dancing worldwide is the awesomest video ever!",
