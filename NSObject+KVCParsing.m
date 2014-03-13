@@ -302,7 +302,7 @@
     // Otherwise, lets try to fit the desired class type
     // Because *ioValue comes frome a JSON deserialization, it can only be a string, number, array or dictionary.
     
-    if ([*ioValue isKindOfClass:NSString.class])
+    if ([*ioValue isKindOfClass:NSString.class]) // <-- STRINGS
     {
         if ([typeClass isSubclassOfClass:NSURL.class])
         {
@@ -326,7 +326,7 @@
             return YES;
         }
     }
-    else if ([*ioValue isKindOfClass:NSNumber.class])
+    else if ([*ioValue isKindOfClass:NSNumber.class]) // <-- NUMBERS
     {
         if ([typeClass isSubclassOfClass:NSDate.class])
         {
@@ -339,7 +339,7 @@
             return YES;
         }
     }
-    else if ([*ioValue isKindOfClass:NSArray.class])
+    else if ([*ioValue isKindOfClass:NSArray.class]) // <-- ARRAYS
     {
         if ([typeClass isSubclassOfClass:NSMutableArray.class])
         {
@@ -367,7 +367,7 @@
             return YES;
         }
     }
-    else if ([*ioValue isKindOfClass:NSDictionary.class])
+    else if ([*ioValue isKindOfClass:NSDictionary.class]) // <-- DICTIONARIES
     {
         if ([typeClass isSubclassOfClass:NSMutableDictionary.class])
         {
