@@ -391,10 +391,6 @@
             return YES;
         }
     }
-    //else if ()
-    //{
-    //    TODO: add more automatic parsing for multiple object types here
-    //}
     else
     {
         // if container is a NSDictionary, parse the new object using the same technique.
