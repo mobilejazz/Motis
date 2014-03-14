@@ -311,12 +311,12 @@
         if ([typeClass isSubclassOfClass:NSURL.class])
         {
             *ioValue = [NSURL URLWithString:*ioValue];
-            return YES;
+            return *ioValue != nil;
         }
         else if ([typeClass isSubclassOfClass:NSData.class])
         {
             *ioValue = [[NSData alloc] initWithBase64EncodedString:*ioValue options:NSDataBase64DecodingIgnoreUnknownCharacters];
-            return YES;
+            return *ioValue != nil;
         }
         else if ([typeClass isSubclassOfClass:NSNumber.class])
         {
@@ -327,7 +327,7 @@
                 numberFormatter.numberStyle = NSNumberFormatterDecimalStyle;
             });
             *ioValue = [numberFormatter numberFromString:*ioValue];
-            return YES;
+            return *ioValue != nil;
         }
     }
     else if ([*ioValue isKindOfClass:NSNumber.class]) // <-- NUMBERS
@@ -335,7 +335,7 @@
         if ([typeClass isSubclassOfClass:NSDate.class])
         {
             *ioValue = [NSDate dateWithTimeIntervalSince1970:[*ioValue doubleValue]];
-            return YES;
+            return *ioValue != nil;
         }
         else if ([typeClass isSubclassOfClass:NSString.class])
         {
