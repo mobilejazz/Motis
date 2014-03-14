@@ -48,10 +48,11 @@
  * Return YES if the value has been automatically validated. The newer value is setted in the pointer.
  * @param ioValue The value to be validated.
  * @param typeClass The final class for the value.
+ * @param key The property key in which the validated value will be assigned, either directly or as part of an array.
  * @return YES if automatic validation has been done, NO otherwise.
  * @discussion A return value of NO only indicates that the value couldn't be validated automatically.
  **/
-- (BOOL)mjz_validateAutomaticallyValue:(inout __autoreleasing id *)ioValue toClass:(Class)typeClass;
+- (BOOL)mjz_validateAutomaticallyValue:(inout __autoreleasing id *)ioValue toClass:(Class)typeClass key:(NSString*)key;
 
 @end
 
@@ -94,7 +95,7 @@
                 Class typeClass = self.mjz_arrayClassTypeMappingForAutomaticKVCParsingValidation[mappedKey];
                 if (typeClass)
                 {
-                    validated = [self mjz_validateAutomaticallyValue:&validatedObject toClass:typeClass];
+                    validated = [self mjz_validateAutomaticallyValue:&validatedObject toClass:typeClass key:mappedKey];
                 }
             }
             
@@ -215,6 +216,11 @@
     return @{};
 }
 
+- (void)mjz_didCreateObject:(id)object forKey:(NSString *)key
+{
+    // Subclasses might override.
+}
+
 - (BOOL)mjz_validateArrayObject:(inout __autoreleasing id *)ioValue forArrayKey:(NSString *)arrayKey error:(out NSError *__autoreleasing *)outError
 {
     // Subclasses might override.
@@ -286,7 +292,7 @@
         if (typeClass != nil)
         {
             KVCPLog(@"%@ --> %@", key, typeClassName);
-            return [self mjz_validateAutomaticallyValue:ioValue toClass:typeClass];
+            return [self mjz_validateAutomaticallyValue:ioValue toClass:typeClass key:key];
         }
     }
     else
@@ -297,10 +303,8 @@
     return NO;
 }
 
-- (BOOL)mjz_validateAutomaticallyValue:(inout __autoreleasing id *)ioValue toClass:(Class)typeClass
+- (BOOL)mjz_validateAutomaticallyValue:(inout __autoreleasing id *)ioValue toClass:(Class)typeClass key:(NSString*)key
 {
-
-    
     // If types match, just return
     if ([*ioValue isKindOfClass:typeClass])
         return YES;
@@ -388,6 +392,7 @@
         {
             id instance = [[typeClass alloc] init];
             [instance mjz_parseValuesForKeysWithDictionary:*ioValue];
+            [self mjz_didCreateObject:instance forKey:key];
             
             *ioValue = instance;
             return YES;

@@ -147,6 +147,8 @@ typedef NS_ENUM(NSUInteger, KVCParsingMappingClearance)
  **/
 - (NSDictionary*)mjz_arrayClassTypeMappingForAutomaticKVCParsingValidation;
 
+- (void)mjz_didCreateObject:(id)object forKey:(NSString *)key;
+
 /** ---------------------------------------------- **
  * @name Manual Validation
  ** ---------------------------------------------- **/
