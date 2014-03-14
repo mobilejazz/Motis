@@ -74,6 +74,13 @@
     return mapping;
 }
 
+- (id)mjz_willCreateObjectForKey:(NSString*)key ofClass:(Class)typeClass withDictionary:(NSDictionary*)dictionary abort:(BOOL*)abort
+{
+    // Subclasses might override.
+    NSLog(@"WILL CREATE: %@ OF CLASS %@", key, NSStringFromClass(typeClass));
+    return nil;
+}
+
 // Automatic validation does the job!
 //- (BOOL)validateUploader:(id *)ioValue error:(NSError * __autoreleasing *)outError
 //{

@@ -52,7 +52,7 @@
  * @return YES if automatic validation has been done, NO otherwise.
  * @discussion A return value of NO only indicates that the value couldn't be validated automatically.
  **/
-- (BOOL)mjz_validateAutomaticallyValue:(inout __autoreleasing id *)ioValue toClass:(Class)typeClass key:(NSString*)key;
+- (BOOL)mjz_validateAutomaticallyValue:(inout __autoreleasing id *)ioValue toClass:(Class)typeClass forKey:(NSString*)key;
 
 @end
 
@@ -95,7 +95,7 @@
                 Class typeClass = self.mjz_arrayClassTypeMappingForAutomaticKVCParsingValidation[mappedKey];
                 if (typeClass)
                 {
-                    validated = [self mjz_validateAutomaticallyValue:&validatedObject toClass:typeClass key:mappedKey];
+                    validated = [self mjz_validateAutomaticallyValue:&validatedObject toClass:typeClass forKey:mappedKey];
                 }
             }
             
@@ -216,6 +216,12 @@
     return @{};
 }
 
+- (id)mjz_willCreateObjectOfClass:(Class)typeClass withDictionary:(NSDictionary*)dictionary forKey:(NSString*)key abort:(BOOL*)abort;
+{
+    // Subclasses might override.
+    return nil;
+}
+
 - (void)mjz_didCreateObject:(id)object forKey:(NSString *)key
 {
     // Subclasses might override.
@@ -267,42 +273,53 @@
     NSArray * attributes = [typeString componentsSeparatedByString:@","];
     NSString * typeAttribute = [attributes objectAtIndex:0];
     
-    NSString * propertyType = [typeAttribute substringFromIndex:1];
-    const char * rawPropertyType = [propertyType UTF8String];
-    
-    if (strcmp(rawPropertyType, @encode(BOOL)) == 0)
+    if ([typeAttribute hasPrefix:@"T@"] && [typeAttribute length] > 1) // if property is a pointer to a class
     {
-        if ([*ioValue isKindOfClass:NSString.class])
-        {
-            KVCPLog(@"NSString --> BOOL", key);
-            BOOL premium = [*ioValue boolValue];
-            *ioValue = @(premium);
-            return YES;
-        }
-    }
-    
-    // Other basic types are already handled by the system.
-
-    if ([typeAttribute hasPrefix:@"T@"] && [typeAttribute length] > 1)
-    {
-        NSString * typeClassName = [typeAttribute substringWithRange:NSMakeRange(3, [typeAttribute length]-4)]; // <-- turns @"NSDate" into NSDate
+        NSString * typeClassName = [typeAttribute substringWithRange:NSMakeRange(3, [typeAttribute length]-4)];
         Class typeClass = NSClassFromString(typeClassName);
         
         if (typeClass != nil)
         {
             KVCPLog(@"%@ --> %@", key, typeClassName);
-            return [self mjz_validateAutomaticallyValue:ioValue toClass:typeClass key:key];
+            return [self mjz_validateAutomaticallyValue:ioValue toClass:typeClass forKey:key];
+        }
+        
+        return NO;
+    }
+    else // if property is a basic type
+    {
+        NSString * propertyType = [typeAttribute substringFromIndex:1];
+        const char * rawPropertyType = [propertyType UTF8String];
+        
+        if ([*ioValue isKindOfClass:NSNumber.class])
+        {
+            // Conversion from NSNumber to basic types is already handled by the system.
+            return YES;
+        }
+        else if ([*ioValue isKindOfClass:NSString.class])
+        {
+            if (strcmp(rawPropertyType, @encode(BOOL)) == 0)
+            {
+                if ([*ioValue isKindOfClass:NSString.class])
+                {
+                    KVCPLog(@"NSString --> BOOL", key);
+                    BOOL premium = [*ioValue boolValue];
+                    *ioValue = @(premium);
+                }
+            }
+            
+            // Other conversions from NSString to basic types are already handled by the system.
+            
+            return YES;
+        }
+        else // If not a number and not a string, types cannot match.
+        {
+            return NO;
         }
     }
-    else
-    {
-        KVCPLog(@"%@ --> <UNKNOWN>", key);
-    }
-    
-    return NO;
 }
 
-- (BOOL)mjz_validateAutomaticallyValue:(inout __autoreleasing id *)ioValue toClass:(Class)typeClass key:(NSString*)key
+- (BOOL)mjz_validateAutomaticallyValue:(inout __autoreleasing id *)ioValue toClass:(Class)typeClass forKey:(NSString*)key
 {
     // If types match, just return
     if ([*ioValue isKindOfClass:typeClass])
@@ -349,7 +366,7 @@
         else if ([typeClass isSubclassOfClass:NSString.class])
         {
             *ioValue = [*ioValue stringValue];
-            return YES;
+            return *ioValue != nil;
         }
     }
     else if ([*ioValue isKindOfClass:NSArray.class]) // <-- ARRAYS
@@ -357,27 +374,27 @@
         if ([typeClass isSubclassOfClass:NSMutableArray.class])
         {
             *ioValue = [NSMutableArray arrayWithArray:*ioValue];
-            return YES;
+            return *ioValue != nil;
         }
         else if ([typeClass isSubclassOfClass:NSMutableSet.class])
         {
             *ioValue = [NSMutableSet setWithArray:*ioValue];
-            return YES;
+            return *ioValue != nil;
         }
         else if ([typeClass isSubclassOfClass:NSSet.class])
         {
             *ioValue = [NSSet setWithArray:*ioValue];
-            return YES;
+            return *ioValue != nil;
         }
         else if ([typeClass isSubclassOfClass:NSMutableOrderedSet.class])
         {
             *ioValue = [NSMutableOrderedSet orderedSetWithArray:*ioValue];
-            return YES;
+            return *ioValue != nil;
         }
         else if ([typeClass isSubclassOfClass:NSOrderedSet.class])
         {
             *ioValue = [NSOrderedSet orderedSetWithArray:*ioValue];
-            return YES;
+            return *ioValue != nil;
         }
     }
     else if ([*ioValue isKindOfClass:NSDictionary.class]) // <-- DICTIONARIES
@@ -385,16 +402,26 @@
         if ([typeClass isSubclassOfClass:NSMutableDictionary.class])
         {
             *ioValue = [NSMutableDictionary dictionaryWithDictionary:*ioValue];
-            return YES;
+            return *ioValue != nil;
         }
         else if ([typeClass isSubclassOfClass:NSObject.class])
         {
-            id instance = [[typeClass alloc] init];
-            [instance mjz_parseValuesForKeysWithDictionary:*ioValue];
+            BOOL abort = NO;
+            id instance = [self mjz_willCreateObjectOfClass:typeClass withDictionary:*ioValue forKey:key abort:&abort];
+
+            if (abort)
+                return NO;
+            
+            if (!instance)
+            {
+                instance = [[typeClass alloc] init];
+                [instance mjz_parseValuesForKeysWithDictionary:*ioValue];
+            }
+            
             [self mjz_didCreateObject:instance forKey:key];
             
             *ioValue = instance;
-            return YES;
+            return *ioValue != nil;
         }
     }
     

@@ -147,6 +147,22 @@ typedef NS_ENUM(NSUInteger, KVCParsingMappingClearance)
  **/
 - (NSDictionary*)mjz_arrayClassTypeMappingForAutomaticKVCParsingValidation;
 
+/**
+ * While validating automatically your JSON objects, KVCParsing might create new objects. This method is called just before new objects are created.
+ * @param typeClass The object class. A new object of this class is going to be created.
+ * @param dictionary The JSON-based dictionary which will be parsed into the new object.
+ * @param key The property name of the object to assign or the array name where the object will belong to.
+ * @param abort A flag boolean. Return YES if you want to abort (because of dictionary incoherences, for example). When aborting the object is not setted or included inside an array.
+ * @return A custom object or nil.
+ * @discussion If you return nil, KVCParsing will create automatically the new instance of class typeClass and parse the dictionary into it. Optionally, you can create the object and parse the dictionary manually. You must return the custom object as a return value of this method.
+ **/
+- (id)mjz_willCreateObjectOfClass:(Class)typeClass withDictionary:(NSDictionary*)dictionary forKey:(NSString*)key abort:(BOOL*)abort;
+
+/**
+ * The newer created object for the given key.
+ * @param object The new object.
+ * @param key The property name of the object or the array name where the object belongs to.
+ **/
 - (void)mjz_didCreateObject:(id)object forKey:(NSString *)key;
 
 /** ---------------------------------------------- **
