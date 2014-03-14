@@ -30,16 +30,9 @@
                                       @"user_id": NSStringFromSelector(@selector(userId)),
                                       @"followers": NSStringFromSelector(@selector(followers)),
                                       };
-        
-        
-        NSDictionary *superMapping = [super mjz_mappingForKVCParsing];
-        
-        NSMutableDictionary *theMapping = [NSMutableDictionary dictionary];
-        
-        [theMapping addEntriesFromDictionary:superMapping];
-        [theMapping addEntriesFromDictionary:JSONMapping];
-        
-        mapping = [theMapping copy];
+        NSMutableDictionary *mutableMapping = [[super mjz_mappingForKVCParsing] mutableCopy];
+        [mutableMapping addEntriesFromDictionary:JSONMapping];
+        mapping = mutableMapping;
     });
     
     return mapping;

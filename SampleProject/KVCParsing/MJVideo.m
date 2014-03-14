@@ -37,16 +37,9 @@
                                       @"uploader": NSStringFromSelector(@selector(uploader)),
                                       @"users_cast": NSStringFromSelector(@selector(cast)),
                                       };
-        
-        
-        NSDictionary *superMapping = [super mjz_mappingForKVCParsing];
-        
-        NSMutableDictionary *theMapping = [NSMutableDictionary dictionary];
-        
-        [theMapping addEntriesFromDictionary:superMapping];
-        [theMapping addEntriesFromDictionary:JSONMapping];
-        
-        mapping = [theMapping copy];
+        NSMutableDictionary *mutableMapping = [[super mjz_mappingForKVCParsing] mutableCopy];
+        [mutableMapping addEntriesFromDictionary:JSONMapping];
+        mapping = mutableMapping;
     });
     
     return mapping;
@@ -73,15 +66,9 @@
     dispatch_once(&onceToken, ^{
         NSDictionary *arrayMapping = @{NSStringFromSelector(@selector(cast)) : MJUser.class,
                                       };
-        
-        NSDictionary *superMapping = [super mjz_mappingForKVCParsing];
-        
-        NSMutableDictionary *theMapping = [NSMutableDictionary dictionary];
-        
-        [theMapping addEntriesFromDictionary:superMapping];
-        [theMapping addEntriesFromDictionary:arrayMapping];
-        
-        mapping = [theMapping copy];
+        NSMutableDictionary *mutableMapping = [[super mjz_mappingForKVCParsing] mutableCopy];
+        [mutableMapping addEntriesFromDictionary:arrayMapping];
+        mapping = mutableMapping;
     });
     
     return mapping;
