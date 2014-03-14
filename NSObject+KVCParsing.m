@@ -93,7 +93,9 @@
             {
                 Class typeClass = self.mjz_arrayClassTypeMappingForAutomaticKVCParsingValidation[mappedKey];
                 if (typeClass)
-                    [self mjz_validateAutomaticallyValue:&validatedObject toClass:typeClass];
+                {
+                    validated = [self mjz_validateAutomaticallyValue:&validatedObject toClass:typeClass];
+                }
             }
             
             if (validated)
@@ -129,7 +131,9 @@
     
     // Automatic validation only if the value has not been manually validated
     if (originalValue == value)
-        [self mjz_validateAutomaticallyValue:&value forKey:mappedKey];
+    {
+        validated = [self mjz_validateAutomaticallyValue:&value forKey:mappedKey];
+    }
     
     if (validated)
     {
