@@ -74,7 +74,7 @@
         NSDictionary *arrayMapping = @{NSStringFromSelector(@selector(cast)) : MJUser.class,
                                       };
         
-        NSDictionary *superMapping = [super mjz_mappingForKVCParsing];
+        NSDictionary *superMapping = [super mjz_arrayClassTypeMappingForAutomaticKVCParsingValidation];
         
         NSMutableDictionary *theMapping = [NSMutableDictionary dictionary];
         
