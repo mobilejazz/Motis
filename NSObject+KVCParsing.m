@@ -408,7 +408,7 @@
     static NSNumberFormatter *decimalFormatter = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        NSNumberFormatter *decimalFormatter = [NSNumberFormatter new];
+        decimalFormatter = [NSNumberFormatter new];
         decimalFormatter.numberStyle = NSNumberFormatterDecimalStyle;
     });
     return decimalFormatter;
