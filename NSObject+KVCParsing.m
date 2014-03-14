@@ -299,6 +299,8 @@
 
 - (BOOL)mjz_validateAutomaticallyValue:(inout __autoreleasing id *)ioValue toClass:(Class)typeClass
 {
+
+    
     // If types match, just return
     if ([*ioValue isKindOfClass:typeClass])
         return YES;
@@ -320,13 +322,17 @@
         }
         else if ([typeClass isSubclassOfClass:NSNumber.class])
         {
-            static NSNumberFormatter *numberFormatter = nil;
-            static dispatch_once_t onceToken;
-            dispatch_once(&onceToken, ^{
-                NSNumberFormatter *numberFormatter = [[NSNumberFormatter alloc] init];
-                numberFormatter.numberStyle = NSNumberFormatterDecimalStyle;
-            });
-            *ioValue = [numberFormatter numberFromString:*ioValue];
+            NSNumberFormatter *formatter = [NSObject mjz_decimalFormatter];
+            *ioValue = [formatter numberFromString:*ioValue];
+            return *ioValue != nil;
+        }
+        if ([typeClass isSubclassOfClass:NSDate.class])
+        {
+            NSNumberFormatter *formatter = [NSObject mjz_decimalFormatter];
+            *ioValue = [formatter numberFromString:*ioValue];
+            if (*ioValue == nil) return NO;
+
+            *ioValue = [NSDate dateWithTimeIntervalSince1970:[*ioValue doubleValue]];
             return *ioValue != nil;
         }
     }
@@ -389,6 +395,19 @@
     }
     
     return NO;
+}
+
+#pragma mark Helpers
+
++ (NSNumberFormatter*)mjz_decimalFormatter
+{
+    static NSNumberFormatter *decimalFormatter = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        NSNumberFormatter *decimalFormatter = [NSNumberFormatter new];
+        decimalFormatter.numberStyle = NSNumberFormatterDecimalStyle;
+    });
+    return decimalFormatter;
 }
 
 @end
