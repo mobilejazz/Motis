@@ -17,56 +17,103 @@
 #import "NSObject+KVCParsing.h"
 #import <objc/runtime.h>
 
-static char const * const validatesKVCParsingKey = "MJKVCParsing_validatesKVCParsing";
+#define KVCP_DEBUG 0
+
+#if KVCP_DEBUG
+#define KVCPLog(format, ...) NSLog(@"%@",[NSString stringWithFormat:format, ## __VA_ARGS__]);
+#else
+#define KVCPLog(format, ...)
+#endif
+
+
+// ------------------------------------------------------------------------------------------------------------------------------------------------------------------ //
+// ------------------------------------------------------------------------------------------------------------------------------------------------------------------ //
+// ------------------------------------------------------------------------------------------------------------------------------------------------------------------ //
+
+
+#pragma mark - KVCParsing_Private
+
+@interface NSObject (KVCParsing_Private)
+
+/**
+ * Return YES if the value has been automatically validated. The newer value is setted in the pointer.
+ * @param ioValue The value to be validated.
+ * @param key The property key in which the validated value is going to be assigned.
+ * @return YES if automatic validation has been done, NO otherwise.
+ * @discussion A return value of NO only indicates that the value couldn't be validated automatically.
+ **/
+- (BOOL)mjz_validateAutomaticallyValue:(inout __autoreleasing id *)ioValue forKey:(NSString*)key;
+
+/**
+ * Return YES if the value has been automatically validated. The newer value is setted in the pointer.
+ * @param ioValue The value to be validated.
+ * @param typeClass The final class for the value.
+ * @return YES if automatic validation has been done, NO otherwise.
+ * @discussion A return value of NO only indicates that the value couldn't be validated automatically.
+ **/
+- (BOOL)mjz_validateAutomaticallyValue:(inout __autoreleasing id *)ioValue toClass:(Class)typeClass;
+
+@end
+
+
+// ------------------------------------------------------------------------------------------------------------------------------------------------------------------ //
+// ------------------------------------------------------------------------------------------------------------------------------------------------------------------ //
+// ------------------------------------------------------------------------------------------------------------------------------------------------------------------ //
+
+
+#pragma mark - KVCParsing
 
 @implementation NSObject (KVCParsing)
 
-- (void)setMjz_validatesKVCParsing:(BOOL)validateKVCParsing
-{
-    objc_setAssociatedObject(self, validatesKVCParsingKey, @(validateKVCParsing), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
-
-- (BOOL)mjz_validatesKVCParsing
-{
-    NSNumber *value = objc_getAssociatedObject(self, validatesKVCParsingKey);
-    
-    if (!value)
-    {
-        BOOL defaultValue = YES;
-        self.mjz_validatesKVCParsing = defaultValue;
-        return defaultValue;
-    }
-    
-    return [value boolValue];
-}
-
 #pragma mark Public Methods
-
-- (NSDictionary*)mjz_mappingForKVCParsing
-{
-    // Subclasses may override, always adding super to the mapping!
-    return @{};
-}
 
 - (void)mjz_parseValue:(id)value forKey:(NSString *)key
 {
     NSString *mappedKey = [self mjz_mapKey:key];
     
-    NSError *error = nil;
-    BOOL validated = YES;
+    if (!mappedKey)
+    {
+        [self mjz_parseValue:value forUndefinedMappingKey:key];
+        return;
+    }
     
     if ([value isKindOfClass:NSArray.class])
     {
         __block NSMutableArray *modifiedArray = nil;
-        [value enumerateObjectsUsingBlock:^(id object, NSUInteger idx, BOOL *stop) {
-            id parsedArrayObject = [self mjz_parseArrayObject:object arrayKey:mappedKey arrayOriginalKey:key];
-            if (parsedArrayObject != object)
+        
+        [value enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(id object, NSUInteger idx, BOOL *stop) {
+            
+            id validatedObject = object;
+            
+            NSError *error = nil;
+            BOOL validated = [self mjz_validateArrayObject:&validatedObject forArrayKey:mappedKey error:&error];
+            
+            // Automatic validation only if the value has not been manually validated
+            if (object == validatedObject)
+            {
+                Class typeClass = self.mjz_arrayClassTypeMappingForAutomaticKVCParsingValidation[mappedKey];
+                if (typeClass)
+                    [self mjz_validateAutomaticallyValue:&validatedObject toClass:typeClass];
+            }
+            
+            if (validated)
+            {
+                if (validatedObject != object)
+                {
+                    if (!modifiedArray)
+                        modifiedArray = [value mutableCopy];
+                    
+                    [modifiedArray replaceObjectAtIndex:idx withObject:validatedObject];
+                }
+            }
+            else
             {
                 if (!modifiedArray)
-                {
                     modifiedArray = [value mutableCopy];
-                }
-                [modifiedArray replaceObjectAtIndex:idx withObject:parsedArrayObject];
+                
+                [modifiedArray removeObjectAtIndex:idx];
+                
+                [self mjz_invalidValue:validatedObject forArrayKey:mappedKey error:error];
             }
         }];
         if (modifiedArray)
@@ -74,9 +121,15 @@ static char const * const validatesKVCParsingKey = "MJKVCParsing_validatesKVCPar
             value = modifiedArray;
         }
     }
+
+    id originalValue = value;
     
-    if (self.mjz_validatesKVCParsing)
-        validated = [self mjz_validateValue:&value forKey:mappedKey parseKey:key error:&error];
+    NSError *error = nil;
+    BOOL validated = [self validateValue:&value forKey:mappedKey error:&error];
+    
+    // Automatic validation only if the value has not been manually validated
+    if (originalValue == value)
+        [self mjz_validateAutomaticallyValue:&value forKey:mappedKey];
     
     if (validated)
     {
@@ -87,7 +140,7 @@ static char const * const validatesKVCParsingKey = "MJKVCParsing_validatesKVCPar
     }
     else
     {
-        NSLog(@"%s :: Value for Key <%@>  is not valid in class %@. Error: %@", __PRETTY_FUNCTION__, key, [self.class description], error);
+        [self mjz_invalidValue:value forKey:mappedKey error:error];
     }
 }
 
@@ -98,11 +151,6 @@ static char const * const validatesKVCParsingKey = "MJKVCParsing_validatesKVCPar
         id value = keyedValues[key];
         [self mjz_parseValue:value forKey:key];
     }
-}
-
-- (BOOL)mjz_validateValue:(inout __autoreleasing id *)ioValue forKey:(NSString *)inKey parseKey:(NSString*)parseKey error:(out NSError *__autoreleasing *)outError
-{
-    return [self validateValue:ioValue forKey:inKey error:outError];
 }
 
 - (NSString*)mjz_extendedObjectDescription
@@ -126,16 +174,217 @@ static char const * const validatesKVCParsingKey = "MJKVCParsing_validatesKVCPar
     if (mappedKey)
         return mappedKey;
     
-    return key;
+    if ([self.class mjz_mappingClearanceForKVCParsing] == KVCParsingMappingClearanceOpen)
+        return key;
+    
+    return nil;
 }
 
 @end
 
-@implementation NSObject(KVCParsing_Subclassing)
 
-- (id)mjz_parseArrayObject:(id)object arrayKey:(NSString *)arrayKey arrayOriginalKey:(NSString*)arrayOriginalKey
+// ------------------------------------------------------------------------------------------------------------------------------------------------------------------ //
+// ------------------------------------------------------------------------------------------------------------------------------------------------------------------ //
+// ------------------------------------------------------------------------------------------------------------------------------------------------------------------ //
+
+
+#pragma mark - KVCParsing_Subclassing
+
+@implementation NSObject (KVCParsing_Subclassing)
+
+
+- (NSDictionary*)mjz_mappingForKVCParsing
 {
-    return object;
+    // Subclasses must override, always adding super to the mapping!
+    return @{};
+}
+
++ (KVCParsingMappingClearance)mjz_mappingClearanceForKVCParsing
+{
+    // Subclasses might override.
+    return KVCParsingMappingClearanceOpen;
+}
+
+- (NSDictionary*)mjz_arrayClassTypeMappingForAutomaticKVCParsingValidation
+{
+    // Subclasses might override.
+    return @{};
+}
+
+- (BOOL)mjz_validateArrayObject:(inout __autoreleasing id *)ioValue forArrayKey:(NSString *)arrayKey error:(out NSError *__autoreleasing *)outError
+{
+    // Subclasses might override.
+    return YES;
+}
+
+- (void)mjz_parseValue:(id)value forUndefinedMappingKey:(NSString*)key
+{
+    // Subclasses might override.
+    KVCPLog(@"Undefined Mapping Key <%@> in class %@.", key, [self.class description]);
+}
+
+- (void)mjz_invalidValue:(id)value forKey:(NSString *)key error:(NSError*)error
+{
+    // Subclasses might override.
+    KVCPLog(@"Value for Key <%@> is not valid in class %@. Error: %@", key, [self.class description], error);
+}
+
+- (void)mjz_invalidValue:(id)value forArrayKey:(NSString *)key error:(NSError*)error
+{
+    // Subclasses might override.
+    KVCPLog(@"Item for ArrayKey <%@> is not valid in class %@. Error: %@", key, [self.class description], error);
+}
+
+@end
+
+
+// ------------------------------------------------------------------------------------------------------------------------------------------------------------------ //
+// ------------------------------------------------------------------------------------------------------------------------------------------------------------------ //
+// ------------------------------------------------------------------------------------------------------------------------------------------------------------------ //
+
+
+#pragma mark - KVCParsing_Private
+
+@implementation NSObject (KVCParsing_Private)
+
+- (BOOL)mjz_validateAutomaticallyValue:(inout __autoreleasing id *)ioValue forKey:(NSString*)key
+{
+    objc_property_t property = class_getProperty(self.class, key.UTF8String);
+    
+    const char * type = property_getAttributes(property);
+    
+    NSString * typeString = [NSString stringWithUTF8String:type];
+    NSArray * attributes = [typeString componentsSeparatedByString:@","];
+    NSString * typeAttribute = [attributes objectAtIndex:0];
+    
+    /*
+     NSString * propertyType = [typeAttribute substringFromIndex:1];
+     const char * rawPropertyType = [propertyType UTF8String];
+     
+     if (strcmp(rawPropertyType, @encode(unsigned)) == 0)
+     {
+         KVCPLog(@"%@ --> UNSIGNED", key);
+         if ([*ioValue isKindOfClass:NSString.class])
+         {
+             *ioValue = [NSNumber numberWithUnsignedInt:[*ioValue unsignedIntValue]];
+             return YES;
+         }
+     }
+     */
+    
+    // Basic types are already handled by the system.
+
+    if ([typeAttribute hasPrefix:@"T@"] && [typeAttribute length] > 1)
+    {
+        NSString * typeClassName = [typeAttribute substringWithRange:NSMakeRange(3, [typeAttribute length]-4)]; // <-- turns @"NSDate" into NSDate
+        Class typeClass = NSClassFromString(typeClassName);
+        
+        if (typeClass != nil)
+        {
+            KVCPLog(@"%@ --> %@", key, typeClassName);
+            return [self mjz_validateAutomaticallyValue:ioValue toClass:typeClass];
+        }
+    }
+    else
+    {
+        KVCPLog(@"%@ --> <UNKNOWN>", key);
+    }
+    
+    return NO;
+}
+
+- (BOOL)mjz_validateAutomaticallyValue:(inout __autoreleasing id *)ioValue toClass:(Class)typeClass
+{
+    // If types match, just return
+    if ([*ioValue isKindOfClass:typeClass])
+        return YES;
+    
+    // Otherwise, lets try to fit the desired class type
+    // Because *ioValue comes frome a JSON deserialization, it can only be a string, number, array or dictionary.
+    
+    if ([*ioValue isKindOfClass:NSString.class]) // <-- STRINGS
+    {
+        if ([typeClass isSubclassOfClass:NSURL.class])
+        {
+            *ioValue = [NSURL URLWithString:*ioValue];
+            return YES;
+        }
+        else if ([typeClass isSubclassOfClass:NSData.class])
+        {
+            *ioValue = [[NSData alloc] initWithBase64EncodedString:*ioValue options:NSDataBase64DecodingIgnoreUnknownCharacters];
+            return YES;
+        }
+        else if ([typeClass isSubclassOfClass:NSNumber.class])
+        {
+            static NSNumberFormatter *numberFormatter = nil;
+            static dispatch_once_t onceToken;
+            dispatch_once(&onceToken, ^{
+                NSNumberFormatter *numberFormatter = [[NSNumberFormatter alloc] init];
+                numberFormatter.numberStyle = NSNumberFormatterDecimalStyle;
+            });
+            *ioValue = [numberFormatter numberFromString:*ioValue];
+            return YES;
+        }
+    }
+    else if ([*ioValue isKindOfClass:NSNumber.class]) // <-- NUMBERS
+    {
+        if ([typeClass isSubclassOfClass:NSDate.class])
+        {
+            *ioValue = [NSDate dateWithTimeIntervalSince1970:[*ioValue doubleValue]];
+            return YES;
+        }
+        else if ([typeClass isSubclassOfClass:NSString.class])
+        {
+            *ioValue = [*ioValue stringValue];
+            return YES;
+        }
+    }
+    else if ([*ioValue isKindOfClass:NSArray.class]) // <-- ARRAYS
+    {
+        if ([typeClass isSubclassOfClass:NSMutableArray.class])
+        {
+            *ioValue = [NSMutableArray arrayWithArray:*ioValue];
+            return YES;
+        }
+        else if ([typeClass isSubclassOfClass:NSMutableSet.class])
+        {
+            *ioValue = [NSMutableSet setWithArray:*ioValue];
+            return YES;
+        }
+        else if ([typeClass isSubclassOfClass:NSSet.class])
+        {
+            *ioValue = [NSSet setWithArray:*ioValue];
+            return YES;
+        }
+        else if ([typeClass isSubclassOfClass:NSMutableOrderedSet.class])
+        {
+            *ioValue = [NSMutableOrderedSet orderedSetWithArray:*ioValue];
+            return YES;
+        }
+        else if ([typeClass isSubclassOfClass:NSOrderedSet.class])
+        {
+            *ioValue = [NSOrderedSet orderedSetWithArray:*ioValue];
+            return YES;
+        }
+    }
+    else if ([*ioValue isKindOfClass:NSDictionary.class]) // <-- DICTIONARIES
+    {
+        if ([typeClass isSubclassOfClass:NSMutableDictionary.class])
+        {
+            *ioValue = [NSMutableDictionary dictionaryWithDictionary:*ioValue];
+            return YES;
+        }
+        else if ([typeClass isSubclassOfClass:NSObject.class])
+        {
+            id instance = [[typeClass alloc] init];
+            [instance mjz_parseValuesForKeysWithDictionary:*ioValue];
+            
+            *ioValue = instance;
+            return YES;
+        }
+    }
+    
+    return NO;
 }
 
 @end

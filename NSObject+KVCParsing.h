@@ -16,70 +16,174 @@
 
 #import <Foundation/Foundation.h>
 
+/* *************************************************************************************************************************************** *
+ * KVCParsing Methods
+ * *************************************************************************************************************************************** */
+
+#pragma mark - KVCParsing
+
 /**
- * Extends NSObject adding parsing capabilities from JSON dictionaries.
- * Objects must override the method `mappingForKVCParsing` method and define the mapping from the JSON keys to the Object property names.
- * To parse and set the object from the JSON dictionary, use the methods `parseValue:forKey:` or `parseValuesForKeysWithDictionary:`.
- * Also, objects can validate values by implementing the KVC validation method `validate<Key>:error:`.
+ * KVCParsing
  *
- * Objects also might want to override KVC method `setValue:forUndefinedKey:` to handle undefined keys (and maybe remove the default thrown exception).
- */
+ * Extends NSObject adding parsing capabilities from JSON dictionaries.
+ * To parse and set the object from the JSON dictionary, use the methods `parseValue:forKey:` or `parseValuesForKeysWithDictionary:`.
+ **/
 @interface NSObject (KVCParsing)
 
-/**
- * If YES, parsing values will trigger KVC-validation. Default value is YES.
- */
-@property (nonatomic, readwrite) BOOL mjz_validatesKVCParsing;
-
-/**
- * Returns the extended object description.
- * @return The custom extended object description.
- */
-- (NSString*)mjz_extendedObjectDescription;
-
-/**
- * Returns the mapping to be used in the parsing. The default value is an empty dictionary.
- * @return the mapping in a dictionary.
- * @discussion Subclasses might override this method and specify a custom mapping dictionary. As a good practice, always add the [super mappingForKVCParsing] dictionary inside the custom dictionary.
- */
-- (NSDictionary*)mjz_mappingForKVCParsing;
+/** ---------------------------------------------- **
+ * @name Parsing Methods
+ ** ---------------------------------------------- **/
 
 /**
  * Parse and set the value for the given key. This method validates the value.
  * @param value The value to parse and set.
  * @param key The key of the attribute to set the value.
  * @discussion This method will check if the key is mappable using the dictionary specified in `mappingForKVCParsing`. Once the key mapped, this method will call the KVC method `setValue:forKey` to set the value. If value is nil or [NSNull null], the method will invoke instead `setNilValueForKey:`. If value is an array, `mjz_parseArrayValue:forKey:parseKey:` will be invoked for each object.
- */
+ **/
 - (void)mjz_parseValue:(id)value forKey:(NSString *)key;
 
 /**
  * Parse and set the key-values of the dictionary. This method will fire validation for each value.
  * @param dictionary The dictionary to parse and set.
  * @discussion This method will call for each dictionary pair key-value the method `parseValue:forKey:`.
- */
+ **/
 - (void)mjz_parseValuesForKeysWithDictionary:(NSDictionary *)dictionary;
 
+/** ---------------------------------------------- **
+ * @name Logging objects
+ ** ---------------------------------------------- **/
+
 /**
- * As an extended KVC feature, this method is called to fire the KVC validation automatically (you should not call it). This method calls the KVC validation method `validateValue:forKey:error`. Subclasses may override and use the `parseKey` (the not mapped key) for its own purpuses.
- * @param ioValue The value to be validated
- * @param inKey The name of the key on which the value will be assigned.
- * @param parseKey The original key name, before mapping.
- * @param outError Validation error.
- * @return YES, if value is valid or validated. NO if value not valid.
- * @discussion It is recomended to validate your attributes using overriding the KVC method `validate<Key>:error:` for each attribute to validate.
- */
-- (BOOL)mjz_validateValue:(inout __autoreleasing id *)ioValue forKey:(NSString *)inKey parseKey:(NSString*)parseKey error:(out NSError *__autoreleasing *)outError;
+ * Returns the extended object description.
+ * @return The custom extended object description.
+ **/
+- (NSString*)mjz_extendedObjectDescription;
 
 @end
 
-@interface NSObject(KVCParsing_Subclassing)
+
+/* *************************************************************************************************************************************** *
+ * KVCParsing Subclassing
+ * *************************************************************************************************************************************** */
+
+#pragma mark - KVCParsing_Subclassing
 
 /**
- Subclasses may override to parse the objects of array values. The default implementation returns the given object.
- @param arrayKey The name of the key in which the containing array will be assigned.
- @param arrayOriginalKey The original key, before mapping.
- @return The given object or a parsed object.
+ * The mapping clearance behaviour.
  **/
-- (id)mjz_parseArrayObject:(id)object arrayKey:(NSString *)arrayKey arrayOriginalKey:(NSString*)arrayOriginalKey;
+typedef NS_ENUM(NSUInteger, KVCParsingMappingClearance)
+{
+    /**
+     * Only those keys defined in the mapping `mjz_mappingForKVCParsing` can be used while performing KVCParsing.
+     **/
+    KVCParsingMappingClearanceRestricted,
+    
+    /**
+     * Any key can be used while performing KVCParsing.
+     **/
+    KVCParsingMappingClearanceOpen,
+};
+
+/**
+ * KVCParsing Object Subclassing
+ *
+ * PARSING MAPPINGS
+ *
+ * In order to use KVCParsign you must define mappings between JSON keys and object properties by overriding the following methods:
+ *
+ *  - `mjz_mappingForKVCParsing`: Subclasses must override this method and return the mapping between the JSON keys and the object properties.
+ *  - `mjz_mappingClearanceForKVCParsing`: Optionally, subclasses can override this method and define a custom clearance for the mapping. The default is `KVCParsingMappingClearanceOpen`.
+ *
+ *
+ * VALIDATION METHODS
+ *
+ * KVCParsing adds automatic validation for your properties. This means the system will try to convert into your property type the input value.
+ * To support automatic validation you must override:
+ *
+ *  - `mjz_arrayClassTypeMappingForAutomaticKVCParsingValidation`: If your objects has properties of type `NSArray`, override this method and define a mapping between the array property name and the expected content object class.
+ *
+ * However, you can validate manually any value before the automatic validation is done. If you implements manually validation for a property, the system won't perform the automatic validation.
+ * To implement manual validation you must override:
+ *
+ *  - `validate<Key>:error:` For each property to manually validate implement this method with <Key> being the name of the object property. This is a KVC validation method.
+ *  - `mjz_validateArrayObject:forArrayKey:`: For those property of type array, implement this method to validate their content.
+ *
+ *
+ * OTHER METHODS TO SUBCLASS
+ *
+ *  - `setValue:forUndefinedKey:`: KVC Method to handle undefined keys. By default this method throws an exception.
+ *  - `mjz_parseValue:forUndefinedMappingKey`: If mapping clearance is restricted (`KVCParsingMappingClearanceRestricted`), this method will be called when a undefined mapping key is found.
+ *  - `mjz_invalidValue:forKey:error:`: If value is does not pass valiation, this method is called after aborting the value setting.
+ *  - `mjz_invalidValue:forArrayKey:error:`: if an array item does not pass validation, this method is called after aborting the item setting.
+ **/
+@interface NSObject (KVCParsing_Subclassing)
+
+/** ---------------------------------------------- **
+ * @name KVCParsing Mappings
+ ** ---------------------------------------------- **/
+
+/**
+ * Returns the mapping to be used in the parsing. The default value is an empty dictionary.
+ * @return the mapping in a dictionary.
+ * @discussion Subclasses must override this method and specify a custom mapping dictionary. As a good practice, always add the [super mappingForKVCParsing] dictionary inside the custom dictionary.
+ **/
+- (NSDictionary*)mjz_mappingForKVCParsing;
+
+/**
+ * Returns the object class mapping clearance. Default value is `KVCParsingMappingClearanceOpen`.
+ * @return The mapping key clearance.
+ * @discussion Subclasses may override and return a custom clearance.
+ **/
++ (KVCParsingMappingClearance)mjz_mappingClearanceForKVCParsing;
+
+/** ---------------------------------------------- **
+ * @name Automatic Validation
+ ** ---------------------------------------------- **/
+
+/**
+ * Return a mapping between the array property name to the contained object class type.
+ * For example: @{@"myArrayPropertyName": User.class, ... };
+ * @return A dictionary with the array content mapping.
+ **/
+- (NSDictionary*)mjz_arrayClassTypeMappingForAutomaticKVCParsingValidation;
+
+/** ---------------------------------------------- **
+ * @name Manual Validation
+ ** ---------------------------------------------- **/
+
+/**
+ * Subclasses may override to parse the objects of array values. The default implementation accepts (return YES) the default value.
+ * @param ioValue The value to be validated. You can replace the value by assigning a new object to the pointer.
+ * @param arrayKey The name of the key in which the containing array will be assigned.
+ * @return YES if value is accepted, NO to avoid adding this value inside the array.
+ **/
+- (BOOL)mjz_validateArrayObject:(inout __autoreleasing id *)ioValue forArrayKey:(NSString *)arrayKey error:(out NSError *__autoreleasing *)outError;
+
+/** ---------------------------------------------- **
+ * @name Other methods
+ ** ---------------------------------------------- **/
+
+/**
+ * Notifies restricted values for undefined mapping keys.
+ * @param value The value that has not been setted.
+ * @param key The key undefined in the mapping.
+ **/
+- (void)mjz_parseValue:(id)value forUndefinedMappingKey:(NSString*)key;
+
+/**
+ * If a value does not pass validation, this method is called after aborting the value setting.
+ * @param value The invalid value.
+ * @param key The key for the value.
+ * @param error The validation error.
+ **/
+- (void)mjz_invalidValue:(id)value forKey:(NSString *)key error:(NSError*)error;
+
+/**
+ * If a array item does not pass validation, this method is called after aborting the item setting.
+ * @param value The invalid array item.
+ * @param key The key of the array.
+ * @param error The validation error.
+ **/
+- (void)mjz_invalidValue:(id)value forArrayKey:(NSString *)key error:(NSError*)error;
 
 @end

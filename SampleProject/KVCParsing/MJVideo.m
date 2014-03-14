@@ -20,9 +20,8 @@
 #import "NSObject+KVCParsing.h"
 
 @implementation MJVideo
-{
-    NSString *_asdf;
-}
+
+#pragma mark KVCParsing Subclassing
 
 - (NSDictionary*)mjz_mappingForKVCParsing
 {
@@ -36,6 +35,7 @@
                                       @"description": NSStringFromSelector(@selector(videoDescription)),
                                       @"last_view_time": NSStringFromSelector(@selector(lastViewDate)),
                                       @"uploader": NSStringFromSelector(@selector(uploader)),
+                                      @"users_cast": NSStringFromSelector(@selector(cast)),
                                       };
         
         
@@ -52,30 +52,82 @@
     return mapping;
 }
 
-#pragma mark KVC Validation
-
-- (BOOL)validateUploader:(id *)ioValue error:(NSError * __autoreleasing *)outError
++ (KVCParsingMappingClearance)mjz_mappingClearanceForKVCParsing
 {
-    if ([*ioValue isKindOfClass:[NSDictionary class]])
-    {
-        MJUser *user = [[MJUser alloc] init];
-        [user mjz_parseValuesForKeysWithDictionary:*ioValue];
+    return KVCParsingMappingClearanceRestricted;
+}
+
+- (void)mjz_restrictedValue:(id)value forUndefinedMappingKey:(NSString *)key
+{
+    NSLog(@"[WARNING]: Undefined mapping key: <%@> value: <%@>. Value has not been setted.", key, [value description]);
+}
+
+#pragma mark KVCParsing Validation
+
+// Automatic array validation mapping
+- (NSDictionary*)mjz_arrayClassTypeMappingForAutomaticKVCParsingValidation
+{
+    static NSDictionary *mapping = nil;
+    
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        NSDictionary *arrayMapping = @{NSStringFromSelector(@selector(cast)) : MJUser.class,
+                                      };
         
-        *ioValue = user;
-    }
+        NSDictionary *superMapping = [super mjz_mappingForKVCParsing];
+        
+        NSMutableDictionary *theMapping = [NSMutableDictionary dictionary];
+        
+        [theMapping addEntriesFromDictionary:superMapping];
+        [theMapping addEntriesFromDictionary:arrayMapping];
+        
+        mapping = [theMapping copy];
+    });
     
-    return YES;
+    return mapping;
 }
 
-- (BOOL)validateLastViewDate:(id *)ioValue error:(NSError * __autoreleasing *)outError
-{
-    if ([*ioValue isKindOfClass:[NSNumber class]])
-    {
-        NSDate *date = [NSDate dateWithTimeIntervalSince1970:[*ioValue doubleValue]];
-        *ioValue = date;
-    }
-    
-    return YES;
-}
+// Automatic validation does the job!
+//- (BOOL)validateUploader:(id *)ioValue error:(NSError * __autoreleasing *)outError
+//{
+//    if ([*ioValue isKindOfClass:[NSDictionary class]])
+//    {
+//        MJUser *user = [[MJUser alloc] init];
+//        [user mjz_parseValuesForKeysWithDictionary:*ioValue];
+//        
+//        *ioValue = user;
+//    }
+//    
+//    return YES;
+//}
+
+// Automatic validation does the job!
+//- (BOOL)validateLastViewDate:(id *)ioValue error:(NSError * __autoreleasing *)outError
+//{
+//    if ([*ioValue isKindOfClass:NSNumber.class])
+//    {
+//        NSDate *date = [NSDate dateWithTimeIntervalSince1970:[*ioValue doubleValue]];
+//        *ioValue = date;
+//    }
+//    
+//    return YES;
+//}
+
+// Automatic array validation does the job!
+//- (BOOL)mjz_validateArrayObject:(inout __autoreleasing id *)ioValue arrayKey:(NSString *)arrayKey arrayOriginalKey:(NSString *)arrayOriginalKey
+//{
+//    if ([arrayKey isEqualToString:@"cast"])
+//    {
+//        if ([*ioValue isKindOfClass:NSDictionary.class])
+//        {
+//            MJUser *user = [[MJUser alloc] init];
+//            [user mjz_parseValuesForKeysWithDictionary:*ioValue];
+//            
+//            *ioValue = user;
+//        }
+//    }
+//    
+//    return YES;
+//}
 
 @end
