@@ -267,22 +267,21 @@
     NSArray * attributes = [typeString componentsSeparatedByString:@","];
     NSString * typeAttribute = [attributes objectAtIndex:0];
     
-    /*
-     NSString * propertyType = [typeAttribute substringFromIndex:1];
-     const char * rawPropertyType = [propertyType UTF8String];
-     
-     if (strcmp(rawPropertyType, @encode(unsigned)) == 0)
-     {
-         KVCPLog(@"%@ --> UNSIGNED", key);
-         if ([*ioValue isKindOfClass:NSString.class])
-         {
-             *ioValue = [NSNumber numberWithUnsignedInt:[*ioValue unsignedIntValue]];
-             return YES;
-         }
-     }
-     */
+    NSString * propertyType = [typeAttribute substringFromIndex:1];
+    const char * rawPropertyType = [propertyType UTF8String];
     
-    // Basic types are already handled by the system.
+    if (strcmp(rawPropertyType, @encode(BOOL)) == 0)
+    {
+        if ([*ioValue isKindOfClass:NSString.class])
+        {
+            KVCPLog(@"NSString --> BOOL", key);
+            BOOL premium = [*ioValue boolValue];
+            *ioValue = @(premium);
+            return YES;
+        }
+    }
+    
+    // Other basic types are already handled by the system.
 
     if ([typeAttribute hasPrefix:@"T@"] && [typeAttribute length] > 1)
     {
