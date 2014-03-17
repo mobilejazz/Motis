@@ -112,7 +112,7 @@ typedef NS_ENUM(NSUInteger, MJZMotisMappingClearance)
  * OTHER METHODS TO SUBCLASS
  *
  *  - `setValue:forUndefinedKey:`: KVC Method to handle undefined keys. By default this method throws an exception.
- *  - `mjz_parseValue:forUndefinedMappingKey`: If mapping clearance is restricted (`MJZMotisMappingClearanceRestricted`), this method will be called when a undefined mapping key is found.
+ *  - `mjz_restrictSetValue:forUndefinedMappingKey`: If mapping clearance is restricted (`MJZMotisMappingClearanceRestricted`), this method will be called when a undefined mapping key is found.
  *  - `mjz_invalidValue:forKey:error:`: If value is does not pass valiation, this method is called after aborting the value setting.
  *  - `mjz_invalidValue:forArrayKey:error:`: if an array item does not pass validation, this method is called after aborting the item setting.
  **/

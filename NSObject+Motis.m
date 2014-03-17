@@ -17,12 +17,12 @@
 #import "NSObject+Motis.h"
 #import <objc/runtime.h>
 
-#define KVCP_DEBUG 0
+#define MOTIS_DEBUG 0
 
-#if KVCP_DEBUG
-#define KVCPLog(format, ...) NSLog(@"%@",[NSString stringWithFormat:format, ## __VA_ARGS__]);
+#if MOTIS_DEBUG
+#define MLog(format, ...) NSLog(@"%@",[NSString stringWithFormat:format, ## __VA_ARGS__]);
 #else
-#define KVCPLog(format, ...)
+#define MLog(format, ...)
 #endif
 
 
@@ -236,19 +236,19 @@
 - (void)mjz_restrictSetValue:(id)value forUndefinedMappingKey:(NSString*)key
 {
     // Subclasses might override.
-    KVCPLog(@"Undefined Mapping Key <%@> in class %@.", key, [self.class description]);
+    MLog(@"Undefined Mapping Key <%@> in class %@.", key, [self.class description]);
 }
 
 - (void)mjz_invalidValue:(id)value forKey:(NSString *)key error:(NSError*)error
 {
     // Subclasses might override.
-    KVCPLog(@"Value for Key <%@> is not valid in class %@. Error: %@", key, [self.class description], error);
+    MLog(@"Value for Key <%@> is not valid in class %@. Error: %@", key, [self.class description], error);
 }
 
 - (void)mjz_invalidValue:(id)value forArrayKey:(NSString *)key error:(NSError*)error
 {
     // Subclasses might override.
-    KVCPLog(@"Item for ArrayKey <%@> is not valid in class %@. Error: %@", key, [self.class description], error);
+    MLog(@"Item for ArrayKey <%@> is not valid in class %@. Error: %@", key, [self.class description], error);
 }
 
 @end
@@ -280,7 +280,7 @@
         
         if (typeClass != nil)
         {
-            KVCPLog(@"%@ --> %@", key, typeClassName);
+            MLog(@"%@ --> %@", key, typeClassName);
             return [self mjz_validateAutomaticallyValue:ioValue toClass:typeClass forKey:key];
         }
         
@@ -302,7 +302,7 @@
             {
                 if ([*ioValue isKindOfClass:NSString.class])
                 {
-                    KVCPLog(@"NSString --> BOOL", key);
+                    MLog(@"NSString --> BOOL", key);
                     BOOL premium = [*ioValue boolValue];
                     *ioValue = @(premium);
                 }
