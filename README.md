@@ -3,15 +3,15 @@ Motis
 
 Easy JSON to NSObject mapping using Cocoa's key value coding (KVC)
 
-Using **Motis** you are not creating a "parser" object. Your NSObjects will be fully responsible of parsing your JSON dictionaries by themselves using the Cocoa built-in Key-Value-Coding layer.
+**Motis** is a user-friendly interface with Key Value Coding that provides your NSObjects   tools to map key-values stored in dictionaries into themselves. With **Motis** your objects will be responsible for each mapping (distributed mapping definitions) and you won't have to worry for data validation, as **Motis** will validate your object types for you.
 
 ##How To
-####1. Define the parsing keys
+####1. Define the mapping keys
 
-Your custom object (subclass of `NSObject`) needs to override the method `mjz_mappingForKVCParsing` and define the mappging from the JSON keys to the Objective-C property names.
+Your custom object (subclass of `NSObject`) needs to override the method `mjz_motisMapping` and define the mappging from the JSON keys to the Objective-C property names.
 
 ```objective-c
-- (NSDictionary*)mjz_mappingForKVCParsing
+- (NSDictionary*)mjz_motisMapping
 {
 	return @{@"json_attribute_key_1" : @"class_property_name_1",
 		@"json_attribute_key_2" : @"class_property_name_2",
@@ -21,9 +21,9 @@ Your custom object (subclass of `NSObject`) needs to override the method `mjz_ma
 }
 ```
 	
-Remember that you might want to add also the dictionary from the call `[super mjz_mappingForKVCParsing]` to your custom mapping.
+Remember that you might want to add also the dictionary from the call `[super mjz_motisMapping]` to your custom mapping.
 
-####2. Parse and set your objects
+####2. Map and set your objects
 
 After defining your mappings in step (1) you are ready to go:
 
@@ -37,15 +37,22 @@ After defining your mappings in step (1) you are ready to go:
 	MyClass instance = [[MyClass alloc] init];
 			
 	// Parsing and setting the values of the JSON object
-	[instance mjz_parseValuesForKeysWithDictionary:jsonObject];
+	[instance mjz_setValuesForKeysWithDictionary:jsonObject];
 }
 ```
 	
 ####3. Value Validation
 
-As an extra feature, you can validate your objects and change the type of your values on the go. The validation is done via KVC validation and is enabled by default (you can disable it by setting the property `mjz_validatesKVCParsing` to NO).
+##### Automatic Validation
+**Motis** checks the object type of your values when mapping from a JSON response. The system will try to fit your defined property types (making introspection in your classes). JSON objects contains only strings, numbers, dictionaries and arrays. Automatic validation will try to convert from these types to your property types. If cannot be achieved, the mapping of those property won't be performed and the value won't be set.
 
-With KVC, you validate values by implementing the methods for each key:
+Automatic validation is done by default if the user is not validating manually. 
+
+In order to support automatic validation for array content (objects inside of an array), you must override the method `-mjz_arrayClassTypeMappingForAutomaticValidation` and return a dictionary containing pairs of *array property name* and *class type* for its content.
+
+##### Manual Validation
+
+If you prefer to do manual validation, you can override the KVC validation method for each key:
 
 ```objective-c
 - (BOOL)validate<Key>:(id *)ioValue error:(NSError * __autoreleasing *)outError
@@ -56,26 +63,15 @@ With KVC, you validate values by implementing the methods for each key:
 	return YES; 
 }
 ```
-	
-For example, let's consider we are parsing a JSON of a `Video` object that contains inside a `User` description as a dictionary for the `uploader` key. Our implementation would do:
+
+and for array contents:
 
 ```objective-c
-- (BOOL)validateUploader:(id *)ioValue error:(NSError * __autoreleasing *)outError
+- (BOOL)mjz_validateArrayObject:(inout __autoreleasing id *)ioValue forArrayKey:(NSString *)arrayKey error:(out NSError *__autoreleasing *)outError;
 {
-	// If the uplaoder is a dictionary
-	if ([*ioValue isKindOfClass:[NSDictionary class]])
-	{
-		// Create a new instance of uploader
-		User uploader = [[User alloc] init];
+	// Check *ioValue and assign new value to ioValue if needed.
+	// Return YES if *ioValue can be included into the array, NO otherwise
 	
-		// Populate the uploader with the key-value contained in *ioValue
-		[uploader mjz_parseValuesForKeysWithDictionary:*ioValue];
-		
-		// Reasign the new value
-		*ioValue = uploader;
-	}			
-		
-	// Finally, return YES
 	return YES; 
 }
 ```
