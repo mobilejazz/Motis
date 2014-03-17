@@ -1,4 +1,4 @@
-Motis*
+Motis Object Mapping*
 ==========
 
 
