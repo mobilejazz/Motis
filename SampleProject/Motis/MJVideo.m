@@ -17,13 +17,13 @@
 #import "MJVideo.h"
 #import "MJUser.h"
 
-#import "NSObject+KVCParsing.h"
+#import "NSObject+Motis.h"
 
 @implementation MJVideo
 
-#pragma mark KVCParsing Subclassing
+#pragma mark Motis Subclassing
 
-- (NSDictionary*)mjz_mappingForKVCParsing
+- (NSDictionary*)mjz_motisMapping
 {
     static NSDictionary *mapping = nil;
     
@@ -37,7 +37,7 @@
                                       @"uploader": NSStringFromSelector(@selector(uploader)),
                                       @"users_cast": NSStringFromSelector(@selector(cast)),
                                       };
-        NSMutableDictionary *mutableMapping = [[super mjz_mappingForKVCParsing] mutableCopy];
+        NSMutableDictionary *mutableMapping = [[super mjz_motisMapping] mutableCopy];
         [mutableMapping addEntriesFromDictionary:JSONMapping];
         mapping = mutableMapping;
     });
@@ -45,20 +45,20 @@
     return mapping;
 }
 
-+ (KVCParsingMappingClearance)mjz_mappingClearanceForKVCParsing
++ (MJZMotisMappingClearance)mjz_motisMappingClearance
 {
-    return KVCParsingMappingClearanceRestricted;
+    return MJZMotisMappingClearanceRestricted;
 }
 
-- (void)mjz_restrictedValue:(id)value forUndefinedMappingKey:(NSString *)key
+- (void)mjz_restrictSetValue:(id)value forUndefinedMappingKey:(NSString *)key
 {
     NSLog(@"[WARNING]: Undefined mapping key: <%@> value: <%@>. Value has not been setted.", key, [value description]);
 }
 
-#pragma mark KVCParsing Validation
+#pragma mark Motis Validation
 
 // Automatic array validation mapping
-- (NSDictionary*)mjz_arrayClassTypeMappingForAutomaticKVCParsingValidation
+- (NSDictionary*)mjz_arrayClassTypeMappingForAutomaticValidation
 {
     static NSDictionary *mapping = nil;
     
@@ -66,7 +66,7 @@
     dispatch_once(&onceToken, ^{
         NSDictionary *arrayMapping = @{NSStringFromSelector(@selector(cast)) : MJUser.class,
                                       };
-        NSMutableDictionary *mutableMapping = [[super mjz_arrayClassTypeMappingForAutomaticKVCParsingValidation] mutableCopy];
+        NSMutableDictionary *mutableMapping = [[super mjz_arrayClassTypeMappingForAutomaticValidation] mutableCopy];
         [mutableMapping addEntriesFromDictionary:arrayMapping];
         mapping = mutableMapping;
     });
@@ -74,12 +74,12 @@
     return mapping;
 }
 
-- (id)mjz_willCreateObjectForKey:(NSString*)key ofClass:(Class)typeClass withDictionary:(NSDictionary*)dictionary abort:(BOOL*)abort
-{
-    // Subclasses might override.
-    NSLog(@"WILL CREATE: %@ OF CLASS %@", key, NSStringFromClass(typeClass));
-    return nil;
-}
+//- (id)mjz_willCreateObjectForKey:(NSString*)key ofClass:(Class)typeClass withDictionary:(NSDictionary*)dictionary abort:(BOOL*)abort
+//{
+//    // Subclasses might override.
+//    NSLog(@"WILL CREATE: %@ OF CLASS %@", key, NSStringFromClass(typeClass));
+//    return nil;
+//}
 
 // Automatic validation does the job!
 //- (BOOL)validateUploader:(id *)ioValue error:(NSError * __autoreleasing *)outError

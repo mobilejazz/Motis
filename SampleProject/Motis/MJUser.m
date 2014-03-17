@@ -16,11 +16,11 @@
 
 #import "MJUser.h"
 
-#import "NSObject+KVCParsing.h"
+#import "NSObject+Motis.h"
 
 @implementation MJUser
 
-- (NSDictionary*)mjz_mappingForKVCParsing
+- (NSDictionary*)mjz_motisMapping
 {
     static NSDictionary *mapping = nil;
     
@@ -30,7 +30,7 @@
                                       @"user_id": NSStringFromSelector(@selector(userId)),
                                       @"followers": NSStringFromSelector(@selector(followers)),
                                       };
-        NSMutableDictionary *mutableMapping = [[super mjz_mappingForKVCParsing] mutableCopy];
+        NSMutableDictionary *mutableMapping = [[super mjz_motisMapping] mutableCopy];
         [mutableMapping addEntriesFromDictionary:JSONMapping];
         mapping = mutableMapping;
     });

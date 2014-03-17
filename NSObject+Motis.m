@@ -1,5 +1,5 @@
 //
-//  NSObject+KVCParsing.m
+//  NSObject+Motis.m
 //  Copyright 2014 Mobile Jazz
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,7 +14,7 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import "NSObject+KVCParsing.h"
+#import "NSObject+Motis.h"
 #import <objc/runtime.h>
 
 #define KVCP_DEBUG 0
@@ -31,9 +31,9 @@
 // ------------------------------------------------------------------------------------------------------------------------------------------------------------------ //
 
 
-#pragma mark - KVCParsing_Private
+#pragma mark - Motis_Private
 
-@interface NSObject (KVCParsing_Private)
+@interface NSObject (Motis_Private)
 
 /**
  * Return YES if the value has been automatically validated. The newer value is setted in the pointer.
@@ -62,19 +62,19 @@
 // ------------------------------------------------------------------------------------------------------------------------------------------------------------------ //
 
 
-#pragma mark - KVCParsing
+#pragma mark - Motis
 
-@implementation NSObject (KVCParsing)
+@implementation NSObject (Motis)
 
 #pragma mark Public Methods
 
-- (void)mjz_parseValue:(id)value forKey:(NSString *)key
+- (void)mjz_setValue:(id)value forKey:(NSString *)key
 {
     NSString *mappedKey = [self mjz_mapKey:key];
     
     if (!mappedKey)
     {
-        [self mjz_parseValue:value forUndefinedMappingKey:key];
+        [self mjz_restrictSetValue:value forUndefinedMappingKey:key];
         return;
     }
     
@@ -92,7 +92,7 @@
             // Automatic validation only if the value has not been manually validated
             if (object == validatedObject)
             {
-                Class typeClass = self.mjz_arrayClassTypeMappingForAutomaticKVCParsingValidation[mappedKey];
+                Class typeClass = self.mjz_arrayClassTypeMappingForAutomaticValidation[mappedKey];
                 if (typeClass)
                 {
                     validated = [self mjz_validateAutomaticallyValue:&validatedObject toClass:typeClass forKey:mappedKey];
@@ -149,19 +149,19 @@
     }
 }
 
-- (void)mjz_parseValuesForKeysWithDictionary:(NSDictionary *)keyedValues
+- (void)mjz_setValuesForKeysWithDictionary:(NSDictionary *)keyedValues
 {
     for (NSString *key in keyedValues)
     {
         id value = keyedValues[key];
-        [self mjz_parseValue:value forKey:key];
+        [self mjz_setValue:value forKey:key];
     }
 }
 
 - (NSString*)mjz_extendedObjectDescription
 {
     NSString *description = self.description;
-    NSArray *keys = [[self mjz_mappingForKVCParsing] allValues];
+    NSArray *keys = [[self mjz_motisMapping] allValues];
     if (keys.count > 0)
     {
         NSDictionary *keyValues = [self dictionaryWithValuesForKeys:keys];
@@ -174,12 +174,12 @@
 
 - (NSString*)mjz_mapKey:(NSString*)key
 {
-    NSString *mappedKey = [[self mjz_mappingForKVCParsing] valueForKey:key];
+    NSString *mappedKey = [[self mjz_motisMapping] valueForKey:key];
     
     if (mappedKey)
         return mappedKey;
     
-    if ([self.class mjz_mappingClearanceForKVCParsing] == KVCParsingMappingClearanceOpen)
+    if ([self.class mjz_motisMappingClearance] == MJZMotisMappingClearanceOpen)
         return key;
     
     return nil;
@@ -193,24 +193,24 @@
 // ------------------------------------------------------------------------------------------------------------------------------------------------------------------ //
 
 
-#pragma mark - KVCParsing_Subclassing
+#pragma mark - Motis_Subclassing
 
-@implementation NSObject (KVCParsing_Subclassing)
+@implementation NSObject (Motis_Subclassing)
 
 
-- (NSDictionary*)mjz_mappingForKVCParsing
+- (NSDictionary*)mjz_motisMapping
 {
     // Subclasses must override, always adding super to the mapping!
     return @{};
 }
 
-+ (KVCParsingMappingClearance)mjz_mappingClearanceForKVCParsing
++ (MJZMotisMappingClearance)mjz_motisMappingClearance
 {
     // Subclasses might override.
-    return KVCParsingMappingClearanceOpen;
+    return MJZMotisMappingClearanceOpen;
 }
 
-- (NSDictionary*)mjz_arrayClassTypeMappingForAutomaticKVCParsingValidation
+- (NSDictionary*)mjz_arrayClassTypeMappingForAutomaticValidation
 {
     // Subclasses might override.
     return @{};
@@ -233,7 +233,7 @@
     return YES;
 }
 
-- (void)mjz_parseValue:(id)value forUndefinedMappingKey:(NSString*)key
+- (void)mjz_restrictSetValue:(id)value forUndefinedMappingKey:(NSString*)key
 {
     // Subclasses might override.
     KVCPLog(@"Undefined Mapping Key <%@> in class %@.", key, [self.class description]);
@@ -259,9 +259,9 @@
 // ------------------------------------------------------------------------------------------------------------------------------------------------------------------ //
 
 
-#pragma mark - KVCParsing_Private
+#pragma mark - Motis_Private
 
-@implementation NSObject (KVCParsing_Private)
+@implementation NSObject (Motis_Private)
 
 - (BOOL)mjz_validateAutomaticallyValue:(inout __autoreleasing id *)ioValue forKey:(NSString*)key
 {
@@ -415,7 +415,7 @@
             if (!instance)
             {
                 instance = [[typeClass alloc] init];
-                [instance mjz_parseValuesForKeysWithDictionary:*ioValue];
+                [instance mjz_setValuesForKeysWithDictionary:*ioValue];
             }
             
             [self mjz_didCreateObject:instance forKey:key];

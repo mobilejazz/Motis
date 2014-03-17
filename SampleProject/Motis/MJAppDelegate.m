@@ -19,13 +19,13 @@
 #import "MJVideo.h"
 #import "MJUser.h"
 
-#import "NSObject+KVCParsing.h"
+#import "NSObject+Motis.h"
 
 @implementation MJAppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    [self performKVCParsingTest];
+    [self performTest];
     
     UIWindow *window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     window.rootViewController = [[UIViewController alloc] init];
@@ -39,7 +39,7 @@
 
 #pragma mark Private Methods
 
-- (void)performKVCParsingTest
+- (void)performTest
 {
     // Defining a JSONDictionary
     NSDictionary *JSONDict = @{@"video_id": @"42",
@@ -85,7 +85,7 @@
     NSLog(@"BEFORE parsing: %@", video.mjz_extendedObjectDescription);
     NSLog(@"video.privateVideoKey: %@",[video.privateVideoKey description]);
     
-    [video mjz_parseValuesForKeysWithDictionary:receivedJSONDict];
+    [video mjz_setValuesForKeysWithDictionary:receivedJSONDict];
     
     NSLog(@"AFTER parsing: %@", video.mjz_extendedObjectDescription);
     NSLog(@"video.privateVideoKey: %@",[video.privateVideoKey description]);
