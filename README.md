@@ -1,5 +1,6 @@
-Motis
+Motis*
 ==========
+
 
 Easy JSON to NSObject mapping using Cocoa's key value coding (KVC)
 
@@ -75,3 +76,6 @@ and for array contents:
 	return YES; 
 }
 ```
+
+---
+*Motis was called before KVCParsing.
