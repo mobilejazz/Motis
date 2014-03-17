@@ -1,9 +1,9 @@
-KVCParsing
+Motis
 ==========
 
-Easy JSON parsing using the built-in Key Value Coding (KVC) layer.
+Easy JSON to NSObject mapping using Cocoa's key value coding (KVC)
 
-Using **KVCParsing** you are not creating a "parser" object. Your NSObjects will be fully responsible of parsing your JSON dictionaries by themselves using the Cocoa built-in Key-Value-Coding layer.
+Using **Motis** you are not creating a "parser" object. Your NSObjects will be fully responsible of parsing your JSON dictionaries by themselves using the Cocoa built-in Key-Value-Coding layer.
 
 ##How To
 ####1. Define the parsing keys
