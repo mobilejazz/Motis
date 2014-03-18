@@ -32,6 +32,7 @@
                     @"float": @"floatField",
                     @"double": @"doubleField",
                     @"string": @"stringField",
+                    @"number": @"numberField",
                     };
     });
     

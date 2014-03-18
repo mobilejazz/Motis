@@ -45,7 +45,7 @@
     
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        array = @[@0, @0.1, @0.6, @0.999, @YES, @NO, @(CHAR_MAX), @(CHAR_MIN), @(UCHAR_MAX), @(SHRT_MAX), @(SHRT_MIN), @(INT_MIN), @(INT_MAX), @(UINT_MAX), @(LONG_MAX), @(LONG_MIN), @(LONG_LONG_MAX), @(LONG_LONG_MIN), @(ULONG_LONG_MAX), @(FLT_MAX), @(FLT_MIN), @(FLT_EPSILON), @(DBL_MAX), @(DBL_MIN), @(DBL_EPSILON)];
+        array = @[@0, @0.1f, @0.1, @0.6, @0.999, @YES, @NO, @(CHAR_MAX), @(CHAR_MIN), @(UCHAR_MAX), @(SHRT_MAX), @(SHRT_MIN), @(INT_MIN), @(INT_MAX), @(UINT_MAX), @(LONG_MAX), @(LONG_MIN), @(LONG_LONG_MAX), @(LONG_LONG_MIN), @(ULONG_LONG_MAX), @(FLT_MAX), @(FLT_MIN), @(FLT_EPSILON), @(DBL_MAX), @(DBL_MIN), @(DBL_EPSILON)];
     });
     
     return array;
@@ -194,5 +194,67 @@
             XCTFail(@"%s: failed to map number value %@", __PRETTY_FUNCTION__, number.description);
     }
 }
+
+#pragma mark - FROM STRING
+// ------------------------------------------------------------------------------------------------------------------------ //
+// FROM STRING TO ....
+// ------------------------------------------------------------------------------------------------------------------------ //
+
+- (NSArray*)mjz_arrayWithStrings
+{
+    static NSArray *array = nil;
+    
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        NSMutableArray *strings = [NSMutableArray array];
+        
+        // Adding numbers as strings
+        for (NSNumber *number in [self mjz_arrayWithNumbers])
+            [strings addObject:number.stringValue];
+        
+        array = [strings copy];
+    });
+    
+    return array;
+}
+
+#pragma mark to basic types
+
+- (void)testStringNumbersToBool
+{
+    for (NSNumber *originalNumber in [self mjz_arrayWithNumbers])
+    {
+        NSString *string = originalNumber.stringValue;
+        
+        _object.numberField = nil;
+        [_object mjz_setValue:string forKey:@"bool"];
+        
+        if (_object.boolField != originalNumber.boolValue)
+            XCTFail(@"%s: failed to map number value %@", __PRETTY_FUNCTION__, originalNumber.description);
+    }
+}
+
+#pragma mark to number
+
+- (void)testStringNumbersToNumber
+{
+    for (NSNumber *originalNumber in [self mjz_arrayWithNumbers])
+    {
+        NSString *string = originalNumber.stringValue;
+        
+        _object.numberField = nil;
+        [_object mjz_setValue:string forKey:@"number"];
+        
+        NSDecimalNumber *decimal = [NSDecimalNumber decimalNumberWithString:string];
+        NSLog(@"DECIMAL: %@ (%@)", decimal, string);
+        
+        if (![_object.numberField isEqualToNumber:originalNumber])
+        {
+            NSLog(@"Number: %@ - %@", _object.numberField, originalNumber);
+            XCTFail(@"%s: failed to map string value %@ (%@)", __PRETTY_FUNCTION__, string, _object.numberField.description);
+        }
+    }
+}
+
 
 @end

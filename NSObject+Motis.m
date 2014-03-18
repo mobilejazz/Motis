@@ -303,8 +303,13 @@
                 if ([*ioValue isKindOfClass:NSString.class])
                 {
                     MLog(@"NSString --> BOOL", key);
-                    BOOL premium = [*ioValue boolValue];
-                    *ioValue = @(premium);
+                    
+                    NSNumber *number = [[self.class mjz_decimalFormatter] numberFromString:*ioValue];
+                    
+                    if (number)
+                        *ioValue = @(number.boolValue);
+                    else
+                        *ioValue = @([*ioValue boolValue]);
                 }
             }
             

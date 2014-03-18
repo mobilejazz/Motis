@@ -25,5 +25,6 @@
 @property (nonatomic, assign) double doubleField;
 
 @property (nonatomic, strong) NSString *stringField;
+@property (nonatomic, strong) NSNumber *numberField;
 
 @end
