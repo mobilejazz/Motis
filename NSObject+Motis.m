@@ -1,5 +1,5 @@
 //
-//  NSObject+KVCParsing.m
+//  NSObject+Motis.m
 //  Copyright 2014 Mobile Jazz
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,15 +14,15 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import "NSObject+KVCParsing.h"
+#import "NSObject+Motis.h"
 #import <objc/runtime.h>
 
-#define KVCP_DEBUG 0
+#define MOTIS_DEBUG 0
 
-#if KVCP_DEBUG
-#define KVCPLog(format, ...) NSLog(@"%@",[NSString stringWithFormat:format, ## __VA_ARGS__]);
+#if MOTIS_DEBUG
+#define MLog(format, ...) NSLog(@"%@",[NSString stringWithFormat:format, ## __VA_ARGS__]);
 #else
-#define KVCPLog(format, ...)
+#define MLog(format, ...)
 #endif
 
 
@@ -31,9 +31,9 @@
 // ------------------------------------------------------------------------------------------------------------------------------------------------------------------ //
 
 
-#pragma mark - KVCParsing_Private
+#pragma mark - Motis_Private
 
-@interface NSObject (KVCParsing_Private)
+@interface NSObject (Motis_Private)
 
 /**
  * Return YES if the value has been automatically validated. The newer value is setted in the pointer.
@@ -52,7 +52,7 @@
  * @return YES if automatic validation has been done, NO otherwise.
  * @discussion A return value of NO only indicates that the value couldn't be validated automatically.
  **/
-- (BOOL)mjz_validateAutomaticallyValue:(inout __autoreleasing id *)ioValue toClass:(Class)typeClass key:(NSString*)key;
+- (BOOL)mjz_validateAutomaticallyValue:(inout __autoreleasing id *)ioValue toClass:(Class)typeClass forKey:(NSString*)key;
 
 @end
 
@@ -62,19 +62,19 @@
 // ------------------------------------------------------------------------------------------------------------------------------------------------------------------ //
 
 
-#pragma mark - KVCParsing
+#pragma mark - Motis
 
-@implementation NSObject (KVCParsing)
+@implementation NSObject (Motis)
 
 #pragma mark Public Methods
 
-- (void)mjz_parseValue:(id)value forKey:(NSString *)key
+- (void)mjz_setValue:(id)value forKey:(NSString *)key
 {
     NSString *mappedKey = [self mjz_mapKey:key];
     
     if (!mappedKey)
     {
-        [self mjz_parseValue:value forUndefinedMappingKey:key];
+        [self mjz_restrictSetValue:value forUndefinedMappingKey:key];
         return;
     }
     
@@ -92,10 +92,10 @@
             // Automatic validation only if the value has not been manually validated
             if (object == validatedObject)
             {
-                Class typeClass = self.mjz_arrayClassTypeMappingForAutomaticKVCParsingValidation[mappedKey];
+                Class typeClass = self.mjz_arrayClassTypeMappingForAutomaticValidation[mappedKey];
                 if (typeClass)
                 {
-                    validated = [self mjz_validateAutomaticallyValue:&validatedObject toClass:typeClass key:mappedKey];
+                    validated = [self mjz_validateAutomaticallyValue:&validatedObject toClass:typeClass forKey:mappedKey];
                 }
             }
             
@@ -149,19 +149,19 @@
     }
 }
 
-- (void)mjz_parseValuesForKeysWithDictionary:(NSDictionary *)keyedValues
+- (void)mjz_setValuesForKeysWithDictionary:(NSDictionary *)keyedValues
 {
     for (NSString *key in keyedValues)
     {
         id value = keyedValues[key];
-        [self mjz_parseValue:value forKey:key];
+        [self mjz_setValue:value forKey:key];
     }
 }
 
 - (NSString*)mjz_extendedObjectDescription
 {
     NSString *description = self.description;
-    NSArray *keys = [[self mjz_mappingForKVCParsing] allValues];
+    NSArray *keys = [[self mjz_motisMapping] allValues];
     if (keys.count > 0)
     {
         NSDictionary *keyValues = [self dictionaryWithValuesForKeys:keys];
@@ -174,12 +174,12 @@
 
 - (NSString*)mjz_mapKey:(NSString*)key
 {
-    NSString *mappedKey = [[self mjz_mappingForKVCParsing] valueForKey:key];
+    NSString *mappedKey = [[self mjz_motisMapping] valueForKey:key];
     
     if (mappedKey)
         return mappedKey;
     
-    if ([self.class mjz_mappingClearanceForKVCParsing] == KVCParsingMappingClearanceOpen)
+    if ([self.class mjz_motisMappingClearance] == MJZMotisMappingClearanceOpen)
         return key;
     
     return nil;
@@ -193,27 +193,33 @@
 // ------------------------------------------------------------------------------------------------------------------------------------------------------------------ //
 
 
-#pragma mark - KVCParsing_Subclassing
+#pragma mark - Motis_Subclassing
 
-@implementation NSObject (KVCParsing_Subclassing)
+@implementation NSObject (Motis_Subclassing)
 
 
-- (NSDictionary*)mjz_mappingForKVCParsing
+- (NSDictionary*)mjz_motisMapping
 {
     // Subclasses must override, always adding super to the mapping!
     return @{};
 }
 
-+ (KVCParsingMappingClearance)mjz_mappingClearanceForKVCParsing
++ (MJZMotisMappingClearance)mjz_motisMappingClearance
 {
     // Subclasses might override.
-    return KVCParsingMappingClearanceOpen;
+    return MJZMotisMappingClearanceOpen;
 }
 
-- (NSDictionary*)mjz_arrayClassTypeMappingForAutomaticKVCParsingValidation
+- (NSDictionary*)mjz_arrayClassTypeMappingForAutomaticValidation
 {
     // Subclasses might override.
     return @{};
+}
+
+- (id)mjz_willCreateObjectOfClass:(Class)typeClass withDictionary:(NSDictionary*)dictionary forKey:(NSString*)key abort:(BOOL*)abort;
+{
+    // Subclasses might override.
+    return nil;
 }
 
 - (void)mjz_didCreateObject:(id)object forKey:(NSString *)key
@@ -227,22 +233,22 @@
     return YES;
 }
 
-- (void)mjz_parseValue:(id)value forUndefinedMappingKey:(NSString*)key
+- (void)mjz_restrictSetValue:(id)value forUndefinedMappingKey:(NSString*)key
 {
     // Subclasses might override.
-    KVCPLog(@"Undefined Mapping Key <%@> in class %@.", key, [self.class description]);
+    MLog(@"Undefined Mapping Key <%@> in class %@.", key, [self.class description]);
 }
 
 - (void)mjz_invalidValue:(id)value forKey:(NSString *)key error:(NSError*)error
 {
     // Subclasses might override.
-    KVCPLog(@"Value for Key <%@> is not valid in class %@. Error: %@", key, [self.class description], error);
+    MLog(@"Value for Key <%@> is not valid in class %@. Error: %@", key, [self.class description], error);
 }
 
 - (void)mjz_invalidValue:(id)value forArrayKey:(NSString *)key error:(NSError*)error
 {
     // Subclasses might override.
-    KVCPLog(@"Item for ArrayKey <%@> is not valid in class %@. Error: %@", key, [self.class description], error);
+    MLog(@"Item for ArrayKey <%@> is not valid in class %@. Error: %@", key, [self.class description], error);
 }
 
 @end
@@ -253,9 +259,9 @@
 // ------------------------------------------------------------------------------------------------------------------------------------------------------------------ //
 
 
-#pragma mark - KVCParsing_Private
+#pragma mark - Motis_Private
 
-@implementation NSObject (KVCParsing_Private)
+@implementation NSObject (Motis_Private)
 
 - (BOOL)mjz_validateAutomaticallyValue:(inout __autoreleasing id *)ioValue forKey:(NSString*)key
 {
@@ -267,42 +273,53 @@
     NSArray * attributes = [typeString componentsSeparatedByString:@","];
     NSString * typeAttribute = [attributes objectAtIndex:0];
     
-    NSString * propertyType = [typeAttribute substringFromIndex:1];
-    const char * rawPropertyType = [propertyType UTF8String];
-    
-    if (strcmp(rawPropertyType, @encode(BOOL)) == 0)
+    if ([typeAttribute hasPrefix:@"T@"] && [typeAttribute length] > 1) // if property is a pointer to a class
     {
-        if ([*ioValue isKindOfClass:NSString.class])
-        {
-            KVCPLog(@"NSString --> BOOL", key);
-            BOOL premium = [*ioValue boolValue];
-            *ioValue = @(premium);
-            return YES;
-        }
-    }
-    
-    // Other basic types are already handled by the system.
-
-    if ([typeAttribute hasPrefix:@"T@"] && [typeAttribute length] > 1)
-    {
-        NSString * typeClassName = [typeAttribute substringWithRange:NSMakeRange(3, [typeAttribute length]-4)]; // <-- turns @"NSDate" into NSDate
+        NSString * typeClassName = [typeAttribute substringWithRange:NSMakeRange(3, [typeAttribute length]-4)];
         Class typeClass = NSClassFromString(typeClassName);
         
         if (typeClass != nil)
         {
-            KVCPLog(@"%@ --> %@", key, typeClassName);
-            return [self mjz_validateAutomaticallyValue:ioValue toClass:typeClass key:key];
+            MLog(@"%@ --> %@", key, typeClassName);
+            return [self mjz_validateAutomaticallyValue:ioValue toClass:typeClass forKey:key];
+        }
+        
+        return NO;
+    }
+    else // if property is a basic type
+    {
+        NSString * propertyType = [typeAttribute substringFromIndex:1];
+        const char * rawPropertyType = [propertyType UTF8String];
+        
+        if ([*ioValue isKindOfClass:NSNumber.class])
+        {
+            // Conversion from NSNumber to basic types is already handled by the system.
+            return YES;
+        }
+        else if ([*ioValue isKindOfClass:NSString.class])
+        {
+            if (strcmp(rawPropertyType, @encode(BOOL)) == 0)
+            {
+                if ([*ioValue isKindOfClass:NSString.class])
+                {
+                    MLog(@"NSString --> BOOL", key);
+                    BOOL premium = [*ioValue boolValue];
+                    *ioValue = @(premium);
+                }
+            }
+            
+            // Other conversions from NSString to basic types are already handled by the system.
+            
+            return YES;
+        }
+        else // If not a number and not a string, types cannot match.
+        {
+            return NO;
         }
     }
-    else
-    {
-        KVCPLog(@"%@ --> <UNKNOWN>", key);
-    }
-    
-    return NO;
 }
 
-- (BOOL)mjz_validateAutomaticallyValue:(inout __autoreleasing id *)ioValue toClass:(Class)typeClass key:(NSString*)key
+- (BOOL)mjz_validateAutomaticallyValue:(inout __autoreleasing id *)ioValue toClass:(Class)typeClass forKey:(NSString*)key
 {
     // If types match, just return
     if ([*ioValue isKindOfClass:typeClass])
@@ -349,7 +366,7 @@
         else if ([typeClass isSubclassOfClass:NSString.class])
         {
             *ioValue = [*ioValue stringValue];
-            return YES;
+            return *ioValue != nil;
         }
     }
     else if ([*ioValue isKindOfClass:NSArray.class]) // <-- ARRAYS
@@ -357,27 +374,27 @@
         if ([typeClass isSubclassOfClass:NSMutableArray.class])
         {
             *ioValue = [NSMutableArray arrayWithArray:*ioValue];
-            return YES;
+            return *ioValue != nil;
         }
         else if ([typeClass isSubclassOfClass:NSMutableSet.class])
         {
             *ioValue = [NSMutableSet setWithArray:*ioValue];
-            return YES;
+            return *ioValue != nil;
         }
         else if ([typeClass isSubclassOfClass:NSSet.class])
         {
             *ioValue = [NSSet setWithArray:*ioValue];
-            return YES;
+            return *ioValue != nil;
         }
         else if ([typeClass isSubclassOfClass:NSMutableOrderedSet.class])
         {
             *ioValue = [NSMutableOrderedSet orderedSetWithArray:*ioValue];
-            return YES;
+            return *ioValue != nil;
         }
         else if ([typeClass isSubclassOfClass:NSOrderedSet.class])
         {
             *ioValue = [NSOrderedSet orderedSetWithArray:*ioValue];
-            return YES;
+            return *ioValue != nil;
         }
     }
     else if ([*ioValue isKindOfClass:NSDictionary.class]) // <-- DICTIONARIES
@@ -385,16 +402,26 @@
         if ([typeClass isSubclassOfClass:NSMutableDictionary.class])
         {
             *ioValue = [NSMutableDictionary dictionaryWithDictionary:*ioValue];
-            return YES;
+            return *ioValue != nil;
         }
         else if ([typeClass isSubclassOfClass:NSObject.class])
         {
-            id instance = [[typeClass alloc] init];
-            [instance mjz_parseValuesForKeysWithDictionary:*ioValue];
+            BOOL abort = NO;
+            id instance = [self mjz_willCreateObjectOfClass:typeClass withDictionary:*ioValue forKey:key abort:&abort];
+
+            if (abort)
+                return NO;
+            
+            if (!instance)
+            {
+                instance = [[typeClass alloc] init];
+                [instance mjz_setValuesForKeysWithDictionary:*ioValue];
+            }
+            
             [self mjz_didCreateObject:instance forKey:key];
             
             *ioValue = instance;
-            return YES;
+            return *ioValue != nil;
         }
     }
     

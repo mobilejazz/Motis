@@ -7,37 +7,37 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		D25BB62E18C4EC1E0019799F /* NSObject+KVCParsing.m in Sources */ = {isa = PBXBuildFile; fileRef = D25BB62D18C4EC1E0019799F /* NSObject+KVCParsing.m */; };
+		D21D6FB218D7470D000E620B /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = D21D6FB018D7470D000E620B /* InfoPlist.strings */; };
+		D21D6FB518D74717000E620B /* NSObject+Motis.m in Sources */ = {isa = PBXBuildFile; fileRef = D21D6FB418D74717000E620B /* NSObject+Motis.m */; };
 		D2C3463718959EF2005B6B5C /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D2C3463618959EF2005B6B5C /* Foundation.framework */; };
 		D2C3463918959EF2005B6B5C /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D2C3463818959EF2005B6B5C /* CoreGraphics.framework */; };
 		D2C3463B18959EF2005B6B5C /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D2C3463A18959EF2005B6B5C /* UIKit.framework */; };
-		D2C3464118959EF2005B6B5C /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = D2C3463F18959EF2005B6B5C /* InfoPlist.strings */; };
-		D2C3464318959EF2005B6B5C /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = D2C3464218959EF2005B6B5C /* main.m */; };
-		D2C3464718959EF2005B6B5C /* MJAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = D2C3464618959EF2005B6B5C /* MJAppDelegate.m */; };
-		D2C3464918959EF2005B6B5C /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D2C3464818959EF2005B6B5C /* Images.xcassets */; };
-		D2C3466A1895A05F005B6B5C /* MJVideo.m in Sources */ = {isa = PBXBuildFile; fileRef = D2C346691895A05F005B6B5C /* MJVideo.m */; };
-		D2C3466D1895A22D005B6B5C /* MJUser.m in Sources */ = {isa = PBXBuildFile; fileRef = D2C3466C1895A22D005B6B5C /* MJUser.m */; };
+		D2DF757D18D746A800163BA8 /* MJAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = D2DF757818D746A800163BA8 /* MJAppDelegate.m */; };
+		D2DF757E18D746A800163BA8 /* MJUser.m in Sources */ = {isa = PBXBuildFile; fileRef = D2DF757A18D746A800163BA8 /* MJUser.m */; };
+		D2DF757F18D746A800163BA8 /* MJVideo.m in Sources */ = {isa = PBXBuildFile; fileRef = D2DF757C18D746A800163BA8 /* MJVideo.m */; };
+		D2DF758118D746AF00163BA8 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D2DF758018D746AF00163BA8 /* Images.xcassets */; };
+		D2DF758518D746C200163BA8 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = D2DF758218D746C200163BA8 /* main.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		D25BB62C18C4EC1E0019799F /* NSObject+KVCParsing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = "NSObject+KVCParsing.h"; path = "../../NSObject+KVCParsing.h"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
-		D25BB62D18C4EC1E0019799F /* NSObject+KVCParsing.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = "NSObject+KVCParsing.m"; path = "../../NSObject+KVCParsing.m"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
-		D2C3463318959EF2005B6B5C /* KVCParsing.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = KVCParsing.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		D21D6FB118D7470D000E620B /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = InfoPlist.strings; sourceTree = "<group>"; };
+		D21D6FB318D74717000E620B /* NSObject+Motis.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSObject+Motis.h"; path = "../../NSObject+Motis.h"; sourceTree = "<group>"; };
+		D21D6FB418D74717000E620B /* NSObject+Motis.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSObject+Motis.m"; path = "../../NSObject+Motis.m"; sourceTree = "<group>"; };
+		D2C3463318959EF2005B6B5C /* Motis.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Motis.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D2C3463618959EF2005B6B5C /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		D2C3463818959EF2005B6B5C /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		D2C3463A18959EF2005B6B5C /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
-		D2C3463E18959EF2005B6B5C /* KVCParsing-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "KVCParsing-Info.plist"; sourceTree = "<group>"; };
-		D2C3464018959EF2005B6B5C /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		D2C3464218959EF2005B6B5C /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		D2C3464418959EF2005B6B5C /* KVCParsing-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "KVCParsing-Prefix.pch"; sourceTree = "<group>"; };
-		D2C3464518959EF2005B6B5C /* MJAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MJAppDelegate.h; sourceTree = "<group>"; };
-		D2C3464618959EF2005B6B5C /* MJAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = MJAppDelegate.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
-		D2C3464818959EF2005B6B5C /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		D2C3464F18959EF2005B6B5C /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
-		D2C346681895A05F005B6B5C /* MJVideo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MJVideo.h; sourceTree = "<group>"; };
-		D2C346691895A05F005B6B5C /* MJVideo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = MJVideo.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
-		D2C3466B1895A22D005B6B5C /* MJUser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MJUser.h; sourceTree = "<group>"; };
-		D2C3466C1895A22D005B6B5C /* MJUser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = MJUser.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		D2DF757718D746A800163BA8 /* MJAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MJAppDelegate.h; path = Motis/MJAppDelegate.h; sourceTree = SOURCE_ROOT; };
+		D2DF757818D746A800163BA8 /* MJAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MJAppDelegate.m; path = Motis/MJAppDelegate.m; sourceTree = SOURCE_ROOT; };
+		D2DF757918D746A800163BA8 /* MJUser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MJUser.h; path = Motis/MJUser.h; sourceTree = SOURCE_ROOT; };
+		D2DF757A18D746A800163BA8 /* MJUser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MJUser.m; path = Motis/MJUser.m; sourceTree = SOURCE_ROOT; };
+		D2DF757B18D746A800163BA8 /* MJVideo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MJVideo.h; path = Motis/MJVideo.h; sourceTree = SOURCE_ROOT; };
+		D2DF757C18D746A800163BA8 /* MJVideo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MJVideo.m; path = Motis/MJVideo.m; sourceTree = SOURCE_ROOT; };
+		D2DF758018D746AF00163BA8 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = Motis/Images.xcassets; sourceTree = SOURCE_ROOT; };
+		D2DF758218D746C200163BA8 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = Motis/main.m; sourceTree = SOURCE_ROOT; };
+		D2DF758318D746C200163BA8 /* Motis-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "Motis-Info.plist"; path = "Motis/Motis-Info.plist"; sourceTree = SOURCE_ROOT; };
+		D2DF758418D746C200163BA8 /* Motis-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "Motis-Prefix.pch"; path = "Motis/Motis-Prefix.pch"; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -54,10 +54,19 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		D21D6FAF18D7470D000E620B /* en.lproj */ = {
+			isa = PBXGroup;
+			children = (
+				D21D6FB018D7470D000E620B /* InfoPlist.strings */,
+			);
+			name = en.lproj;
+			path = Motis/en.lproj;
+			sourceTree = SOURCE_ROOT;
+		};
 		D2C3462A18959EF2005B6B5C = {
 			isa = PBXGroup;
 			children = (
-				D2C3463C18959EF2005B6B5C /* KVCParsing */,
+				D2C3463C18959EF2005B6B5C /* Motis */,
 				D2C3463518959EF2005B6B5C /* Frameworks */,
 				D2C3463418959EF2005B6B5C /* Products */,
 			);
@@ -66,7 +75,7 @@
 		D2C3463418959EF2005B6B5C /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				D2C3463318959EF2005B6B5C /* KVCParsing.app */,
+				D2C3463318959EF2005B6B5C /* Motis.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -82,30 +91,30 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		D2C3463C18959EF2005B6B5C /* KVCParsing */ = {
+		D2C3463C18959EF2005B6B5C /* Motis */ = {
 			isa = PBXGroup;
 			children = (
-				D2C3464518959EF2005B6B5C /* MJAppDelegate.h */,
-				D2C3464618959EF2005B6B5C /* MJAppDelegate.m */,
-				D25BB62C18C4EC1E0019799F /* NSObject+KVCParsing.h */,
-				D25BB62D18C4EC1E0019799F /* NSObject+KVCParsing.m */,
-				D2C346681895A05F005B6B5C /* MJVideo.h */,
-				D2C346691895A05F005B6B5C /* MJVideo.m */,
-				D2C3466B1895A22D005B6B5C /* MJUser.h */,
-				D2C3466C1895A22D005B6B5C /* MJUser.m */,
-				D2C3464818959EF2005B6B5C /* Images.xcassets */,
+				D2DF757718D746A800163BA8 /* MJAppDelegate.h */,
+				D2DF757818D746A800163BA8 /* MJAppDelegate.m */,
+				D21D6FB318D74717000E620B /* NSObject+Motis.h */,
+				D21D6FB418D74717000E620B /* NSObject+Motis.m */,
+				D2DF757918D746A800163BA8 /* MJUser.h */,
+				D2DF757A18D746A800163BA8 /* MJUser.m */,
+				D2DF757B18D746A800163BA8 /* MJVideo.h */,
+				D2DF757C18D746A800163BA8 /* MJVideo.m */,
+				D2DF758018D746AF00163BA8 /* Images.xcassets */,
 				D2C3463D18959EF2005B6B5C /* Supporting Files */,
 			);
-			path = KVCParsing;
+			path = Motis;
 			sourceTree = "<group>";
 		};
 		D2C3463D18959EF2005B6B5C /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				D2C3463E18959EF2005B6B5C /* KVCParsing-Info.plist */,
-				D2C3463F18959EF2005B6B5C /* InfoPlist.strings */,
-				D2C3464218959EF2005B6B5C /* main.m */,
-				D2C3464418959EF2005B6B5C /* KVCParsing-Prefix.pch */,
+				D2DF758218D746C200163BA8 /* main.m */,
+				D2DF758318D746C200163BA8 /* Motis-Info.plist */,
+				D2DF758418D746C200163BA8 /* Motis-Prefix.pch */,
+				D21D6FAF18D7470D000E620B /* en.lproj */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -113,9 +122,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		D2C3463218959EF2005B6B5C /* KVCParsing */ = {
+		D2C3463218959EF2005B6B5C /* Motis */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = D2C3465F18959EF2005B6B5C /* Build configuration list for PBXNativeTarget "KVCParsing" */;
+			buildConfigurationList = D2C3465F18959EF2005B6B5C /* Build configuration list for PBXNativeTarget "Motis" */;
 			buildPhases = (
 				D2C3462F18959EF2005B6B5C /* Sources */,
 				D2C3463018959EF2005B6B5C /* Frameworks */,
@@ -125,9 +134,9 @@
 			);
 			dependencies = (
 			);
-			name = KVCParsing;
-			productName = KVCParsing;
-			productReference = D2C3463318959EF2005B6B5C /* KVCParsing.app */;
+			name = Motis;
+			productName = Motis;
+			productReference = D2C3463318959EF2005B6B5C /* Motis.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -140,7 +149,7 @@
 				LastUpgradeCheck = 0510;
 				ORGANIZATIONNAME = "Mobile Jazz";
 			};
-			buildConfigurationList = D2C3462E18959EF2005B6B5C /* Build configuration list for PBXProject "KVCParsing" */;
+			buildConfigurationList = D2C3462E18959EF2005B6B5C /* Build configuration list for PBXProject "Motis" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -152,7 +161,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				D2C3463218959EF2005B6B5C /* KVCParsing */,
+				D2C3463218959EF2005B6B5C /* Motis */,
 			);
 		};
 /* End PBXProject section */
@@ -162,8 +171,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D2C3464118959EF2005B6B5C /* InfoPlist.strings in Resources */,
-				D2C3464918959EF2005B6B5C /* Images.xcassets in Resources */,
+				D2DF758118D746AF00163BA8 /* Images.xcassets in Resources */,
+				D21D6FB218D7470D000E620B /* InfoPlist.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -174,21 +183,21 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D2C3464318959EF2005B6B5C /* main.m in Sources */,
-				D25BB62E18C4EC1E0019799F /* NSObject+KVCParsing.m in Sources */,
-				D2C3464718959EF2005B6B5C /* MJAppDelegate.m in Sources */,
-				D2C3466A1895A05F005B6B5C /* MJVideo.m in Sources */,
-				D2C3466D1895A22D005B6B5C /* MJUser.m in Sources */,
+				D2DF757E18D746A800163BA8 /* MJUser.m in Sources */,
+				D2DF757F18D746A800163BA8 /* MJVideo.m in Sources */,
+				D2DF758518D746C200163BA8 /* main.m in Sources */,
+				D2DF757D18D746A800163BA8 /* MJAppDelegate.m in Sources */,
+				D21D6FB518D74717000E620B /* NSObject+Motis.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
-		D2C3463F18959EF2005B6B5C /* InfoPlist.strings */ = {
+		D21D6FB018D7470D000E620B /* InfoPlist.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
-				D2C3464018959EF2005B6B5C /* en */,
+				D21D6FB118D7470D000E620B /* en */,
 			);
 			name = InfoPlist.strings;
 			sourceTree = "<group>";
@@ -272,9 +281,9 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "KVCParsing/KVCParsing-Prefix.pch";
-				INFOPLIST_FILE = "KVCParsing/KVCParsing-Info.plist";
-				PRODUCT_NAME = KVCParsing;
+				GCC_PREFIX_HEADER = "Motis/Motis-Prefix.pch";
+				INFOPLIST_FILE = "Motis/Motis-Info.plist";
+				PRODUCT_NAME = Motis;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -285,9 +294,9 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "KVCParsing/KVCParsing-Prefix.pch";
-				INFOPLIST_FILE = "KVCParsing/KVCParsing-Info.plist";
-				PRODUCT_NAME = KVCParsing;
+				GCC_PREFIX_HEADER = "Motis/Motis-Prefix.pch";
+				INFOPLIST_FILE = "Motis/Motis-Info.plist";
+				PRODUCT_NAME = Motis;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
@@ -295,7 +304,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		D2C3462E18959EF2005B6B5C /* Build configuration list for PBXProject "KVCParsing" */ = {
+		D2C3462E18959EF2005B6B5C /* Build configuration list for PBXProject "Motis" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				D2C3465D18959EF2005B6B5C /* Debug */,
@@ -304,7 +313,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		D2C3465F18959EF2005B6B5C /* Build configuration list for PBXNativeTarget "KVCParsing" */ = {
+		D2C3465F18959EF2005B6B5C /* Build configuration list for PBXNativeTarget "Motis" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				D2C3466018959EF2005B6B5C /* Debug */,

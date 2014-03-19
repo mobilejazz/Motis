@@ -67,7 +67,7 @@
  ** ********************************************************* **/
 
 /**
- * This property is an example of non-JSON field. It is not included in the mapping defined in `mjz_mappingForKVCParsing`. 
+ * This property is an example of non-JSON field. It is not included in the mapping defined in `mjz_motisMapping`.
  * However, for test purposes, the JSON will include a field of generic type (can be any type) with that key. 
  * Our goal is to avoid setting the property.
  **/
