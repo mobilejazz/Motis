@@ -299,14 +299,66 @@
             {
                 if ([*ioValue isKindOfClass:NSString.class])
                 {
-                    MLog(@"NSString --> BOOL", key);
-                    
                     NSNumber *number = [[self.class mjz_decimalFormatter] numberFromString:*ioValue];
                     
                     if (number)
                         *ioValue = @(number.boolValue);
                     else
                         *ioValue = @([*ioValue boolValue]);
+                }
+            }
+            else if (strcmp(rawPropertyType, @encode(char)) == 0)
+            {
+                if ([*ioValue isKindOfClass:NSString.class])
+                {
+                    NSNumber *number = [[self.class mjz_decimalFormatter] numberFromString:*ioValue];
+                    *ioValue = @(number.charValue);
+                    return *ioValue != nil;
+                }
+            }
+            else if (strcmp(rawPropertyType, @encode(unsigned char)) == 0)
+            {
+                if ([*ioValue isKindOfClass:NSString.class])
+                {
+                    NSNumber *number = [[self.class mjz_decimalFormatter] numberFromString:*ioValue];
+                    *ioValue = @(number.unsignedCharValue);
+                    return *ioValue != nil;
+                }
+            }
+            else if (strcmp(rawPropertyType, @encode(short)) == 0)
+            {
+                if ([*ioValue isKindOfClass:NSString.class])
+                {                    
+                    NSNumber *number = [[self.class mjz_decimalFormatter] numberFromString:*ioValue];
+                    *ioValue = @(number.shortValue);
+                    return *ioValue != nil;
+                }
+            }
+            else if (strcmp(rawPropertyType, @encode(unsigned short)) == 0)
+            {
+                if ([*ioValue isKindOfClass:NSString.class])
+                {
+                    NSNumber *number = [[self.class mjz_decimalFormatter] numberFromString:*ioValue];
+                    *ioValue = @(number.unsignedShortValue);
+                    return *ioValue != nil;
+                }
+            }
+//            else if (strcmp(rawPropertyType, @encode(unsigned long)) == 0)
+//            {
+//                if ([*ioValue isKindOfClass:NSString.class])
+//                {
+//                    NSNumber *number = [[self.class mjz_decimalFormatter] numberFromString:*ioValue];
+//                    *ioValue = @(number.unsignedLongValue);
+//                    return *ioValue != nil;
+//                }
+//            }
+            else if (strcmp(rawPropertyType, @encode(unsigned long long)) == 0)
+            {
+                if ([*ioValue isKindOfClass:NSString.class])
+                {
+                    NSNumber *number = [[self.class mjz_decimalFormatter] numberFromString:*ioValue];
+                    *ioValue = @(number.unsignedLongLongValue);
+                    return *ioValue != nil;
                 }
             }
             

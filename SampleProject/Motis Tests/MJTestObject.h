@@ -26,5 +26,6 @@
 
 @property (nonatomic, strong) NSString *stringField;
 @property (nonatomic, strong) NSNumber *numberField;
+@property (nonatomic, strong) NSURL *urlField;
 
 @end

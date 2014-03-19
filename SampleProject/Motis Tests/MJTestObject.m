@@ -33,6 +33,7 @@
                     @"double": @"doubleField",
                     @"string": @"stringField",
                     @"number": @"numberField",
+                    @"url": @"urlField",
                     };
     });
     
@@ -47,6 +48,11 @@
 - (void)setNilValueForKey:(NSString *)key
 {
     NSLog(@"setting nil value for key : %@", key);
+}
+
+- (void)mjz_invalidValue:(id)value forKey:(NSString *)key error:(NSError *)error
+{
+    NSLog(@"INVALID VALUE %@ FOR KEY %@", [value description], key);
 }
 
 @end

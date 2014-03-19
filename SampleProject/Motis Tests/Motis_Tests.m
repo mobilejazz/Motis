@@ -276,6 +276,167 @@
     }
 }
 
+- (void)testStringNumbersToChar
+{
+    NSArray *numbers = @[@(CHAR_MAX), @(CHAR_MIN)];
+    
+    for (NSNumber *originalNumber in numbers)
+    {
+        NSString *string = originalNumber.stringValue;
+        
+        _object.charField = 0;
+        [_object mjz_setValue:string forKey:@"char"];
+        
+        if (_object.charField != originalNumber.charValue)
+            XCTFail(@"Failed to map number value %@", originalNumber.description);
+    }
+}
+
+- (void)testStringNumbersToUnsignedChar
+{
+    NSArray *numbers = @[@(UCHAR_MAX), @0];
+    
+    for (NSNumber *originalNumber in numbers)
+    {
+        NSString *string = originalNumber.stringValue;
+        
+        _object.unsignedCharField = 0;
+        [_object mjz_setValue:string forKey:@"unsigned_char"];
+        
+        if (_object.unsignedCharField != originalNumber.unsignedCharValue)
+            XCTFail(@"Failed to map number value %@", originalNumber.description);
+    }
+}
+
+- (void)testStringNumbersToShort
+{
+    NSArray *numbers = @[@(SHRT_MAX), @(SHRT_MIN)];
+    
+    for (NSNumber *originalNumber in numbers)
+    {
+        NSString *string = originalNumber.stringValue;
+        
+        _object.shortField = 0;
+        [_object mjz_setValue:string forKey:@"short"];
+ 
+        if (_object.shortField != originalNumber.shortValue)
+            XCTFail(@"Failed to map number value %@", originalNumber.description);
+    }
+}
+
+- (void)testStringNumbersToUnsignedShort
+{
+    NSArray *numbers = @[@(USHRT_MAX), @0];
+    
+    for (NSNumber *originalNumber in numbers)
+    {
+        NSString *string = originalNumber.stringValue;
+        
+        _object.unsignedShortField = 0;
+        [_object mjz_setValue:string forKey:@"unsigned_short"];
+        
+        if (_object.unsignedShortField != originalNumber.unsignedShortValue)
+            XCTFail(@"Failed to map number value %@", originalNumber.description);
+    }
+}
+
+- (void)testStringNumbersToInt
+{
+    NSArray *numbers = @[@(INT_MAX), @(INT_MIN)];
+    
+    for (NSNumber *originalNumber in numbers)
+    {
+        NSString *string = originalNumber.stringValue;
+        
+        _object.intField = 0;
+        [_object mjz_setValue:string forKey:@"int"];
+        
+        if (_object.intField != originalNumber.intValue)
+            XCTFail(@"Failed to map number value %@", originalNumber.description);
+    }
+}
+
+- (void)testStringNumbersToUnsignedInt
+{
+    NSArray *numbers = @[@(UINT_MAX), @0];
+    
+    for (NSNumber *originalNumber in numbers)
+    {
+        NSString *string = originalNumber.stringValue;
+        
+        _object.unsignedIntField = 0;
+        [_object mjz_setValue:string forKey:@"unsigned_int"];
+        
+        if (_object.unsignedIntField != originalNumber.unsignedIntValue)
+            XCTFail(@"Failed to map number value %@", originalNumber.description);
+    }
+}
+
+- (void)testStringNumbersToLong
+{
+    NSArray *numbers = @[@(LONG_MAX), @(LONG_MIN)];
+    
+    for (NSNumber *originalNumber in numbers)
+    {
+        NSString *string = originalNumber.stringValue;
+        
+        _object.longField = 0;
+        [_object mjz_setValue:string forKey:@"long"];
+        
+        if (_object.longField != originalNumber.longValue)
+            XCTFail(@"Failed to map number value %@", originalNumber.description);
+    }
+}
+
+- (void)testStringNumbersToUnsignedLong
+{
+    NSArray *numbers = @[@(ULONG_MAX), @0];
+    
+    for (NSNumber *originalNumber in numbers)
+    {
+        NSString *string = originalNumber.stringValue;
+        
+        _object.unsignedLongField = 0;
+        [_object mjz_setValue:string forKey:@"unsigned_long"];
+        
+        if (_object.unsignedLongField != originalNumber.unsignedLongValue)
+            XCTFail(@"Failed to map number value %@", originalNumber.description);
+    }
+}
+
+- (void)testStringNumbersToLongLong
+{
+    NSArray *numbers = @[@(LONG_LONG_MAX), @(LONG_LONG_MIN)];
+    
+    for (NSNumber *originalNumber in numbers)
+    {
+        NSString *string = originalNumber.stringValue;
+        
+        _object.longLongField = 0;
+        [_object mjz_setValue:string forKey:@"long_long"];
+        
+        if (_object.longLongField != originalNumber.longLongValue)
+            XCTFail(@"Failed to map number value %@", originalNumber.description);
+    }
+}
+
+- (void)testStringNumbersToUnsignedLongLong
+{
+    NSArray *numbers = @[@(ULONG_LONG_MAX), @0];
+    
+    for (NSNumber *originalNumber in numbers)
+    {
+        NSString *string = originalNumber.stringValue;
+        
+        _object.unsignedLongLongField = 0;
+        [_object mjz_setValue:string forKey:@"unsigned_long_long"];
+        
+        if (_object.unsignedLongLongField != originalNumber.unsignedLongLongValue)
+            XCTFail(@"Failed to map number value %@", originalNumber.description);
+    }
+}
+
+
 #pragma mark to number
 
 - (void)testStringNumbersToNumber
@@ -290,6 +451,17 @@
         if (![_object.numberField isEqualToNumber:originalNumber])
             XCTFail(@"Failed to map string value %@ --> %@", string, _object.numberField.description);
     }
+}
+
+#pragma mark to url
+
+- (void)testStringToUrl
+{
+    NSString *string = @"http://www.google.com";
+    [_object mjz_setValue:string forKey:@"url"];
+    
+    if (![_object.urlField.absoluteString isEqualToString:string])
+        XCTFail(@"Failed to map string value %@", string);
 }
 
 @end
