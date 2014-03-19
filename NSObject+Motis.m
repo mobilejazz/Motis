@@ -92,7 +92,7 @@
             // Automatic validation only if the value has not been manually validated
             if (object == validatedObject)
             {
-                Class typeClass = self.mjz_arrayClassTypeMappingForAutomaticValidation[mappedKey];
+                Class typeClass = self.mjz_motisArrayClassMapping[mappedKey];
                 if (typeClass)
                 {
                     validated = [self mjz_validateAutomaticallyValue:&validatedObject toClass:typeClass forKey:mappedKey];
@@ -210,7 +210,7 @@
     return MJZMotisMappingClearanceOpen;
 }
 
-- (NSDictionary*)mjz_arrayClassTypeMappingForAutomaticValidation
+- (NSDictionary*)mjz_motisArrayClassMapping
 {
     // Subclasses might override.
     return @{};

@@ -100,7 +100,7 @@ typedef NS_ENUM(NSUInteger, MJZMotisMappingClearance)
  * Motis object mapping adds automatic validation for your properties. This means the system will try to convert into your property type the input value.
  * To support automatic validation you must override:
  *
- *  - `mjz_arrayClassTypeMappingForAutomaticValidation`: If your objects has properties of type `NSArray`, override this method and define a mapping between the array property name and the expected content object class.
+ *  - `mjz_motisArrayClassMapping`: If your objects has properties of type `NSArray`, override this method and define a mapping between the array property name and the expected content object class.
  *
  * However, you can validate manually any value before the automatic validation is done. If you implements manually validation for a property, the system won't perform the automatic validation.
  * To implement manual validation you must override:
@@ -145,7 +145,7 @@ typedef NS_ENUM(NSUInteger, MJZMotisMappingClearance)
  * For example: @{@"myArrayPropertyName": User.class, ... };
  * @return A dictionary with the array content mapping.
  **/
-- (NSDictionary*)mjz_arrayClassTypeMappingForAutomaticValidation;
+- (NSDictionary*)mjz_motisArrayClassMapping;
 
 /**
  * While validating automatically your JSON objects, Motis object mapping might create new objects. This method is called just before new objects are created.

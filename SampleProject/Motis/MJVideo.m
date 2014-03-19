@@ -58,7 +58,7 @@
 #pragma mark Motis Validation
 
 // Automatic array validation mapping
-- (NSDictionary*)mjz_arrayClassTypeMappingForAutomaticValidation
+- (NSDictionary*)mjz_motisArrayClassMapping
 {
     static NSDictionary *mapping = nil;
     
@@ -66,7 +66,7 @@
     dispatch_once(&onceToken, ^{
         NSDictionary *arrayMapping = @{NSStringFromSelector(@selector(cast)) : MJUser.class,
                                       };
-        NSMutableDictionary *mutableMapping = [[super mjz_arrayClassTypeMappingForAutomaticValidation] mutableCopy];
+        NSMutableDictionary *mutableMapping = [[super mjz_motisArrayClassMapping] mutableCopy];
         [mutableMapping addEntriesFromDictionary:arrayMapping];
         mapping = mutableMapping;
     });
