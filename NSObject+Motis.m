@@ -179,7 +179,7 @@
     if (mappedKey)
         return mappedKey;
     
-    if ([self.class mjz_motisMappingClearance] == MJZMotisMappingClearanceOpen)
+    if ([self.class mjz_motisShouldSetUndefinedKeys])
         return key;
     
     return nil;
@@ -204,10 +204,10 @@
     return @{};
 }
 
-+ (MJZMotisMappingClearance)mjz_motisMappingClearance
++ (BOOL)mjz_motisShouldSetUndefinedKeys
 {
     // Subclasses might override.
-    return MJZMotisMappingClearanceOpen;
+    return YES;
 }
 
 - (NSDictionary*)mjz_motisArrayClassMapping

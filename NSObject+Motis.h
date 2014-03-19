@@ -69,22 +69,6 @@
 #pragma mark - Motis_Subclassing
 
 /**
- * The mapping clearance behaviour.
- **/
-typedef NS_ENUM(NSUInteger, MJZMotisMappingClearance)
-{
-    /**
-     * Only those keys defined in the mapping `mjz_motisMapping` can be used while performing key-value mapping.
-     **/
-    MJZMotisMappingClearanceRestricted,
-    
-    /**
-     * Any key can be used while performing key-value mapping.
-     **/
-    MJZMotisMappingClearanceOpen,
-};
-
-/**
  * Motis Object Subclassing
  *
  * PARSING MAPPINGS
@@ -92,7 +76,7 @@ typedef NS_ENUM(NSUInteger, MJZMotisMappingClearance)
  * In order to use KVCParsign you must define mappings between JSON keys and object properties by overriding the following methods:
  *
  *  - `mjz_motisMapping`: Subclasses must override this method and return the mapping between the JSON keys and the object properties.
- *  - `mjz_motisMappingClearance`: Optionally, subclasses can override this method and define a custom clearance for the mapping. The default is `MJZMotisMappingClearanceOpen`.
+ *  - `mjz_motisShouldSetUndefinedKeys`: Optionally, subclasses can override this method to forbid Motis from automatically setting keys not found in the mapping. The default is `YES`.
  *
  *
  * VALIDATION METHODS
@@ -112,7 +96,7 @@ typedef NS_ENUM(NSUInteger, MJZMotisMappingClearance)
  * OTHER METHODS TO SUBCLASS
  *
  *  - `setValue:forUndefinedKey:`: KVC Method to handle undefined keys. By default this method throws an exception.
- *  - `mjz_restrictSetValue:forUndefinedMappingKey`: If mapping clearance is restricted (`MJZMotisMappingClearanceRestricted`), this method will be called when a undefined mapping key is found.
+ *  - `mjz_restrictSetValue:forUndefinedMappingKey`: If undefined keys are disabled (`mjz_motisShouldSetUndefinedKeys`), this method will be called when a undefined mapping key is found.
  *  - `mjz_invalidValue:forKey:error:`: If value is does not pass valiation, this method is called after aborting the value setting.
  *  - `mjz_invalidValue:forArrayKey:error:`: if an array item does not pass validation, this method is called after aborting the item setting.
  **/
@@ -130,11 +114,12 @@ typedef NS_ENUM(NSUInteger, MJZMotisMappingClearance)
 - (NSDictionary*)mjz_motisMapping;
 
 /**
- * Returns the object class mapping clearance. Default value is `MJZMotisMappingClearanceOpen`.
- * @return The mapping key clearance.
- * @discussion Subclasses may override and return a custom clearance.
+ 
+ * Returns whether Mopis should set keys not found in the mapping. Default value is `YES`.
+ * @return `YES` if Mopis should set undefined keys, `NO` if only the keys defined `mjz_motisMapping` can be set.
+ * @discussion Subclasses may override to return `NO`.
  **/
-+ (MJZMotisMappingClearance)mjz_motisMappingClearance;
++ (BOOL)mjz_motisShouldSetUndefinedKeys;
 
 /** ---------------------------------------------- **
  * @name Automatic Validation

@@ -45,9 +45,9 @@
     return mapping;
 }
 
-+ (MJZMotisMappingClearance)mjz_motisMappingClearance
++ (BOOL)mjz_motisShouldSetUndefinedKeys
 {
-    return MJZMotisMappingClearanceRestricted;
+    return NO;
 }
 
 - (void)mjz_restrictSetValue:(id)value forUndefinedMappingKey:(NSString *)key
