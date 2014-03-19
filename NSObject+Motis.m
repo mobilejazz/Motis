@@ -78,6 +78,13 @@
         return;
     }
     
+    // if nil or NSNull, nillify value.
+    if (value == [NSNull null] || value == nil)
+    {
+        [self setValue:nil forKey:mappedKey];
+        return;
+    }
+    
     if ([value isKindOfClass:NSArray.class])
     {
         __block NSMutableArray *modifiedArray = nil;
@@ -119,10 +126,9 @@
                 [self mjz_invalidValue:validatedObject forArrayKey:mappedKey error:error];
             }
         }];
+        
         if (modifiedArray)
-        {
             value = modifiedArray;
-        }
     }
 
     id originalValue = value;
@@ -132,21 +138,12 @@
     
     // Automatic validation only if the value has not been manually validated
     if (originalValue == value)
-    {
         validated = [self mjz_validateAutomaticallyValue:&value forKey:mappedKey];
-    }
     
     if (validated)
-    {
-        if (value != [NSNull null] && value != nil)
-            [self setValue:value forKey:mappedKey];
-        else
-            [self setNilValueForKey:mappedKey];
-    }
+        [self setValue:value forKey:mappedKey];
     else
-    {
         [self mjz_invalidValue:value forKey:mappedKey error:error];
-    }
 }
 
 - (void)mjz_setValuesForKeysWithDictionary:(NSDictionary *)keyedValues

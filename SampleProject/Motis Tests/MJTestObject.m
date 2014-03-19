@@ -44,4 +44,9 @@
     return MJZMotisMappingClearanceRestricted;
 }
 
+- (void)setNilValueForKey:(NSString *)key
+{
+    NSLog(@"setting nil value for key : %@", key);
+}
+
 @end
