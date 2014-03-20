@@ -35,9 +35,34 @@
 
 @interface NSObject (Motis_Private)
 
+/** ---------------------------------------------- **
+ * @name Object Class Introspection
+ ** ---------------------------------------------- **/
+
+/**
+ * Returns the attribute type string for the given key.
+ * @param key The name of property.
+ * @return The attribute type string.
+ */
 - (NSString*)mjz_typeAttributeForKey:(NSString*)key;
+
+/**
+ * YES if the attribute type can be converted into a Class object, NO otherwise.
+ * @param typeAttribute The value returned by `-mjz_typeAttributeForKey:`.
+ * @return YES if it represents an object (therefore, exists a related class object).
+ */
 - (BOOL)mjz_isClassTypeTypeAttribute:(NSString*)typeAttribute;
+
+/**
+ * Returns the class object for the given attribute type or nil if cannot be created.
+ * @param typeAttribute The value returned by `-mjz_typeAttributeForKey:`.
+ * @return The related class object.
+ */
 - (Class)mjz_classForTypeAttribute:(NSString*)typeAttribute;
+
+/** ---------------------------------------------- **
+ * @name Automatic Validation
+ ** ---------------------------------------------- **/
 
 /**
  * Return YES if the value has been automatically validated. The newer value is setted in the pointer.
@@ -319,7 +344,7 @@
         
         return NO;
     }
-    else // if property is a basic type
+    else // because it is not a class, the property must be a basic type
     {
         NSString * propertyType = [typeAttribute substringFromIndex:1];
         const char * rawPropertyType = [propertyType UTF8String];
