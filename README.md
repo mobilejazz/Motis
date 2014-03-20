@@ -49,7 +49,7 @@ After defining your mappings in step (1) you are ready to go:
 
 Automatic validation is done by default if the user is not validating manually. 
 
-In order to support automatic validation for array content (objects inside of an array), you must override the method `-mjz_arrayClassTypeMappingForAutomaticValidation` and return a dictionary containing pairs of *array property name* and *class type* for its content.
+In order to support automatic validation for array content (objects inside of an array), you must override the method `-mjz_motisArrayClassMapping` and return a dictionary containing pairs of *array property name* and *class type* for its content.
 
 ##### Manual Validation
 
