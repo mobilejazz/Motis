@@ -31,7 +31,7 @@
 @interface NSObject (Motis)
 
 /** ---------------------------------------------- **
- * @name Parsing Methods
+ * @name Object Mapping Methods
  ** ---------------------------------------------- **/
 
 /**
@@ -71,9 +71,9 @@
 /**
  * Motis Object Subclassing
  *
- * PARSING MAPPINGS
+ * OBJECT MAPPINGS
  *
- * In order to use KVCParsign you must define mappings between JSON keys and object properties by overriding the following methods:
+ * In order to use Motis you must define mappings between JSON keys and object properties by overriding the following methods:
  *
  *  - `mjz_motisMapping`: Subclasses must override this method and return the mapping between the JSON keys and the object properties.
  *  - `mjz_motisShouldSetUndefinedKeys`: Optionally, subclasses can override this method to forbid Motis from automatically setting keys not found in the mapping. The default is `YES`.

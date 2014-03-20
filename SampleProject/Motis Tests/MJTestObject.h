@@ -11,16 +11,16 @@
 @interface MJTestObject : NSObject
 
 @property (nonatomic, assign) BOOL boolField;
-@property (nonatomic, assign) char charField;
-@property (nonatomic, assign) unsigned char unsignedCharField;
-@property (nonatomic, assign) short shortField;
-@property (nonatomic, assign) unsigned short unsignedShortField;
-@property (nonatomic, assign) int intField;
-@property (nonatomic, assign) unsigned int unsignedIntField;
-@property (nonatomic, assign) long longField;
-@property (nonatomic, assign) unsigned long unsignedLongField;
-@property (nonatomic, assign) long long longLongField;
-@property (nonatomic, assign) unsigned long long unsignedLongLongField;
+
+@property (nonatomic, assign) UInt8 unsigned8Field;
+@property (nonatomic, assign) SInt8 signed8Field;
+@property (nonatomic, assign) UInt16 unsigned16Field;
+@property (nonatomic, assign) SInt16 signed16Field;
+@property (nonatomic, assign) UInt32 unsigned32Field;
+@property (nonatomic, assign) SInt32 signed32Field;
+@property (nonatomic, assign) UInt64 unsigned64Field;
+@property (nonatomic, assign) SInt64 signed64Field;
+
 @property (nonatomic, assign) float floatField;
 @property (nonatomic, assign) double doubleField;
 

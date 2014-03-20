@@ -19,18 +19,19 @@
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         mapping = @{@"bool": @"boolField",
-                    @"char": @"charField",
-                    @"unsigned_char": @"unsignedCharField",
-                    @"short": @"shortField",
-                    @"unsigned_short": @"unsignedShortField",
-                    @"int": @"intField",
-                    @"unsigned_int": @"unsignedIntField",
-                    @"long": @"longField",
-                    @"unsigned_long": @"unsignedLongField",
-                    @"long_long": @"longLongField",
-                    @"unsigned_long_long": @"unsignedLongLongField",
+                    
+                    @"unsigned_8":  @"unsigned8Field",
+                    @"signed_8":    @"signed8Field",
+                    @"unsigned_16": @"unsigned16Field",
+                    @"signed_16":   @"signed16Field",
+                    @"unsigned_32": @"unsigned32Field",
+                    @"signed_32":   @"signed32Field",
+                    @"unsigned_64": @"unsigned64Field",
+                    @"signed_64":   @"signed64Field",
+                    
                     @"float": @"floatField",
                     @"double": @"doubleField",
+                    
                     @"string": @"stringField",
                     @"number": @"numberField",
                     @"url": @"urlField",
