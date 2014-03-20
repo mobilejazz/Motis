@@ -17,7 +17,7 @@ Your custom object (subclass of `NSObject`) needs to override the method `mjz_mo
 	return @{@"json_attribute_key_1" : @"class_property_name_1",
 		@"json_attribute_key_2" : @"class_property_name_2",
 		...
-		@"json_attribute_key_N" : @"class_property_name_N",
+		@"json_attribute_key_N" : @"class_property_name_M",
 	};
 }
 ```
