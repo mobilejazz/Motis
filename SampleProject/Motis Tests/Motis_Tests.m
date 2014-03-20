@@ -108,7 +108,7 @@
         _object.boolField = NO;
         [_object mjz_setValue:number forKey:@"bool"];
         if (_object.boolField != number.boolValue)
-            XCTFail(@"Failed to map number value %@", number.description);
+            XCTFail(@"Failed to map number value %@ --> %d", number.description, _object.boolField);
     }
 }
 
@@ -268,7 +268,7 @@
         [_object mjz_setValue:string forKey:@"bool"];
         
         if (_object.boolField != originalNumber.boolValue)
-            XCTFail(@"Failed to map number value %@", originalNumber.description);
+            XCTFail(@"Failed to map number value %@ --> %d", originalNumber.description, _object.boolField);
     }
 }
 

@@ -167,7 +167,7 @@
     
     if (validated)
     {
-        if (value == nil && ![self mjz_isClassTypeTypeAttribute:mappedKey])
+        if (value == nil && ![self mjz_isClassTypeTypeAttribute:[self mjz_typeAttributeForKey:mappedKey]])
             [self mjz_nullValueForKey:mappedKey];
         else
             [self setValue:value forKey:mappedKey];
@@ -438,8 +438,11 @@
                         *ioValue = @(number.boolValue);
                     else
                         *ioValue = @([*ioValue boolValue]);
+                    
+                    return *ioValue != nil;
                 }
             }
+
 
 //            else if (strcmp(rawPropertyType, @encode(char)) == 0)
 //            {
