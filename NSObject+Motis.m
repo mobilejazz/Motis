@@ -17,7 +17,7 @@
 #import "NSObject+Motis.h"
 #import <objc/runtime.h>
 
-#define MOTIS_DEBUG 0
+#define MOTIS_DEBUG 0 // <-- set 1 to get debug logs
 
 #if MOTIS_DEBUG
 #define MLog(format, ...) NSLog(@"%@",[NSString stringWithFormat:format, ## __VA_ARGS__]);
@@ -34,6 +34,10 @@
 #pragma mark - Motis_Private
 
 @interface NSObject (Motis_Private)
+
+- (NSString*)mjz_typeAttributeForKey:(NSString*)key;
+- (BOOL)mjz_isClassTypeTypeAttribute:(NSString*)typeAttribute;
+- (Class)mjz_classForTypeAttribute:(NSString*)typeAttribute;
 
 /**
  * Return YES if the value has been automatically validated. The newer value is setted in the pointer.
@@ -78,12 +82,8 @@
         return;
     }
     
-    // if nil or NSNull, nillify value.
-    if (value == [NSNull null] || value == nil)
-    {
-        [self setValue:nil forKey:mappedKey];
-        return;
-    }
+    if (value == [NSNull null])
+        value = nil;
     
     if ([value isKindOfClass:NSArray.class])
     {
@@ -141,7 +141,12 @@
         validated = [self mjz_validateAutomaticallyValue:&value forKey:mappedKey];
     
     if (validated)
-        [self setValue:value forKey:mappedKey];
+    {
+        if (value == nil && ![self mjz_isClassTypeTypeAttribute:mappedKey])
+            [self mjz_nullValueForKey:mappedKey];
+        else
+            [self setValue:value forKey:mappedKey];
+    }
     else
         [self mjz_invalidValue:value forKey:mappedKey error:error];
 }
@@ -248,6 +253,12 @@
     MLog(@"Item for ArrayKey <%@> is not valid in class %@. Error: %@", key, [self.class description], error);
 }
 
+- (void)mjz_nullValueForKey:(NSString *)key
+{
+    // Subclasses may override and reset scalar values for the given "key" property name.
+    MLog(@"Null value for key %@ in class %@", key, [self.class description]);
+}
+
 @end
 
 
@@ -260,7 +271,7 @@
 
 @implementation NSObject (Motis_Private)
 
-- (BOOL)mjz_validateAutomaticallyValue:(inout __autoreleasing id *)ioValue forKey:(NSString*)key
+- (NSString*)mjz_typeAttributeForKey:(NSString*)key
 {
     objc_property_t property = class_getProperty(self.class, key.UTF8String);
     
@@ -270,14 +281,39 @@
     NSArray * attributes = [typeString componentsSeparatedByString:@","];
     NSString * typeAttribute = [attributes objectAtIndex:0];
     
-    if ([typeAttribute hasPrefix:@"T@"] && [typeAttribute length] > 1) // if property is a pointer to a class
+    return typeAttribute;
+}
+
+- (BOOL)mjz_isClassTypeTypeAttribute:(NSString*)typeAttribute
+{
+    return [typeAttribute hasPrefix:@"T@"] && ([typeAttribute length] > 1);
+}
+
+- (Class)mjz_classForTypeAttribute:(NSString*)typeAttribute
+{
+    if ([self mjz_isClassTypeTypeAttribute:typeAttribute])
     {
-        NSString * typeClassName = [typeAttribute substringWithRange:NSMakeRange(3, [typeAttribute length]-4)];
-        Class typeClass = NSClassFromString(typeClassName);
+        NSString *typeClassName = [typeAttribute substringWithRange:NSMakeRange(3, [typeAttribute length]-4)];
+        return NSClassFromString(typeClassName);
+    }
+    
+    return nil;
+}
+
+- (BOOL)mjz_validateAutomaticallyValue:(inout __autoreleasing id *)ioValue forKey:(NSString*)key
+{
+    if (*ioValue == nil)
+        return YES;
+    
+    NSString * typeAttribute = [self mjz_typeAttributeForKey:key];
+    
+    if ([self mjz_isClassTypeTypeAttribute:typeAttribute])
+    {
+        Class typeClass = [self mjz_classForTypeAttribute:typeAttribute];
         
         if (typeClass != nil)
         {
-            MLog(@"%@ --> %@", key, typeClassName);
+            MLog(@"%@ --> %@", key, NSStringFromClass(typeClass));
             return [self mjz_validateAutomaticallyValue:ioValue toClass:typeClass forKey:key];
         }
         

@@ -47,6 +47,7 @@
                                @"title": @"Dancing worldwide",
                                @"description": @"Dancing worldwide is the awesomest video ever!",
                                @"last_view_time": @1390767064.0,
+                               @"likes_count": [NSNull null],
                                @"uploader":@{@"user_name":@"Joan",
                                              @"user_id": @7,
                                              @"followers": @209
@@ -81,6 +82,7 @@
     
     // Setting any value for testing purposes.
     video.privateVideoKey = @"my_private_key";
+    video.likesCount = 21;
     
     NSLog(@"BEFORE parsing: %@", video.mjz_extendedObjectDescription);
     NSLog(@"video.privateVideoKey: %@",[video.privateVideoKey description]);

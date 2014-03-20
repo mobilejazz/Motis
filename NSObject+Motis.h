@@ -189,4 +189,11 @@
  **/
 - (void)mjz_invalidValue:(id)value forArrayKey:(NSString *)key error:(NSError*)error;
 
+/**
+ * When the JSON dictionary contains a null value, if the correspondent mapped property is an object it is nillifyed by default. However, scalar types cannot be nillified via KVC, therefore Motis is ignoring "null" values if the mapped type is basic. This method is called when a scalar type recives a "null".
+ * @param key The key of the scalar/basic property.
+ * @discussion Use this method to reset to "zero" your scalar types if needed.
+ **/
+- (void)mjz_nullValueForKey:(NSString *)key;
+
 @end
