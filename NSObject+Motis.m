@@ -20,9 +20,9 @@
 #define MOTIS_DEBUG 0 // <-- set 1 to get debug logs
 
 #if MOTIS_DEBUG
-#define MLog(format, ...) NSLog(@"%@",[NSString stringWithFormat:format, ## __VA_ARGS__]);
+#define MJLog(format, ...) NSLog(@"%@",[NSString stringWithFormat:format, ## __VA_ARGS__]);
 #else
-#define MLog(format, ...)
+#define MJLog(format, ...)
 #endif
 
 
@@ -263,25 +263,25 @@
 - (void)mjz_restrictSetValue:(id)value forUndefinedMappingKey:(NSString*)key
 {
     // Subclasses might override.
-    MLog(@"Undefined Mapping Key <%@> in class %@.", key, [self.class description]);
+    MJLog(@"Undefined Mapping Key <%@> in class %@.", key, [self.class description]);
 }
 
 - (void)mjz_invalidValue:(id)value forKey:(NSString *)key error:(NSError*)error
 {
     // Subclasses might override.
-    MLog(@"Value for Key <%@> is not valid in class %@. Error: %@", key, [self.class description], error);
+    MJLog(@"Value for Key <%@> is not valid in class %@. Error: %@", key, [self.class description], error);
 }
 
 - (void)mjz_invalidValue:(id)value forArrayKey:(NSString *)key error:(NSError*)error
 {
     // Subclasses might override.
-    MLog(@"Item for ArrayKey <%@> is not valid in class %@. Error: %@", key, [self.class description], error);
+    MJLog(@"Item for ArrayKey <%@> is not valid in class %@. Error: %@", key, [self.class description], error);
 }
 
 - (void)mjz_nullValueForKey:(NSString *)key
 {
     // Subclasses may override and reset scalar values for the given "key" property name.
-    MLog(@"Null value for key %@ in class %@", key, [self.class description]);
+    MJLog(@"Null value for key %@ in class %@", key, [self.class description]);
 }
 
 @end
@@ -338,7 +338,7 @@
         
         if (typeClass != nil)
         {
-            MLog(@"%@ --> %@", key, NSStringFromClass(typeClass));
+            MJLog(@"%@ --> %@", key, NSStringFromClass(typeClass));
             return [self mjz_validateAutomaticallyValue:ioValue toClass:typeClass forKey:key];
         }
         
