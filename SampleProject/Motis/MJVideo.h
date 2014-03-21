@@ -38,6 +38,11 @@
 @property (nonatomic, assign) NSInteger viewCount;
 
 /**
+ * Number of video likes.
+ **/
+@property (nonatomic, assign) NSInteger likesCount;
+
+/**
  * Title of the video.
  **/
 @property (nonatomic, strong) NSString *title;

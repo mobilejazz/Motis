@@ -31,7 +31,7 @@
 @interface NSObject (Motis)
 
 /** ---------------------------------------------- **
- * @name Parsing Methods
+ * @name Object Mapping Methods
  ** ---------------------------------------------- **/
 
 /**
@@ -71,9 +71,9 @@
 /**
  * Motis Object Subclassing
  *
- * PARSING MAPPINGS
+ * OBJECT MAPPINGS
  *
- * In order to use KVCParsign you must define mappings between JSON keys and object properties by overriding the following methods:
+ * In order to use Motis you must define mappings between JSON keys and object properties by overriding the following methods:
  *
  *  - `mjz_motisMapping`: Subclasses must override this method and return the mapping between the JSON keys and the object properties.
  *  - `mjz_motisShouldSetUndefinedKeys`: Optionally, subclasses can override this method to forbid Motis from automatically setting keys not found in the mapping. The default is `YES`.
@@ -170,6 +170,7 @@
  * Notifies restricted values for undefined mapping keys.
  * @param value The value that has not been setted.
  * @param key The key undefined in the mapping.
+ * @discussion This method is called when the method `-mjz_motisShouldSetUndefinedKeys` return NO and Motis is trying to set a value for an undefined mapping key.
  **/
 - (void)mjz_restrictSetValue:(id)value forUndefinedMappingKey:(NSString*)key;
 
@@ -188,5 +189,12 @@
  * @param error The validation error.
  **/
 - (void)mjz_invalidValue:(id)value forArrayKey:(NSString *)key error:(NSError*)error;
+
+/**
+ * When the JSON dictionary contains a null value, if the correspondent mapped property is an object it is nillifyed by default. However, scalar types cannot be nillified via KVC, therefore Motis is ignoring "null" values if the mapped type is basic. This method is called when a scalar type recives a "null".
+ * @param key The key of the scalar/basic property.
+ * @discussion Use this method to reset to "zero" your scalar types if needed.
+ **/
+- (void)mjz_nullValueForKey:(NSString *)key;
 
 @end

@@ -23,6 +23,7 @@
 
 #pragma mark Motis Subclassing
 
+// JSON keys to object properties mapping
 - (NSDictionary*)mjz_motisMapping
 {
     static NSDictionary *mapping = nil;
@@ -36,6 +37,7 @@
                                       @"last_view_time": NSStringFromSelector(@selector(lastViewDate)),
                                       @"uploader": NSStringFromSelector(@selector(uploader)),
                                       @"users_cast": NSStringFromSelector(@selector(cast)),
+                                      @"likes_count": NSStringFromSelector(@selector(likesCount)),
                                       };
         NSMutableDictionary *mutableMapping = [[super mjz_motisMapping] mutableCopy];
         [mutableMapping addEntriesFromDictionary:JSONMapping];
@@ -45,18 +47,6 @@
     return mapping;
 }
 
-+ (BOOL)mjz_motisShouldSetUndefinedKeys
-{
-    return NO;
-}
-
-- (void)mjz_restrictSetValue:(id)value forUndefinedMappingKey:(NSString *)key
-{
-    NSLog(@"[WARNING]: Undefined mapping key: <%@> value: <%@>. Value has not been setted.", key, [value description]);
-}
-
-#pragma mark Motis Validation
-
 // Automatic array validation mapping
 - (NSDictionary*)mjz_motisArrayClassMapping
 {
@@ -65,7 +55,7 @@
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         NSDictionary *arrayMapping = @{NSStringFromSelector(@selector(cast)) : MJUser.class,
-                                      };
+                                       };
         NSMutableDictionary *mutableMapping = [[super mjz_motisArrayClassMapping] mutableCopy];
         [mutableMapping addEntriesFromDictionary:arrayMapping];
         mapping = mutableMapping;
@@ -74,54 +64,25 @@
     return mapping;
 }
 
-//- (id)mjz_willCreateObjectForKey:(NSString*)key ofClass:(Class)typeClass withDictionary:(NSDictionary*)dictionary abort:(BOOL*)abort
-//{
-//    // Subclasses might override.
-//    NSLog(@"WILL CREATE: %@ OF CLASS %@", key, NSStringFromClass(typeClass));
-//    return nil;
-//}
+// Only accept values from the mapping
++ (BOOL)mjz_motisShouldSetUndefinedKeys
+{
+    return NO;
+}
 
-// Automatic validation does the job!
-//- (BOOL)validateUploader:(id *)ioValue error:(NSError * __autoreleasing *)outError
-//{
-//    if ([*ioValue isKindOfClass:[NSDictionary class]])
-//    {
-//        MJUser *user = [[MJUser alloc] init];
-//        [user mjz_parseValuesForKeysWithDictionary:*ioValue];
-//        
-//        *ioValue = user;
-//    }
-//    
-//    return YES;
-//}
+// Log undefined mapping keys
+- (void)mjz_restrictSetValue:(id)value forUndefinedMappingKey:(NSString *)key
+{
+    NSLog(@"[%@] Undefined mapping key: <%@> value: <%@>. Value has not been set.", [self.class description], key, [value description]);
+}
 
-// Automatic validation does the job!
-//- (BOOL)validateLastViewDate:(id *)ioValue error:(NSError * __autoreleasing *)outError
-//{
-//    if ([*ioValue isKindOfClass:NSNumber.class])
-//    {
-//        NSDate *date = [NSDate dateWithTimeIntervalSince1970:[*ioValue doubleValue]];
-//        *ioValue = date;
-//    }
-//    
-//    return YES;
-//}
-
-// Automatic array validation does the job!
-//- (BOOL)mjz_validateArrayObject:(inout __autoreleasing id *)ioValue arrayKey:(NSString *)arrayKey arrayOriginalKey:(NSString *)arrayOriginalKey
-//{
-//    if ([arrayKey isEqualToString:@"cast"])
-//    {
-//        if ([*ioValue isKindOfClass:NSDictionary.class])
-//        {
-//            MJUser *user = [[MJUser alloc] init];
-//            [user mjz_parseValuesForKeysWithDictionary:*ioValue];
-//            
-//            *ioValue = user;
-//        }
-//    }
-//    
-//    return YES;
-//}
+// This method is called when received "null" in non-object types.
+- (void)mjz_nullValueForKey:(NSString *)key
+{
+    NSLog(@"[%@] Null value received for key: %@. Value should be manually set.",[self.class description], key);
+    
+    if ([key isEqualToString:@"likesCount"])
+        _likesCount = -1; // <-- Generic default value
+}
 
 @end

@@ -7,8 +7,15 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D201AA0918DC2ED200E5F26D /* MJTestObject2.m in Sources */ = {isa = PBXBuildFile; fileRef = D201AA0818DC2ED200E5F26D /* MJTestObject2.m */; };
 		D21D6FB218D7470D000E620B /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = D21D6FB018D7470D000E620B /* InfoPlist.strings */; };
 		D21D6FB518D74717000E620B /* NSObject+Motis.m in Sources */ = {isa = PBXBuildFile; fileRef = D21D6FB418D74717000E620B /* NSObject+Motis.m */; };
+		D2A0544418D8A5B80050DE68 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D2C3464F18959EF2005B6B5C /* XCTest.framework */; };
+		D2A0544518D8A5B80050DE68 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D2C3463618959EF2005B6B5C /* Foundation.framework */; };
+		D2A0544618D8A5B80050DE68 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D2C3463A18959EF2005B6B5C /* UIKit.framework */; };
+		D2A0544C18D8A5B80050DE68 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = D2A0544A18D8A5B80050DE68 /* InfoPlist.strings */; };
+		D2A0544E18D8A5B80050DE68 /* Motis_Tests.m in Sources */ = {isa = PBXBuildFile; fileRef = D2A0544D18D8A5B80050DE68 /* Motis_Tests.m */; };
+		D2A0545718D8A5CE0050DE68 /* MJTestObject.m in Sources */ = {isa = PBXBuildFile; fileRef = D2A0545618D8A5CE0050DE68 /* MJTestObject.m */; };
 		D2C3463718959EF2005B6B5C /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D2C3463618959EF2005B6B5C /* Foundation.framework */; };
 		D2C3463918959EF2005B6B5C /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D2C3463818959EF2005B6B5C /* CoreGraphics.framework */; };
 		D2C3463B18959EF2005B6B5C /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D2C3463A18959EF2005B6B5C /* UIKit.framework */; };
@@ -19,10 +26,29 @@
 		D2DF758518D746C200163BA8 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = D2DF758218D746C200163BA8 /* main.m */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		D2A0545018D8A5B80050DE68 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D2C3462B18959EF2005B6B5C /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D2C3463218959EF2005B6B5C;
+			remoteInfo = Motis;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
+		D201AA0718DC2ED200E5F26D /* MJTestObject2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MJTestObject2.h; sourceTree = "<group>"; };
+		D201AA0818DC2ED200E5F26D /* MJTestObject2.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MJTestObject2.m; sourceTree = "<group>"; };
 		D21D6FB118D7470D000E620B /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = InfoPlist.strings; sourceTree = "<group>"; };
 		D21D6FB318D74717000E620B /* NSObject+Motis.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSObject+Motis.h"; path = "../../NSObject+Motis.h"; sourceTree = "<group>"; };
 		D21D6FB418D74717000E620B /* NSObject+Motis.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSObject+Motis.m"; path = "../../NSObject+Motis.m"; sourceTree = "<group>"; };
+		D2A0544318D8A5B80050DE68 /* Motis Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Motis Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		D2A0544918D8A5B80050DE68 /* Motis Tests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Motis Tests-Info.plist"; sourceTree = "<group>"; };
+		D2A0544B18D8A5B80050DE68 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		D2A0544D18D8A5B80050DE68 /* Motis_Tests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Motis_Tests.m; sourceTree = "<group>"; };
+		D2A0544F18D8A5B80050DE68 /* Motis Tests-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Motis Tests-Prefix.pch"; sourceTree = "<group>"; };
+		D2A0545518D8A5CE0050DE68 /* MJTestObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MJTestObject.h; sourceTree = "<group>"; };
+		D2A0545618D8A5CE0050DE68 /* MJTestObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MJTestObject.m; sourceTree = "<group>"; };
 		D2C3463318959EF2005B6B5C /* Motis.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Motis.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D2C3463618959EF2005B6B5C /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		D2C3463818959EF2005B6B5C /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -41,6 +67,16 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		D2A0544018D8A5B80050DE68 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D2A0544418D8A5B80050DE68 /* XCTest.framework in Frameworks */,
+				D2A0544618D8A5B80050DE68 /* UIKit.framework in Frameworks */,
+				D2A0544518D8A5B80050DE68 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		D2C3463018959EF2005B6B5C /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -63,10 +99,34 @@
 			path = Motis/en.lproj;
 			sourceTree = SOURCE_ROOT;
 		};
+		D2A0544718D8A5B80050DE68 /* Motis Tests */ = {
+			isa = PBXGroup;
+			children = (
+				D2A0544D18D8A5B80050DE68 /* Motis_Tests.m */,
+				D2A0544818D8A5B80050DE68 /* Supporting Files */,
+				D2A0545518D8A5CE0050DE68 /* MJTestObject.h */,
+				D2A0545618D8A5CE0050DE68 /* MJTestObject.m */,
+				D201AA0718DC2ED200E5F26D /* MJTestObject2.h */,
+				D201AA0818DC2ED200E5F26D /* MJTestObject2.m */,
+			);
+			path = "Motis Tests";
+			sourceTree = "<group>";
+		};
+		D2A0544818D8A5B80050DE68 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				D2A0544918D8A5B80050DE68 /* Motis Tests-Info.plist */,
+				D2A0544A18D8A5B80050DE68 /* InfoPlist.strings */,
+				D2A0544F18D8A5B80050DE68 /* Motis Tests-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
 		D2C3462A18959EF2005B6B5C = {
 			isa = PBXGroup;
 			children = (
 				D2C3463C18959EF2005B6B5C /* Motis */,
+				D2A0544718D8A5B80050DE68 /* Motis Tests */,
 				D2C3463518959EF2005B6B5C /* Frameworks */,
 				D2C3463418959EF2005B6B5C /* Products */,
 			);
@@ -76,6 +136,7 @@
 			isa = PBXGroup;
 			children = (
 				D2C3463318959EF2005B6B5C /* Motis.app */,
+				D2A0544318D8A5B80050DE68 /* Motis Tests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -122,6 +183,24 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		D2A0544218D8A5B80050DE68 /* Motis Tests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D2A0545418D8A5B80050DE68 /* Build configuration list for PBXNativeTarget "Motis Tests" */;
+			buildPhases = (
+				D2A0543F18D8A5B80050DE68 /* Sources */,
+				D2A0544018D8A5B80050DE68 /* Frameworks */,
+				D2A0544118D8A5B80050DE68 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				D2A0545118D8A5B80050DE68 /* PBXTargetDependency */,
+			);
+			name = "Motis Tests";
+			productName = "Motis Tests";
+			productReference = D2A0544318D8A5B80050DE68 /* Motis Tests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		D2C3463218959EF2005B6B5C /* Motis */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = D2C3465F18959EF2005B6B5C /* Build configuration list for PBXNativeTarget "Motis" */;
@@ -148,6 +227,11 @@
 				CLASSPREFIX = MJ;
 				LastUpgradeCheck = 0510;
 				ORGANIZATIONNAME = "Mobile Jazz";
+				TargetAttributes = {
+					D2A0544218D8A5B80050DE68 = {
+						TestTargetID = D2C3463218959EF2005B6B5C;
+					};
+				};
 			};
 			buildConfigurationList = D2C3462E18959EF2005B6B5C /* Build configuration list for PBXProject "Motis" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -162,11 +246,20 @@
 			projectRoot = "";
 			targets = (
 				D2C3463218959EF2005B6B5C /* Motis */,
+				D2A0544218D8A5B80050DE68 /* Motis Tests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		D2A0544118D8A5B80050DE68 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D2A0544C18D8A5B80050DE68 /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		D2C3463118959EF2005B6B5C /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -179,6 +272,16 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		D2A0543F18D8A5B80050DE68 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D2A0544E18D8A5B80050DE68 /* Motis_Tests.m in Sources */,
+				D201AA0918DC2ED200E5F26D /* MJTestObject2.m in Sources */,
+				D2A0545718D8A5CE0050DE68 /* MJTestObject.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		D2C3462F18959EF2005B6B5C /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -193,6 +296,14 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		D2A0545118D8A5B80050DE68 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D2C3463218959EF2005B6B5C /* Motis */;
+			targetProxy = D2A0545018D8A5B80050DE68 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin PBXVariantGroup section */
 		D21D6FB018D7470D000E620B /* InfoPlist.strings */ = {
 			isa = PBXVariantGroup;
@@ -202,9 +313,61 @@
 			name = InfoPlist.strings;
 			sourceTree = "<group>";
 		};
+		D2A0544A18D8A5B80050DE68 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				D2A0544B18D8A5B80050DE68 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		D2A0545218D8A5B80050DE68 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Motis.app/Motis";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Motis Tests/Motis Tests-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				INFOPLIST_FILE = "Motis Tests/Motis Tests-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = xctest;
+			};
+			name = Debug;
+		};
+		D2A0545318D8A5B80050DE68 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Motis.app/Motis";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Motis Tests/Motis Tests-Prefix.pch";
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				INFOPLIST_FILE = "Motis Tests/Motis Tests-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = xctest;
+			};
+			name = Release;
+		};
 		D2C3465D18959EF2005B6B5C /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -304,6 +467,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		D2A0545418D8A5B80050DE68 /* Build configuration list for PBXNativeTarget "Motis Tests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D2A0545218D8A5B80050DE68 /* Debug */,
+				D2A0545318D8A5B80050DE68 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		D2C3462E18959EF2005B6B5C /* Build configuration list for PBXProject "Motis" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
