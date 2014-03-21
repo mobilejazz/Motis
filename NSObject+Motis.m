@@ -298,13 +298,28 @@
 
 - (NSString*)mjz_typeAttributeForKey:(NSString*)key
 {
+    static NSMutableDictionary *typeAttributes = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        typeAttributes = [NSMutableDictionary dictionary];
+    });
+    
+    NSString *typeAttribute = typeAttributes[key];
+    if (typeAttribute)
+        return typeAttribute;
+    
     objc_property_t property = class_getProperty(self.class, key.UTF8String);
+    
+    if (!property)
+        return nil;
     
     const char * type = property_getAttributes(property);
     
     NSString * typeString = [NSString stringWithUTF8String:type];
     NSArray * attributes = [typeString componentsSeparatedByString:@","];
-    NSString * typeAttribute = [attributes objectAtIndex:0];
+    typeAttribute = [attributes objectAtIndex:0];
+    
+    typeAttributes[key] = typeAttribute;
     
     return typeAttribute;
 }
@@ -332,6 +347,9 @@
     
     NSString * typeAttribute = [self mjz_typeAttributeForKey:key];
     
+    if (!typeAttribute) // <-- If no attribute, abort automatic validation
+        return YES;
+    
     if ([self mjz_isClassTypeTypeAttribute:typeAttribute])
     {
         Class typeClass = [self mjz_classForTypeAttribute:typeAttribute];
@@ -351,88 +369,25 @@
         
         if ([*ioValue isKindOfClass:NSNumber.class])
         {
+#if defined(__LP64__) && __LP64__
+            // Nothing to do
+#else
+            if (strcmp(rawPropertyType, @encode(BOOL)) == 0)
+            {
+                *ioValue = @([*ioValue boolValue]);
+                return *ioValue != nil;
+            }
+#endif
             // Conversion from NSNumber to basic types is already handled by the system.
             return YES;
         }
         else if ([*ioValue isKindOfClass:NSString.class])
         {
-            if (strcmp(rawPropertyType, @encode(SInt8)) == 0)
+            if (strcmp(rawPropertyType, @encode(BOOL)) == 0)
             {
                 if ([*ioValue isKindOfClass:NSString.class])
                 {
-                    NSNumber *number = [[self.class mjz_decimalFormatter] numberFromString:*ioValue];
-                    *ioValue = @((SInt8)number.longLongValue);
-                    return *ioValue != nil;
-                }
-            }
-            else if (strcmp(rawPropertyType, @encode(UInt8)) == 0)
-            {
-                if ([*ioValue isKindOfClass:NSString.class])
-                {
-                    NSNumber *number = [[self.class mjz_decimalFormatter] numberFromString:*ioValue];
-                    *ioValue = @((UInt8)number.unsignedLongLongValue);
-                    return *ioValue != nil;
-                }
-            }
-            else if (strcmp(rawPropertyType, @encode(SInt16)) == 0)
-            {
-                if ([*ioValue isKindOfClass:NSString.class])
-                {
-                    NSNumber *number = [[self.class mjz_decimalFormatter] numberFromString:*ioValue];
-                    *ioValue = @((SInt16)number.longLongValue);
-                    return *ioValue != nil;
-                }
-            }
-            else if (strcmp(rawPropertyType, @encode(UInt16)) == 0)
-            {
-                if ([*ioValue isKindOfClass:NSString.class])
-                {
-                    NSNumber *number = [[self.class mjz_decimalFormatter] numberFromString:*ioValue];
-                    *ioValue = @((UInt16)number.unsignedLongLongValue);
-                    return *ioValue != nil;
-                }
-            }
-            else if (strcmp(rawPropertyType, @encode(SInt32)) == 0)
-            {
-                if ([*ioValue isKindOfClass:NSString.class])
-                {
-                    NSNumber *number = [[self.class mjz_decimalFormatter] numberFromString:*ioValue];
-                    *ioValue = @((SInt32)number.longLongValue);
-                    return *ioValue != nil;
-                }
-            }
-            else if (strcmp(rawPropertyType, @encode(UInt32)) == 0)
-            {
-                if ([*ioValue isKindOfClass:NSString.class])
-                {
-                    NSNumber *number = [[self.class mjz_decimalFormatter] numberFromString:*ioValue];
-                    *ioValue = @((UInt32)number.unsignedLongLongValue);
-                    return *ioValue != nil;
-                }
-            }
-            else if (strcmp(rawPropertyType, @encode(SInt64)) == 0)
-            {
-                if ([*ioValue isKindOfClass:NSString.class])
-                {
-                    NSNumber *number = [[self.class mjz_decimalFormatter] numberFromString:*ioValue];
-                    *ioValue = @((SInt64)number.longLongValue);
-                    return *ioValue != nil;
-                }
-            }
-            else if (strcmp(rawPropertyType, @encode(UInt64)) == 0)
-            {
-                if ([*ioValue isKindOfClass:NSString.class])
-                {
-                    NSNumber *number = [[self.class mjz_decimalFormatter] numberFromString:*ioValue];
-                    *ioValue = @((UInt64)number.unsignedLongLongValue);
-                    return *ioValue != nil;
-                }
-            }
-            else if (strcmp(rawPropertyType, @encode(BOOL)) == 0)
-            {
-                if ([*ioValue isKindOfClass:NSString.class])
-                {
-                    NSNumber *number = [[self.class mjz_decimalFormatter] numberFromString:*ioValue];
+                    NSNumber *number = [[self.class mjz_decimalFormatterAllowFloats] numberFromString:*ioValue];
                     
                     if (number)
                         *ioValue = @(number.boolValue);
@@ -442,8 +397,17 @@
                     return *ioValue != nil;
                 }
             }
+            else if (strcmp(rawPropertyType, @encode(unsigned long long)) == 0)
+            {
+                if ([*ioValue isKindOfClass:NSString.class])
+                {
+                    *ioValue = [[self.class mjz_decimalFormatterNoFloats] numberFromString:*ioValue];
+                    return *ioValue != nil;
+                }
+            }
 
-
+            // Other conversions from NSString to basic types are already handled by the system.
+            
 //            else if (strcmp(rawPropertyType, @encode(char)) == 0)
 //            {
 //                if ([*ioValue isKindOfClass:NSString.class])
@@ -498,17 +462,6 @@
 //                    return *ioValue != nil;
 //                }
 //            }
-//            else if (strcmp(rawPropertyType, @encode(unsigned long long)) == 0)
-//            {
-//                if ([*ioValue isKindOfClass:NSString.class])
-//                {
-//                    NSNumber *number = [[self.class mjz_decimalFormatter] numberFromString:*ioValue];
-//                    *ioValue = @(number.unsignedLongLongValue);
-//                    return *ioValue != nil;
-//                }
-//            }
-            
-            // Other conversions from NSString to basic types are already handled by the system.
             
             return YES;
         }
@@ -542,13 +495,13 @@
         }
         else if ([typeClass isSubclassOfClass:NSNumber.class])
         {
-            NSNumberFormatter *formatter = [NSObject mjz_decimalFormatter];
+            NSNumberFormatter *formatter = [NSObject mjz_decimalFormatterAllowFloats];
             *ioValue = [formatter numberFromString:*ioValue];
             return *ioValue != nil;
         }
         if ([typeClass isSubclassOfClass:NSDate.class])
         {
-            NSNumberFormatter *formatter = [NSObject mjz_decimalFormatter];
+            NSNumberFormatter *formatter = [NSObject mjz_decimalFormatterAllowFloats];
             *ioValue = [formatter numberFromString:*ioValue];
             if (*ioValue == nil) return NO;
 
@@ -630,13 +583,26 @@
 
 #pragma mark Helpers
 
-+ (NSNumberFormatter*)mjz_decimalFormatter
++ (NSNumberFormatter*)mjz_decimalFormatterAllowFloats
 {
     static NSNumberFormatter *decimalFormatter = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         decimalFormatter = [NSNumberFormatter new];
         decimalFormatter.numberStyle = NSNumberFormatterDecimalStyle;
+        decimalFormatter.allowsFloats = YES;
+    });
+    return decimalFormatter;
+}
+
++ (NSNumberFormatter*)mjz_decimalFormatterNoFloats
+{
+    static NSNumberFormatter *decimalFormatter = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        decimalFormatter = [NSNumberFormatter new];
+        decimalFormatter.numberStyle = NSNumberFormatterDecimalStyle;
+        decimalFormatter.allowsFloats = NO;
     });
     return decimalFormatter;
 }

@@ -12,14 +12,8 @@
 
 @property (nonatomic, assign) BOOL boolField;
 
-@property (nonatomic, assign) UInt8 unsigned8Field;
-@property (nonatomic, assign) SInt8 signed8Field;
-@property (nonatomic, assign) UInt16 unsigned16Field;
-@property (nonatomic, assign) SInt16 signed16Field;
-@property (nonatomic, assign) UInt32 unsigned32Field;
-@property (nonatomic, assign) SInt32 signed32Field;
-@property (nonatomic, assign) UInt64 unsigned64Field;
-@property (nonatomic, assign) SInt64 signed64Field;
+@property (nonatomic, assign) NSInteger integerField;
+@property (nonatomic, assign) NSUInteger unsignedIntegerField;
 
 @property (nonatomic, assign) float floatField;
 @property (nonatomic, assign) double doubleField;
@@ -27,5 +21,10 @@
 @property (nonatomic, strong) NSString *stringField;
 @property (nonatomic, strong) NSNumber *numberField;
 @property (nonatomic, strong) NSURL *urlField;
+
+
+// This property is not included in the mapping
+@property (nonatomic, strong) NSString *privateStringField;
+@property (nonatomic, assign) NSInteger privateIntegerField;
 
 @end

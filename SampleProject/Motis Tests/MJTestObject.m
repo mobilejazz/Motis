@@ -20,14 +20,8 @@
     dispatch_once(&onceToken, ^{
         mapping = @{@"bool": @"boolField",
                     
-                    @"unsigned_8":  @"unsigned8Field",
-                    @"signed_8":    @"signed8Field",
-                    @"unsigned_16": @"unsigned16Field",
-                    @"signed_16":   @"signed16Field",
-                    @"unsigned_32": @"unsigned32Field",
-                    @"signed_32":   @"signed32Field",
-                    @"unsigned_64": @"unsigned64Field",
-                    @"signed_64":   @"signed64Field",
+                    @"integer": @"integerField",
+                    @"unsigned_integer": @"unsignedIntegerField",
                     
                     @"float": @"floatField",
                     @"double": @"doubleField",
@@ -46,14 +40,15 @@
     return NO;
 }
 
-- (void)setNilValueForKey:(NSString *)key
-{
-    NSLog(@"setting nil value for key : %@", key);
-}
-
 - (void)mjz_invalidValue:(id)value forKey:(NSString *)key error:(NSError *)error
 {
     NSLog(@"INVALID VALUE %@ FOR KEY %@", [value description], key);
+}
+
+- (void)mjz_nullValueForKey:(NSString *)key
+{
+    if ([key isEqualToString:@"boolField"])
+        _boolField = NO;
 }
 
 @end

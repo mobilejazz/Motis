@@ -170,6 +170,7 @@
  * Notifies restricted values for undefined mapping keys.
  * @param value The value that has not been setted.
  * @param key The key undefined in the mapping.
+ * @discussion This method is called when the method `-mjz_motisShouldSetUndefinedKeys` return NO and Motis is trying to set a value for an undefined mapping key.
  **/
 - (void)mjz_restrictSetValue:(id)value forUndefinedMappingKey:(NSString*)key;
 

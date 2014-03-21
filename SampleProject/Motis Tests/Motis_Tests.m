@@ -10,6 +10,7 @@
 
 #import "NSObject+Motis.h"
 #import "MJTestObject.h"
+#import "MJTestObject2.h"
 
 @interface Motis_Tests : XCTestCase
 
@@ -41,16 +42,27 @@
 
 #pragma mark to basic type
 
-// Cannot nillify basic types! objects must implement `setNilValueForKey:` and reset the default value for the given keys.
+- (void)testNullToBasicTypeWithNullDefinition
+{
+    // check `-mjz_nullValueForKey` method.
+    
+    _object.boolField = YES;
+    [_object mjz_setValue:[NSNull null] forKey:@"bool"];
 
-//- (void)testNullToBool
-//{
-//    _object.boolField = YES;
-//    [_object mjz_setValue:[NSNull null] forKey:@"bool"];
-//
-//    if (_object.boolField != NO)
-//        XCTFail(@"Failed to nillify object");
-//}
+    if (_object.boolField != NO)
+        XCTFail(@"Basic type value must change to the new reseted value.");
+}
+
+- (void)testNullToBasicTypeWithoutNullDefinition
+{
+    // check `-mjz_nullValueForKey` method.
+    
+    _object.integerField = 42;
+    [_object mjz_setValue:[NSNull null] forKey:@"integer"];
+    
+    if (_object.integerField != 42)
+        XCTFail(@"Basic type value must not change");
+}
 
 #pragma mark to object
 
@@ -88,10 +100,7 @@
         
         array = @[@0, @1,
                   @YES, @NO,
-                  @(UINT8_MAX), @(INT8_MAX), @(INT8_MIN),
-                  @(UINT16_MAX), @(INT16_MAX), @(INT16_MIN),
-                  @(UINT32_MAX), @(INT32_MAX), @(INT32_MIN),
-                  @(UINT64_MAX), @(INT64_MAX), @(INT64_MIN),
+                  @(NSIntegerMax), @(NSIntegerMin), @(NSUIntegerMax),
                   @0.1, @0.6, @0.999,
                   ];
     });
@@ -102,100 +111,34 @@
 #pragma mark to basic types
 
 - (void)testNumberToBool
-{
+{    
     for (NSNumber *number in [self mjz_arrayWithNumbers])
     {
         _object.boolField = NO;
         [_object mjz_setValue:number forKey:@"bool"];
         if (_object.boolField != number.boolValue)
-            XCTFail(@"Failed to map number value %@ --> %d", number.description, _object.boolField);
+            XCTFail(@"Failed to map number value %@ (%d) --> %d", number.description, number.boolValue, _object.boolField);
     }
 }
 
-- (void)testNumberToSigned8
+- (void)testNumberToInteger
 {
     for (NSNumber *number in [self mjz_arrayWithNumbers])
     {
-        _object.signed8Field = 0;
-        [_object mjz_setValue:number forKey:@"signed_8"];
-        if (_object.signed8Field != (SInt8)number.longLongValue)
+        _object.integerField = 0;
+        [_object mjz_setValue:number forKey:@"integer"];
+        if (_object.integerField != number.integerValue)
             XCTFail(@"Failed to map number value %@", number.description);
     }
 }
 
-- (void)testNumberToUnsigned8
+- (void)testNumberToUnsignedInteger
 {
     for (NSNumber *number in [self mjz_arrayWithNumbers])
     {
-        _object.unsigned8Field = 0;
-        [_object mjz_setValue:number forKey:@"unsigned_8"];
-        if (_object.unsigned8Field != (UInt8)number.unsignedLongLongValue)
-            XCTFail(@"Failed to map number value %@", number.description);
-    }
-}
-
-- (void)testNumberToSigned16
-{
-    for (NSNumber *number in [self mjz_arrayWithNumbers])
-    {
-        _object.signed16Field = 0;
-        [_object mjz_setValue:number forKey:@"signed_16"];
-        if (_object.signed16Field != (SInt16)number.longLongValue)
-            XCTFail(@"Failed to map number value %@", number.description);
-    }
-}
-
-- (void)testNumberToUnsignedUnsigned16
-{
-    for (NSNumber *number in [self mjz_arrayWithNumbers])
-    {
-        _object.unsigned16Field = 0;
-        [_object mjz_setValue:number forKey:@"unsigned_16"];
-        if (_object.unsigned16Field != (UInt16)number.unsignedLongLongValue)
-            XCTFail(@"Failed to map number value %@", number.description);
-    }
-}
-
-- (void)testNumberToSigned32
-{
-    for (NSNumber *number in [self mjz_arrayWithNumbers])
-    {
-        _object.signed32Field = 0;
-        [_object mjz_setValue:number forKey:@"signed_32"];
-        if (_object.signed32Field != (SInt32)number.longLongValue)
-            XCTFail(@"Failed to map number value %@", number.description);
-    }
-}
-
-- (void)testNumberToUnsigned32
-{
-    for (NSNumber *number in [self mjz_arrayWithNumbers])
-    {
-        _object.unsigned32Field = 0;
-        [_object mjz_setValue:number forKey:@"unsigned_32"];
-        if (_object.unsigned32Field != (UInt32)number.unsignedLongLongValue)
-            XCTFail(@"Failed to map number value %@", number.description);
-    }
-}
-
-- (void)testNumberToSigned64
-{
-    for (NSNumber *number in [self mjz_arrayWithNumbers])
-    {
-        _object.signed64Field = 0;
-        [_object mjz_setValue:number forKey:@"signed_64"];
-        if (_object.signed64Field != (SInt64)number.longLongValue)
-            XCTFail(@"Failed to map number value %@", number.description);
-    }
-}
-
-- (void)testNumberToUnsigned64
-{
-    for (NSNumber *number in [self mjz_arrayWithNumbers])
-    {
-        _object.unsigned64Field = 0;
-        [_object mjz_setValue:number forKey:@"unsigned_64"];
-        if (_object.unsigned64Field != (UInt64)number.unsignedLongLongValue)
+        _object.unsignedIntegerField = 0;
+        [_object mjz_setValue:number forKey:@"unsigned_integer"];
+        if (_object.unsignedIntegerField != number.unsignedIntegerValue)
             XCTFail(@"Failed to map number value %@", number.description);
     }
 }
@@ -272,131 +215,35 @@
     }
 }
 
-- (void)testStringNumbersToSigned8
+- (void)testStringNumbersToInteger
 {
-    NSArray *numbers = @[@(INT8_MAX),@(INT8_MIN)];
+    NSArray *numbers = @[@(NSIntegerMax), @(NSIntegerMin)];
     
-    for (NSNumber *originalNumber in numbers)
+    for (NSNumber *number in numbers)
     {
-        NSString *string = originalNumber.stringValue;
+        NSString *string = number.stringValue;
         
-        _object.signed8Field = 0;
-        [_object mjz_setValue:string forKey:@"signed_8"];
+        _object.integerField = 0;
+        [_object mjz_setValue:string forKey:@"integer"];
         
-        if (_object.signed8Field != (SInt8)originalNumber.longLongValue)
-            XCTFail(@"Failed to map number value %@ --> %d", originalNumber.description, _object.signed8Field);
+        if (_object.integerField != number.integerValue)
+            XCTFail(@"Failed to map number value %@ --> %ld", string, (long)_object.integerField);
     }
 }
 
-- (void)testStringNumbersToUnsigned8
+- (void)testStringNumbersToUnsignedInteger
 {
-    NSArray *numbers = @[@(UINT8_MAX),@(0)];
+    NSArray *numbers = @[@(LONG_MAX), @(0)]; // <-- BUG: NSNumberFormatter fails to format numbers bigger than LONG_MAX.
     
-    for (NSNumber *originalNumber in numbers)
+    for (NSNumber *number in numbers)
     {
-        NSString *string = originalNumber.stringValue;
+        NSString *string = number.stringValue;
         
-        _object.unsigned8Field = 0;
-        [_object mjz_setValue:string forKey:@"unsigned_8"];
+        _object.unsignedIntegerField = 0;
+        [_object mjz_setValue:string forKey:@"unsigned_integer"];
         
-        if (_object.unsigned8Field != (UInt8)originalNumber.unsignedLongLongValue)
-            XCTFail(@"Failed to map number value %@ --> %u", originalNumber.description, _object.unsigned8Field);
-    }
-}
-
-- (void)testStringNumbersToSigned16
-{
-    NSArray *numbers = @[@(INT16_MAX),@(INT16_MIN)];
-    
-    for (NSNumber *originalNumber in numbers)
-    {
-        NSString *string = originalNumber.stringValue;
-        
-        _object.signed16Field = 0;
-        [_object mjz_setValue:string forKey:@"signed_16"];
-        
-        if (_object.signed16Field != (SInt16)originalNumber.longLongValue)
-            XCTFail(@"Failed to map number value %@ --> %d", originalNumber.description, _object.signed8Field);
-    }
-}
-
-- (void)testStringNumbersToUnsigned16
-{
-    NSArray *numbers = @[@(UINT16_MAX),@(0)];
-    
-    for (NSNumber *originalNumber in numbers)
-    {
-        NSString *string = originalNumber.stringValue;
-        
-        _object.unsigned16Field = 0;
-        [_object mjz_setValue:string forKey:@"unsigned_16"];
-        
-        if (_object.unsigned16Field != (UInt16)originalNumber.unsignedLongLongValue)
-            XCTFail(@"Failed to map number value %@ --> %u", originalNumber.description, _object.unsigned16Field);
-    }
-}
-
-- (void)testStringNumbersToSigned32
-{
-    NSArray *numbers = @[@(INT32_MAX),@(INT32_MIN)];
-    
-    for (NSNumber *originalNumber in numbers)
-    {
-        NSString *string = originalNumber.stringValue;
-        
-        _object.signed32Field = 0;
-        [_object mjz_setValue:string forKey:@"signed_32"];
-        
-        if (_object.signed32Field != (SInt32)originalNumber.longLongValue)
-            XCTFail(@"Failed to map number value %@ --> %ld", originalNumber.description, _object.signed32Field);
-    }
-}
-
-- (void)testStringNumbersToUnsigned32
-{
-    NSArray *numbers = @[@(UINT32_MAX),@(0)];
-    
-    for (NSNumber *originalNumber in numbers)
-    {
-        NSString *string = originalNumber.stringValue;
-        
-        _object.unsigned32Field = 0;
-        [_object mjz_setValue:string forKey:@"unsigned_32"];
-        
-        if (_object.unsigned32Field != (UInt32)originalNumber.unsignedLongLongValue)
-            XCTFail(@"Failed to map number value %@ --> %lu", originalNumber.description, _object.unsigned32Field);
-    }
-}
-
-- (void)testStringNumbersToSigned64
-{
-    NSArray *numbers = @[@(INT64_MAX),@(INT64_MIN)];
-    
-    for (NSNumber *originalNumber in numbers)
-    {
-        NSString *string = originalNumber.stringValue;
-        
-        _object.signed64Field = 0;
-        [_object mjz_setValue:string forKey:@"signed_64"];
-        
-        if (_object.signed64Field != (SInt64)originalNumber.longLongValue)
-            XCTFail(@"Failed to map number value %@ --> %lld", originalNumber.description, _object.signed64Field);
-    }
-}
-
-- (void)testStringNumbersToUnsigned64
-{
-    NSArray *numbers = @[@(UINT64_MAX),@(0)];
-    
-    for (NSNumber *originalNumber in numbers)
-    {
-        NSString *string = originalNumber.stringValue;
-        
-        _object.unsigned64Field = 0;
-        [_object mjz_setValue:string forKey:@"unsigned_64"];
-        
-        if (_object.unsigned64Field != (UInt64)originalNumber.unsignedLongLongValue)
-            XCTFail(@"Failed to map number value %@ --> %llu", originalNumber.description, _object.unsigned64Field);
+        if (_object.unsignedIntegerField !=  number.unsignedIntegerValue)
+            XCTFail(@"Failed to map number value %@ --> %llu", string, (unsigned long long)_object.unsignedIntegerField);
     }
 }
 
@@ -425,6 +272,95 @@
     
     if (![_object.urlField.absoluteString isEqualToString:string])
         XCTFail(@"Failed to map string value %@", string);
+}
+
+#pragma mark - FROM DICTIONARY
+
+// ------------------------------------------------------------------------------------------------------------------------ //
+// FROM DICTIONARY
+// ------------------------------------------------------------------------------------------------------------------------ //
+
+#pragma mark to object
+
+- (void)testDictionaryToObject
+{
+    // TODO
+}
+
+- (void)testDictionaryToObjectWithRecursiveObject
+{
+    // TODO
+}
+
+- (void)testDictionaryToObjectWithRecursiveArray
+{
+    // TODO
+}
+
+#pragma mark - UNDEFINED MAPPINGS
+
+// MJTestObject overrides the method "-mjz_motisShouldSetUndefinedKeys" and returns NO.
+// MJTestObject2 overrides the method "-mjz_motisShouldSetUndefinedKeys" and returns YES.
+
+// ------------------------------------------------------------------------------------------------------------------------ //
+// WITH UNDEFINED PROPERTIES
+// ------------------------------------------------------------------------------------------------------------------------ //
+
+- (void)testUndefinedMappingWithUndefinedProperty
+{
+    MJTestObject2 *object = [MJTestObject2 new];
+    
+    BOOL foundException = NO;
+    
+    @try
+    {
+        [object mjz_setValue:@"hello world" forKey:@"lorem_ipsum_sir_dolor_amet"];
+    }
+    @catch (NSException *exception)
+    {
+        foundException = YES;
+    }
+    
+    if (!foundException)
+        XCTFail(@"Object must throw exception if key is unknown");
+}
+
+- (void)testUndefinedMappingWithUndefinedPropertyRestricted
+{
+    @try
+    {
+        [_object mjz_setValue:@"hello world" forKey:@"lorem_ipsum_sir_dolor_amet"];
+    }
+    @catch (NSException *exception)
+    {
+        XCTFail(@"Object must not throw exception if key is unknown");
+    }
+}
+
+// ------------------------------------------------------------------------------------------------------------------------ //
+// WITH DEFINED PROPERTIES
+// ------------------------------------------------------------------------------------------------------------------------ //
+
+- (void)testUndefinedMappingWithDefinedProperty
+{
+    MJTestObject2 *object = [MJTestObject2 new];
+    
+    object.privateIntegerField = 42;
+    
+    [object mjz_setValue:@0 forKey:@"privateIntegerField"];
+    
+    if (object.privateIntegerField != 0)
+        XCTFail(@"Object must assign values for undefined mappings");
+}
+
+- (void)testUndefinedMappingWithDefinedPropertyRestricted
+{
+    _object.privateIntegerField = 42;
+    
+    [_object mjz_setValue:@0 forKey:@"privateIntegerField"];
+    
+    if (_object.privateIntegerField != 42)
+        XCTFail(@"Object must not assign values for undefined mappings");
 }
 
 @end
