@@ -20,7 +20,7 @@
 
 @implementation MJUser
 
-- (NSDictionary*)mjz_motisMapping
+- (NSDictionary*)mts_motisMapping
 {
     static NSDictionary *mapping = nil;
     
@@ -30,7 +30,7 @@
                                       @"user_id": NSStringFromSelector(@selector(userId)),
                                       @"followers": NSStringFromSelector(@selector(followers)),
                                       };
-        NSMutableDictionary *mutableMapping = [[super mjz_motisMapping] mutableCopy];
+        NSMutableDictionary *mutableMapping = [[super mts_motisMapping] mutableCopy];
         [mutableMapping addEntriesFromDictionary:JSONMapping];
         mapping = mutableMapping;
     });

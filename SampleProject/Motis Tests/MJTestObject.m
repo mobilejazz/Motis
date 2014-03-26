@@ -12,7 +12,7 @@
 
 @implementation MJTestObject
 
-- (NSDictionary*)mjz_motisMapping
+- (NSDictionary*)mts_motisMapping
 {
     static NSDictionary *mapping = nil;
     
@@ -35,17 +35,17 @@
     return mapping;
 }
 
-+ (BOOL)mjz_motisShouldSetUndefinedKeys
++ (BOOL)mts_motisShouldSetUndefinedKeys
 {
     return NO;
 }
 
-- (void)mjz_invalidValue:(id)value forKey:(NSString *)key error:(NSError *)error
+- (void)mts_invalidValue:(id)value forKey:(NSString *)key error:(NSError *)error
 {
     NSLog(@"INVALID VALUE %@ FOR KEY %@", [value description], key);
 }
 
-- (void)mjz_nullValueForKey:(NSString *)key
+- (void)mts_nullValueForKey:(NSString *)key
 {
     if ([key isEqualToString:@"boolField"])
         _boolField = NO;

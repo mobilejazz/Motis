@@ -84,12 +84,12 @@
     video.privateVideoKey = @"my_private_key";
     video.likesCount = 21;
     
-    NSLog(@"BEFORE parsing: %@", video.mjz_extendedObjectDescription);
+    NSLog(@"BEFORE parsing: %@", video.mts_extendedObjectDescription);
     NSLog(@"video.privateVideoKey: %@",[video.privateVideoKey description]);
     
-    [video mjz_setValuesForKeysWithDictionary:receivedJSONDict];
+    [video mts_setValuesForKeysWithDictionary:receivedJSONDict];
     
-    NSLog(@"AFTER parsing: %@", video.mjz_extendedObjectDescription);
+    NSLog(@"AFTER parsing: %@", video.mts_extendedObjectDescription);
     NSLog(@"video.privateVideoKey: %@",[video.privateVideoKey description]);
 }
 

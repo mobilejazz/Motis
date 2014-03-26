@@ -44,21 +44,21 @@
  * @param key The name of property.
  * @return The attribute type string.
  */
-- (NSString*)mjz_typeAttributeForKey:(NSString*)key;
+- (NSString*)mts_typeAttributeForKey:(NSString*)key;
 
 /**
  * YES if the attribute type can be converted into a Class object, NO otherwise.
- * @param typeAttribute The value returned by `-mjz_typeAttributeForKey:`.
+ * @param typeAttribute The value returned by `-mts_typeAttributeForKey:`.
  * @return YES if it represents an object (therefore, exists a related class object).
  */
-- (BOOL)mjz_isClassTypeTypeAttribute:(NSString*)typeAttribute;
+- (BOOL)mts_isClassTypeTypeAttribute:(NSString*)typeAttribute;
 
 /**
  * Returns the class object for the given attribute type or nil if cannot be created.
- * @param typeAttribute The value returned by `-mjz_typeAttributeForKey:`.
+ * @param typeAttribute The value returned by `-mts_typeAttributeForKey:`.
  * @return The related class object.
  */
-- (Class)mjz_classForTypeAttribute:(NSString*)typeAttribute;
+- (Class)mts_classForTypeAttribute:(NSString*)typeAttribute;
 
 /** ---------------------------------------------- **
  * @name Automatic Validation
@@ -71,7 +71,7 @@
  * @return YES if automatic validation has been done, NO otherwise.
  * @discussion A return value of NO only indicates that the value couldn't be validated automatically.
  **/
-- (BOOL)mjz_validateAutomaticallyValue:(inout __autoreleasing id *)ioValue forKey:(NSString*)key;
+- (BOOL)mts_validateAutomaticallyValue:(inout __autoreleasing id *)ioValue forKey:(NSString*)key;
 
 /**
  * Return YES if the value has been automatically validated. The newer value is setted in the pointer.
@@ -81,7 +81,7 @@
  * @return YES if automatic validation has been done, NO otherwise.
  * @discussion A return value of NO only indicates that the value couldn't be validated automatically.
  **/
-- (BOOL)mjz_validateAutomaticallyValue:(inout __autoreleasing id *)ioValue toClass:(Class)typeClass forKey:(NSString*)key;
+- (BOOL)mts_validateAutomaticallyValue:(inout __autoreleasing id *)ioValue toClass:(Class)typeClass forKey:(NSString*)key;
 
 @end
 
@@ -97,13 +97,13 @@
 
 #pragma mark Public Methods
 
-- (void)mjz_setValue:(id)value forKey:(NSString *)key
+- (void)mts_setValue:(id)value forKey:(NSString *)key
 {
-    NSString *mappedKey = [self mjz_mapKey:key];
+    NSString *mappedKey = [self mts_mapKey:key];
     
     if (!mappedKey)
     {
-        [self mjz_restrictSetValue:value forUndefinedMappingKey:key];
+        [self mts_ignoredSetValue:value forUndefinedMappingKey:key];
         return;
     }
     
@@ -119,16 +119,14 @@
             id validatedObject = object;
             
             NSError *error = nil;
-            BOOL validated = [self mjz_validateArrayObject:&validatedObject forArrayKey:mappedKey error:&error];
+            BOOL validated = [self mts_validateArrayObject:&validatedObject forArrayKey:mappedKey error:&error];
             
             // Automatic validation only if the value has not been manually validated
-            if (object == validatedObject)
+            if (object == validatedObject && validated)
             {
-                Class typeClass = self.mjz_motisArrayClassMapping[mappedKey];
+                Class typeClass = self.mts_motisArrayClassMapping[mappedKey];
                 if (typeClass)
-                {
-                    validated = [self mjz_validateAutomaticallyValue:&validatedObject toClass:typeClass forKey:mappedKey];
-                }
+                    validated = [self mts_validateAutomaticallyValue:&validatedObject toClass:typeClass forKey:mappedKey];
             }
             
             if (validated)
@@ -148,47 +146,47 @@
                 
                 [modifiedArray removeObjectAtIndex:idx];
                 
-                [self mjz_invalidValue:validatedObject forArrayKey:mappedKey error:error];
+                [self mts_invalidValue:validatedObject forArrayKey:mappedKey error:error];
             }
         }];
         
         if (modifiedArray)
             value = modifiedArray;
     }
-
+    
     id originalValue = value;
     
     NSError *error = nil;
     BOOL validated = [self validateValue:&value forKey:mappedKey error:&error];
     
     // Automatic validation only if the value has not been manually validated
-    if (originalValue == value)
-        validated = [self mjz_validateAutomaticallyValue:&value forKey:mappedKey];
+    if (originalValue == value && validated)
+        validated = [self mts_validateAutomaticallyValue:&value forKey:mappedKey];
     
     if (validated)
     {
-        if (value == nil && ![self mjz_isClassTypeTypeAttribute:[self mjz_typeAttributeForKey:mappedKey]])
-            [self mjz_nullValueForKey:mappedKey];
+        if (value == nil && ![self mts_isClassTypeTypeAttribute:[self mts_typeAttributeForKey:mappedKey]])
+            [self mts_nullValueForKey:mappedKey];
         else
             [self setValue:value forKey:mappedKey];
     }
     else
-        [self mjz_invalidValue:value forKey:mappedKey error:error];
+        [self mts_invalidValue:value forKey:mappedKey error:error];
 }
 
-- (void)mjz_setValuesForKeysWithDictionary:(NSDictionary *)keyedValues
+- (void)mts_setValuesForKeysWithDictionary:(NSDictionary *)keyedValues
 {
     for (NSString *key in keyedValues)
     {
         id value = keyedValues[key];
-        [self mjz_setValue:value forKey:key];
+        [self mts_setValue:value forKey:key];
     }
 }
 
-- (NSString*)mjz_extendedObjectDescription
+- (NSString*)mts_extendedObjectDescription
 {
     NSString *description = self.description;
-    NSArray *keys = [[self mjz_motisMapping] allValues];
+    NSArray *keys = [[self mts_motisMapping] allValues];
     if (keys.count > 0)
     {
         NSDictionary *keyValues = [self dictionaryWithValuesForKeys:keys];
@@ -199,14 +197,14 @@
 
 #pragma mark Private Methods
 
-- (NSString*)mjz_mapKey:(NSString*)key
+- (NSString*)mts_mapKey:(NSString*)key
 {
-    NSString *mappedKey = [[self mjz_motisMapping] valueForKey:key];
+    NSString *mappedKey = [[self mts_motisMapping] valueForKey:key];
     
     if (mappedKey)
         return mappedKey;
     
-    if ([self.class mjz_motisShouldSetUndefinedKeys])
+    if ([self.class mts_motisShouldSetUndefinedKeys])
         return key;
     
     return nil;
@@ -225,63 +223,76 @@
 @implementation NSObject (Motis_Subclassing)
 
 
-- (NSDictionary*)mjz_motisMapping
+- (NSDictionary*)mts_motisMapping
 {
     // Subclasses must override, always adding super to the mapping!
     return @{};
 }
 
-+ (BOOL)mjz_motisShouldSetUndefinedKeys
++ (BOOL)mts_motisShouldSetUndefinedKeys
 {
     // Subclasses might override.
     return YES;
 }
 
-- (NSDictionary*)mjz_motisArrayClassMapping
+- (NSDictionary*)mts_motisArrayClassMapping
 {
     // Subclasses might override.
     return @{};
 }
 
-- (id)mjz_willCreateObjectOfClass:(Class)typeClass withDictionary:(NSDictionary*)dictionary forKey:(NSString*)key abort:(BOOL*)abort;
+- (id)mts_willCreateObjectOfClass:(Class)typeClass withDictionary:(NSDictionary*)dictionary forKey:(NSString*)key abort:(BOOL*)abort;
 {
     // Subclasses might override.
     return nil;
 }
 
-- (void)mjz_didCreateObject:(id)object forKey:(NSString *)key
+- (void)mts_didCreateObject:(id)object forKey:(NSString *)key
 {
     // Subclasses might override.
 }
 
-- (BOOL)mjz_validateArrayObject:(inout __autoreleasing id *)ioValue forArrayKey:(NSString *)arrayKey error:(out NSError *__autoreleasing *)outError
+- (BOOL)mts_validateArrayObject:(inout __autoreleasing id *)ioValue forArrayKey:(NSString *)arrayKey error:(out NSError *__autoreleasing *)outError
 {
     // Subclasses might override.
     return YES;
 }
 
-- (void)mjz_restrictSetValue:(id)value forUndefinedMappingKey:(NSString*)key
+- (void)mts_ignoredSetValue:(id)value forUndefinedMappingKey:(NSString*)key
 {
     // Subclasses might override.
     MJLog(@"Undefined Mapping Key <%@> in class %@.", key, [self.class description]);
 }
 
-- (void)mjz_invalidValue:(id)value forKey:(NSString *)key error:(NSError*)error
+- (void)mts_invalidValue:(id)value forKey:(NSString *)key error:(NSError*)error
 {
     // Subclasses might override.
     MJLog(@"Value for Key <%@> is not valid in class %@. Error: %@", key, [self.class description], error);
 }
 
-- (void)mjz_invalidValue:(id)value forArrayKey:(NSString *)key error:(NSError*)error
+- (void)mts_invalidValue:(id)value forArrayKey:(NSString *)key error:(NSError*)error
 {
     // Subclasses might override.
     MJLog(@"Item for ArrayKey <%@> is not valid in class %@. Error: %@", key, [self.class description], error);
 }
 
-- (void)mjz_nullValueForKey:(NSString *)key
+- (void)mts_nullValueForKey:(NSString *)key
 {
     // Subclasses may override and reset scalar values for the given "key" property name.
     MJLog(@"Null value for key %@ in class %@", key, [self.class description]);
+}
+
+- (NSDateFormatter*)mts_validationDateFormatter
+{
+    static NSDateFormatter *dateFormatter = nil;
+    
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        dateFormatter = [[NSDateFormatter alloc] init];
+        dateFormatter.dateFormat = @"yyyy-MM-dd HH:mm:ss";
+    });
+    
+    return dateFormatter;
 }
 
 @end
@@ -296,7 +307,7 @@
 
 @implementation NSObject (Motis_Private)
 
-- (NSString*)mjz_typeAttributeForKey:(NSString*)key
+- (NSString*)mts_typeAttributeForKey:(NSString*)key
 {
     static NSMutableDictionary *typeAttributes = nil;
     static dispatch_once_t onceToken;
@@ -324,14 +335,14 @@
     return typeAttribute;
 }
 
-- (BOOL)mjz_isClassTypeTypeAttribute:(NSString*)typeAttribute
+- (BOOL)mts_isClassTypeTypeAttribute:(NSString*)typeAttribute
 {
     return [typeAttribute hasPrefix:@"T@"] && ([typeAttribute length] > 1);
 }
 
-- (Class)mjz_classForTypeAttribute:(NSString*)typeAttribute
+- (Class)mts_classForTypeAttribute:(NSString*)typeAttribute
 {
-    if ([self mjz_isClassTypeTypeAttribute:typeAttribute])
+    if ([self mts_isClassTypeTypeAttribute:typeAttribute])
     {
         NSString *typeClassName = [typeAttribute substringWithRange:NSMakeRange(3, [typeAttribute length]-4)];
         return NSClassFromString(typeClassName);
@@ -340,33 +351,37 @@
     return nil;
 }
 
-- (BOOL)mjz_validateAutomaticallyValue:(inout __autoreleasing id *)ioValue forKey:(NSString*)key
+- (BOOL)mts_validateAutomaticallyValue:(inout __autoreleasing id *)ioValue forKey:(NSString*)key
 {
     if (*ioValue == nil)
         return YES;
     
-    NSString * typeAttribute = [self mjz_typeAttributeForKey:key];
+    NSString * typeAttribute = [self mts_typeAttributeForKey:key];
     
     if (!typeAttribute) // <-- If no attribute, abort automatic validation
         return YES;
     
-    if ([self mjz_isClassTypeTypeAttribute:typeAttribute])
+    NSString * propertyType = [typeAttribute substringFromIndex:1];
+    const char * rawPropertyType = [propertyType UTF8String];
+    
+    if ([self mts_isClassTypeTypeAttribute:typeAttribute])
     {
-        Class typeClass = [self mjz_classForTypeAttribute:typeAttribute];
+        Class typeClass = [self mts_classForTypeAttribute:typeAttribute];
         
         if (typeClass != nil)
         {
             MJLog(@"%@ --> %@", key, NSStringFromClass(typeClass));
-            return [self mjz_validateAutomaticallyValue:ioValue toClass:typeClass forKey:key];
+            return [self mts_validateAutomaticallyValue:ioValue toClass:typeClass forKey:key];
+        }
+        else if (strcmp(rawPropertyType, @encode(id)) == 0)
+        {
+            return YES;
         }
         
         return NO;
     }
     else // because it is not a class, the property must be a basic type
     {
-        NSString * propertyType = [typeAttribute substringFromIndex:1];
-        const char * rawPropertyType = [propertyType UTF8String];
-        
         if ([*ioValue isKindOfClass:NSNumber.class])
         {
 #if defined(__LP64__) && __LP64__
@@ -387,7 +402,7 @@
             {
                 if ([*ioValue isKindOfClass:NSString.class])
                 {
-                    NSNumber *number = [[self.class mjz_decimalFormatterAllowFloats] numberFromString:*ioValue];
+                    NSNumber *number = [[self.class mts_decimalFormatterAllowFloats] numberFromString:*ioValue];
                     
                     if (number)
                         *ioValue = @(number.boolValue);
@@ -401,67 +416,67 @@
             {
                 if ([*ioValue isKindOfClass:NSString.class])
                 {
-                    *ioValue = [[self.class mjz_decimalFormatterNoFloats] numberFromString:*ioValue];
+                    *ioValue = [[self.class mts_decimalFormatterNoFloats] numberFromString:*ioValue];
                     return *ioValue != nil;
                 }
             }
-
+            
             // Other conversions from NSString to basic types are already handled by the system.
             
-//            else if (strcmp(rawPropertyType, @encode(char)) == 0)
-//            {
-//                if ([*ioValue isKindOfClass:NSString.class])
-//                {
-//                    NSNumber *number = [[self.class mjz_decimalFormatter] numberFromString:*ioValue];
-//                    *ioValue = @(number.charValue);
-//                    return *ioValue != nil;
-//                }
-//            }
-//            else if (strcmp(rawPropertyType, @encode(unsigned char)) == 0)
-//            {
-//                if ([*ioValue isKindOfClass:NSString.class])
-//                {
-//                    NSNumber *number = [[self.class mjz_decimalFormatter] numberFromString:*ioValue];
-//                    *ioValue = @(number.unsignedCharValue);
-//                    return *ioValue != nil;
-//                }
-//            }
-//            else if (strcmp(rawPropertyType, @encode(short)) == 0)
-//            {
-//                if ([*ioValue isKindOfClass:NSString.class])
-//                {                    
-//                    NSNumber *number = [[self.class mjz_decimalFormatter] numberFromString:*ioValue];
-//                    *ioValue = @(number.shortValue);
-//                    return *ioValue != nil;
-//                }
-//            }
-//            else if (strcmp(rawPropertyType, @encode(unsigned short)) == 0)
-//            {
-//                if ([*ioValue isKindOfClass:NSString.class])
-//                {
-//                    NSNumber *number = [[self.class mjz_decimalFormatter] numberFromString:*ioValue];
-//                    *ioValue = @(number.unsignedShortValue);
-//                    return *ioValue != nil;
-//                }
-//            }
-//            else if (strcmp(rawPropertyType, @encode(long)) == 0)
-//            {
-//                if ([*ioValue isKindOfClass:NSString.class])
-//                {
-//                    NSNumber *number = [[self.class mjz_decimalFormatter] numberFromString:*ioValue];
-//                    *ioValue = @(number.longValue);
-//                    return *ioValue != nil;
-//                }
-//            }
-//            else if (strcmp(rawPropertyType, @encode(unsigned long)) == 0)
-//            {
-//                if ([*ioValue isKindOfClass:NSString.class])
-//                {
-//                    NSNumber *number = [[self.class mjz_decimalFormatter] numberFromString:*ioValue];
-//                    *ioValue = @(number.unsignedLongValue);
-//                    return *ioValue != nil;
-//                }
-//            }
+            //            else if (strcmp(rawPropertyType, @encode(char)) == 0)
+            //            {
+            //                if ([*ioValue isKindOfClass:NSString.class])
+            //                {
+            //                    NSNumber *number = [[self.class mts_decimalFormatter] numberFromString:*ioValue];
+            //                    *ioValue = @(number.charValue);
+            //                    return *ioValue != nil;
+            //                }
+            //            }
+            //            else if (strcmp(rawPropertyType, @encode(unsigned char)) == 0)
+            //            {
+            //                if ([*ioValue isKindOfClass:NSString.class])
+            //                {
+            //                    NSNumber *number = [[self.class mts_decimalFormatter] numberFromString:*ioValue];
+            //                    *ioValue = @(number.unsignedCharValue);
+            //                    return *ioValue != nil;
+            //                }
+            //            }
+            //            else if (strcmp(rawPropertyType, @encode(short)) == 0)
+            //            {
+            //                if ([*ioValue isKindOfClass:NSString.class])
+            //                {
+            //                    NSNumber *number = [[self.class mts_decimalFormatter] numberFromString:*ioValue];
+            //                    *ioValue = @(number.shortValue);
+            //                    return *ioValue != nil;
+            //                }
+            //            }
+            //            else if (strcmp(rawPropertyType, @encode(unsigned short)) == 0)
+            //            {
+            //                if ([*ioValue isKindOfClass:NSString.class])
+            //                {
+            //                    NSNumber *number = [[self.class mts_decimalFormatter] numberFromString:*ioValue];
+            //                    *ioValue = @(number.unsignedShortValue);
+            //                    return *ioValue != nil;
+            //                }
+            //            }
+            //            else if (strcmp(rawPropertyType, @encode(long)) == 0)
+            //            {
+            //                if ([*ioValue isKindOfClass:NSString.class])
+            //                {
+            //                    NSNumber *number = [[self.class mts_decimalFormatter] numberFromString:*ioValue];
+            //                    *ioValue = @(number.longValue);
+            //                    return *ioValue != nil;
+            //                }
+            //            }
+            //            else if (strcmp(rawPropertyType, @encode(unsigned long)) == 0)
+            //            {
+            //                if ([*ioValue isKindOfClass:NSString.class])
+            //                {
+            //                    NSNumber *number = [[self.class mts_decimalFormatter] numberFromString:*ioValue];
+            //                    *ioValue = @(number.unsignedLongValue);
+            //                    return *ioValue != nil;
+            //                }
+            //            }
             
             return YES;
         }
@@ -472,7 +487,7 @@
     }
 }
 
-- (BOOL)mjz_validateAutomaticallyValue:(inout __autoreleasing id *)ioValue toClass:(Class)typeClass forKey:(NSString*)key
+- (BOOL)mts_validateAutomaticallyValue:(inout __autoreleasing id *)ioValue toClass:(Class)typeClass forKey:(NSString*)key
 {
     // If types match, just return
     if ([*ioValue isKindOfClass:typeClass])
@@ -495,17 +510,14 @@
         }
         else if ([typeClass isSubclassOfClass:NSNumber.class])
         {
-            NSNumberFormatter *formatter = [NSObject mjz_decimalFormatterAllowFloats];
+            NSNumberFormatter *formatter = [NSObject mts_decimalFormatterAllowFloats];
             *ioValue = [formatter numberFromString:*ioValue];
             return *ioValue != nil;
         }
         if ([typeClass isSubclassOfClass:NSDate.class])
         {
-            NSNumberFormatter *formatter = [NSObject mjz_decimalFormatterAllowFloats];
-            *ioValue = [formatter numberFromString:*ioValue];
-            if (*ioValue == nil) return NO;
-
-            *ioValue = [NSDate dateWithTimeIntervalSince1970:[*ioValue doubleValue]];
+            NSDateFormatter *dateFormatter = [self mts_validationDateFormatter];
+            *ioValue = [dateFormatter dateFromString:*ioValue];
             return *ioValue != nil;
         }
     }
@@ -560,18 +572,18 @@
         else if ([typeClass isSubclassOfClass:NSObject.class])
         {
             BOOL abort = NO;
-            id instance = [self mjz_willCreateObjectOfClass:typeClass withDictionary:*ioValue forKey:key abort:&abort];
-
+            id instance = [self mts_willCreateObjectOfClass:typeClass withDictionary:*ioValue forKey:key abort:&abort];
+            
             if (abort)
                 return NO;
             
             if (!instance)
             {
                 instance = [[typeClass alloc] init];
-                [instance mjz_setValuesForKeysWithDictionary:*ioValue];
+                [instance mts_setValuesForKeysWithDictionary:*ioValue];
             }
             
-            [self mjz_didCreateObject:instance forKey:key];
+            [self mts_didCreateObject:instance forKey:key];
             
             *ioValue = instance;
             return *ioValue != nil;
@@ -583,7 +595,7 @@
 
 #pragma mark Helpers
 
-+ (NSNumberFormatter*)mjz_decimalFormatterAllowFloats
++ (NSNumberFormatter*)mts_decimalFormatterAllowFloats
 {
     static NSNumberFormatter *decimalFormatter = nil;
     static dispatch_once_t onceToken;
@@ -595,7 +607,7 @@
     return decimalFormatter;
 }
 
-+ (NSNumberFormatter*)mjz_decimalFormatterNoFloats
++ (NSNumberFormatter*)mts_decimalFormatterNoFloats
 {
     static NSNumberFormatter *decimalFormatter = nil;
     static dispatch_once_t onceToken;

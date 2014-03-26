@@ -44,10 +44,10 @@
 
 - (void)testNullToBasicTypeWithNullDefinition
 {
-    // check `-mjz_nullValueForKey` method.
+    // check `-mts_nullValueForKey` method.
     
     _object.boolField = YES;
-    [_object mjz_setValue:[NSNull null] forKey:@"bool"];
+    [_object mts_setValue:[NSNull null] forKey:@"bool"];
 
     if (_object.boolField != NO)
         XCTFail(@"Basic type value must change to the new reseted value.");
@@ -55,10 +55,10 @@
 
 - (void)testNullToBasicTypeWithoutNullDefinition
 {
-    // check `-mjz_nullValueForKey` method.
+    // check `-mts_nullValueForKey` method.
     
     _object.integerField = 42;
-    [_object mjz_setValue:[NSNull null] forKey:@"integer"];
+    [_object mts_setValue:[NSNull null] forKey:@"integer"];
     
     if (_object.integerField != 42)
         XCTFail(@"Basic type value must not change");
@@ -69,7 +69,7 @@
 - (void)testNullToObject
 {
     _object.numberField = @(42);
-    [_object mjz_setValue:[NSNull null] forKey:@"number"];
+    [_object mts_setValue:[NSNull null] forKey:@"number"];
     
     if (_object.numberField != nil)
         XCTFail(@"Failed to nullify object");
@@ -78,7 +78,7 @@
 - (void)testNilToObject
 {
     _object.numberField = @(42);
-    [_object mjz_setValue:nil forKey:@"number"];
+    [_object mts_setValue:nil forKey:@"number"];
     
     if (_object.numberField != nil)
         XCTFail(@"Failed to nillify object");
@@ -90,7 +90,7 @@
 // FROM NUMBER TO ....
 // ------------------------------------------------------------------------------------------------------------------------ //
 
-- (NSArray*)mjz_arrayWithNumbers
+- (NSArray*)mts_arrayWithNumbers
 {
     static NSArray *array = nil;
     
@@ -112,10 +112,10 @@
 
 - (void)testNumberToBool
 {    
-    for (NSNumber *number in [self mjz_arrayWithNumbers])
+    for (NSNumber *number in [self mts_arrayWithNumbers])
     {
         _object.boolField = NO;
-        [_object mjz_setValue:number forKey:@"bool"];
+        [_object mts_setValue:number forKey:@"bool"];
         if (_object.boolField != number.boolValue)
             XCTFail(@"Failed to map number value %@ (%d) --> %d", number.description, number.boolValue, _object.boolField);
     }
@@ -123,10 +123,10 @@
 
 - (void)testNumberToInteger
 {
-    for (NSNumber *number in [self mjz_arrayWithNumbers])
+    for (NSNumber *number in [self mts_arrayWithNumbers])
     {
         _object.integerField = 0;
-        [_object mjz_setValue:number forKey:@"integer"];
+        [_object mts_setValue:number forKey:@"integer"];
         if (_object.integerField != number.integerValue)
             XCTFail(@"Failed to map number value %@", number.description);
     }
@@ -134,10 +134,10 @@
 
 - (void)testNumberToUnsignedInteger
 {
-    for (NSNumber *number in [self mjz_arrayWithNumbers])
+    for (NSNumber *number in [self mts_arrayWithNumbers])
     {
         _object.unsignedIntegerField = 0;
-        [_object mjz_setValue:number forKey:@"unsigned_integer"];
+        [_object mts_setValue:number forKey:@"unsigned_integer"];
         if (_object.unsignedIntegerField != number.unsignedIntegerValue)
             XCTFail(@"Failed to map number value %@", number.description);
     }
@@ -145,9 +145,9 @@
 
 - (void)testNumberToFloat
 {
-    for (NSNumber *number in [self mjz_arrayWithNumbers])
+    for (NSNumber *number in [self mts_arrayWithNumbers])
     {
-        [_object mjz_setValue:number forKey:@"float"];
+        [_object mts_setValue:number forKey:@"float"];
         if (_object.floatField != number.floatValue)
             XCTFail(@"Failed to map number value %@", number.description);
     }
@@ -155,9 +155,9 @@
 
 - (void)testNumberToDouble
 {
-    for (NSNumber *number in [self mjz_arrayWithNumbers])
+    for (NSNumber *number in [self mts_arrayWithNumbers])
     {
-        [_object mjz_setValue:number forKey:@"double"];
+        [_object mts_setValue:number forKey:@"double"];
         if (_object.doubleField != number.doubleValue)
             XCTFail(@"Failed to map number value %@", number.description);
     }
@@ -167,9 +167,9 @@
 
 - (void)testNumberToString
 {
-    for (NSNumber *number in [self mjz_arrayWithNumbers])
+    for (NSNumber *number in [self mts_arrayWithNumbers])
     {
-        [_object mjz_setValue:number forKey:@"string"];
+        [_object mts_setValue:number forKey:@"string"];
         if (![_object.stringField isEqualToString:number.stringValue])
             XCTFail(@"Failed to map number value %@", number.description);
     }
@@ -181,7 +181,7 @@
 // FROM STRING TO ....
 // ------------------------------------------------------------------------------------------------------------------------ //
 
-- (NSArray*)mjz_arrayWithStrings
+- (NSArray*)mts_arrayWithStrings
 {
     static NSArray *array = nil;
     
@@ -190,7 +190,7 @@
         NSMutableArray *strings = [NSMutableArray array];
         
         // Adding numbers as strings
-        for (NSNumber *number in [self mjz_arrayWithNumbers])
+        for (NSNumber *number in [self mts_arrayWithNumbers])
             [strings addObject:number.stringValue];
         
         array = [strings copy];
@@ -203,12 +203,12 @@
 
 - (void)testStringNumbersToBool
 {
-    for (NSNumber *originalNumber in [self mjz_arrayWithNumbers])
+    for (NSNumber *originalNumber in [self mts_arrayWithNumbers])
     {
         NSString *string = originalNumber.stringValue;
         
         _object.boolField = NO;
-        [_object mjz_setValue:string forKey:@"bool"];
+        [_object mts_setValue:string forKey:@"bool"];
         
         if (_object.boolField != originalNumber.boolValue)
             XCTFail(@"Failed to map number value %@ --> %d", originalNumber.description, _object.boolField);
@@ -224,7 +224,7 @@
         NSString *string = number.stringValue;
         
         _object.integerField = 0;
-        [_object mjz_setValue:string forKey:@"integer"];
+        [_object mts_setValue:string forKey:@"integer"];
         
         if (_object.integerField != number.integerValue)
             XCTFail(@"Failed to map number value %@ --> %ld", string, (long)_object.integerField);
@@ -240,7 +240,7 @@
         NSString *string = number.stringValue;
         
         _object.unsignedIntegerField = 0;
-        [_object mjz_setValue:string forKey:@"unsigned_integer"];
+        [_object mts_setValue:string forKey:@"unsigned_integer"];
         
         if (_object.unsignedIntegerField !=  number.unsignedIntegerValue)
             XCTFail(@"Failed to map number value %@ --> %llu", string, (unsigned long long)_object.unsignedIntegerField);
@@ -251,12 +251,12 @@
 
 - (void)testStringNumbersToNumber
 {
-    for (NSNumber *originalNumber in [self mjz_arrayWithNumbers])
+    for (NSNumber *originalNumber in [self mts_arrayWithNumbers])
     {
         NSString *string = originalNumber.stringValue;
         
         _object.numberField = nil;
-        [_object mjz_setValue:string forKey:@"number"];
+        [_object mts_setValue:string forKey:@"number"];
         
         if (![_object.numberField isEqualToNumber:originalNumber])
             XCTFail(@"Failed to map string value %@ --> %@", string, _object.numberField.description);
@@ -268,7 +268,7 @@
 - (void)testStringToUrl
 {
     NSString *string = @"http://www.google.com";
-    [_object mjz_setValue:string forKey:@"url"];
+    [_object mts_setValue:string forKey:@"url"];
     
     if (![_object.urlField.absoluteString isEqualToString:string])
         XCTFail(@"Failed to map string value %@", string);
@@ -299,8 +299,8 @@
 
 #pragma mark - UNDEFINED MAPPINGS
 
-// MJTestObject overrides the method "-mjz_motisShouldSetUndefinedKeys" and returns NO.
-// MJTestObject2 overrides the method "-mjz_motisShouldSetUndefinedKeys" and returns YES.
+// MJTestObject overrides the method "-mts_motisShouldSetUndefinedKeys" and returns NO.
+// MJTestObject2 overrides the method "-mts_motisShouldSetUndefinedKeys" and returns YES.
 
 // ------------------------------------------------------------------------------------------------------------------------ //
 // WITH UNDEFINED PROPERTIES
@@ -314,7 +314,7 @@
     
     @try
     {
-        [object mjz_setValue:@"hello world" forKey:@"lorem_ipsum_sir_dolor_amet"];
+        [object mts_setValue:@"hello world" forKey:@"lorem_ipsum_sir_dolor_amet"];
     }
     @catch (NSException *exception)
     {
@@ -329,7 +329,7 @@
 {
     @try
     {
-        [_object mjz_setValue:@"hello world" forKey:@"lorem_ipsum_sir_dolor_amet"];
+        [_object mts_setValue:@"hello world" forKey:@"lorem_ipsum_sir_dolor_amet"];
     }
     @catch (NSException *exception)
     {
@@ -347,7 +347,7 @@
     
     object.privateIntegerField = 42;
     
-    [object mjz_setValue:@0 forKey:@"privateIntegerField"];
+    [object mts_setValue:@0 forKey:@"privateIntegerField"];
     
     if (object.privateIntegerField != 0)
         XCTFail(@"Object must assign values for undefined mappings");
@@ -357,7 +357,7 @@
 {
     _object.privateIntegerField = 42;
     
-    [_object mjz_setValue:@0 forKey:@"privateIntegerField"];
+    [_object mts_setValue:@0 forKey:@"privateIntegerField"];
     
     if (_object.privateIntegerField != 42)
         XCTFail(@"Object must not assign values for undefined mappings");

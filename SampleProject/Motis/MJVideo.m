@@ -24,7 +24,7 @@
 #pragma mark Motis Subclassing
 
 // JSON keys to object properties mapping
-- (NSDictionary*)mjz_motisMapping
+- (NSDictionary*)mts_motisMapping
 {
     static NSDictionary *mapping = nil;
     
@@ -39,7 +39,7 @@
                                       @"users_cast": NSStringFromSelector(@selector(cast)),
                                       @"likes_count": NSStringFromSelector(@selector(likesCount)),
                                       };
-        NSMutableDictionary *mutableMapping = [[super mjz_motisMapping] mutableCopy];
+        NSMutableDictionary *mutableMapping = [[super mts_motisMapping] mutableCopy];
         [mutableMapping addEntriesFromDictionary:JSONMapping];
         mapping = mutableMapping;
     });
@@ -48,7 +48,7 @@
 }
 
 // Automatic array validation mapping
-- (NSDictionary*)mjz_motisArrayClassMapping
+- (NSDictionary*)mts_motisArrayClassMapping
 {
     static NSDictionary *mapping = nil;
     
@@ -56,7 +56,7 @@
     dispatch_once(&onceToken, ^{
         NSDictionary *arrayMapping = @{NSStringFromSelector(@selector(cast)) : MJUser.class,
                                        };
-        NSMutableDictionary *mutableMapping = [[super mjz_motisArrayClassMapping] mutableCopy];
+        NSMutableDictionary *mutableMapping = [[super mts_motisArrayClassMapping] mutableCopy];
         [mutableMapping addEntriesFromDictionary:arrayMapping];
         mapping = mutableMapping;
     });
@@ -65,24 +65,95 @@
 }
 
 // Only accept values from the mapping
-+ (BOOL)mjz_motisShouldSetUndefinedKeys
++ (BOOL)mts_motisShouldSetUndefinedKeys
 {
     return NO;
 }
 
 // Log undefined mapping keys
-- (void)mjz_restrictSetValue:(id)value forUndefinedMappingKey:(NSString *)key
+- (void)mts_restrictSetValue:(id)value forUndefinedMappingKey:(NSString *)key
 {
     NSLog(@"[%@] Undefined mapping key: <%@> value: <%@>. Value has not been set.", [self.class description], key, [value description]);
 }
 
 // This method is called when received "null" in non-object types.
-- (void)mjz_nullValueForKey:(NSString *)key
+- (void)mts_nullValueForKey:(NSString *)key
 {
     NSLog(@"[%@] Null value received for key: %@. Value should be manually set.",[self.class description], key);
     
     if ([key isEqualToString:@"likesCount"])
         _likesCount = -1; // <-- Generic default value
 }
+
+
+#pragma mark Validation
+//
+//- (BOOL)mts_validateUser:(inout __autoreleasing id *)ioValue error:(out NSError *__autoreleasing *)outError
+//{
+//    if ([*ioValue isKindOfClass:MJUser.class])
+//    {
+//        return YES;
+//    }
+//    else if ([*ioValue isKindOfClass:NSDictionary.class])
+//    {
+//        MJUser *user = [[MJUser alloc] init];
+//        [user mts_setValuesForKeysWithDictionary:*ioValue];
+//        *ioValue = user;
+//        
+//        return *ioValue != nil;
+//    }
+//    
+//    return NO;
+//}
+//
+//- (BOOL)validateUploader:(inout __autoreleasing id *)ioValue error:(out NSError *__autoreleasing *)outError
+//{
+//    return [self mts_validateUser:ioValue error:outError];
+//}
+//
+//- (BOOL)validateCast:(inout __autoreleasing id *)ioValue error:(out NSError *__autoreleasing *)outError
+//{
+//    if ([*ioValue isKindOfClass:NSArray.class])
+//    {
+//        __block NSMutableArray *array = nil;
+//        
+//        [*ioValue enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+//            if ([obj isKindOfClass:MJUser.class])
+//            {
+//                // Nothing to do
+//            }
+//            else
+//            {
+//                if (!array)
+//                    array = [*ioValue mutableCopy];
+//                
+//                id object = obj;
+//                BOOL valid = [self mts_validateUser:&object error:nil];
+//                
+//                if (valid)
+//                    [array replaceObjectAtIndex:idx withObject:object];
+//                else
+//                    [array removeObjectAtIndex:idx];
+//            }
+//        }];
+//        
+//        if (array)
+//            *ioValue = [array copy];
+//
+//        return YES;
+//    }
+//    
+//    return NO;
+//}
+//
+//- (BOOL)mts_validateArrayObject:(inout __autoreleasing id *)ioValue forArrayKey:(NSString *)arrayKey error:(out NSError *__autoreleasing *)outError
+//{
+//    if ([arrayKey isEqualToString:@"cast"])
+//    {
+//        return [self mts_validateUser:ioValue error:outError];
+//    }
+//    
+//    return NO;
+//}
 
 @end
