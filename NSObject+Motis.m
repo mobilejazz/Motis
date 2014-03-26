@@ -36,6 +36,22 @@
 @interface NSObject (Motis_Private)
 
 /** ---------------------------------------------- **
+ * @name Mappings
+ ** ---------------------------------------------- **/
+
+/**
+ * Collects all the mappings from each subclass layer.
+ * @return The Motis Object Mapping.
+ **/
++ (NSDictionary*)mts_collectMotisMapping;
+
+/**
+ * Collects all the array class mappings from each subclass layer.
+ * @return The Motis Array Class Mapping.
+ **/
++ (NSDictionary*)mts_collectMotisArrayClassMapping;
+
+/** ---------------------------------------------- **
  * @name Object Class Introspection
  ** ---------------------------------------------- **/
 
@@ -59,6 +75,7 @@
  * @return The related class object.
  */
 - (Class)mts_classForTypeAttribute:(NSString*)typeAttribute;
+
 
 /** ---------------------------------------------- **
  * @name Automatic Validation
@@ -124,7 +141,7 @@
             // Automatic validation only if the value has not been manually validated
             if (object == validatedObject && validated)
             {
-                Class typeClass = self.mts_motisArrayClassMapping[mappedKey];
+                Class typeClass = [self.class mts_collectMotisArrayClassMapping][mappedKey];
                 if (typeClass)
                     validated = [self mts_validateAutomaticallyValue:&validatedObject toClass:typeClass forKey:mappedKey];
             }
@@ -186,7 +203,7 @@
 - (NSString*)mts_extendedObjectDescription
 {
     NSString *description = self.description;
-    NSArray *keys = [[self mts_motisMapping] allValues];
+    NSArray *keys = [[self.class mts_motisMapping] allValues];
     if (keys.count > 0)
     {
         NSDictionary *keyValues = [self dictionaryWithValuesForKeys:keys];
@@ -199,7 +216,7 @@
 
 - (NSString*)mts_mapKey:(NSString*)key
 {
-    NSString *mappedKey = [[self mts_motisMapping] valueForKey:key];
+    NSString *mappedKey = [self.class mts_collectMotisMapping][key];
     
     if (mappedKey)
         return mappedKey;
@@ -222,8 +239,7 @@
 
 @implementation NSObject (Motis_Subclassing)
 
-
-- (NSDictionary*)mts_motisMapping
++ (NSDictionary*)mts_motisMapping
 {
     // Subclasses must override, always adding super to the mapping!
     return @{};
@@ -235,7 +251,7 @@
     return YES;
 }
 
-- (NSDictionary*)mts_motisArrayClassMapping
++ (NSDictionary*)mts_motisArrayClassMapping
 {
     // Subclasses might override.
     return @{};
@@ -250,6 +266,21 @@
 - (void)mts_didCreateObject:(id)object forKey:(NSString *)key
 {
     // Subclasses might override.
+}
+
++ (NSDateFormatter*)mts_validationDateFormatter
+{
+    // Subclasses may override and return a custom formatter.
+    
+    static NSDateFormatter *dateFormatter = nil;
+    
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        dateFormatter = [[NSDateFormatter alloc] init];
+        dateFormatter.dateFormat = @"yyyy-MM-dd HH:mm:ss";
+    });
+    
+    return dateFormatter;
 }
 
 - (BOOL)mts_validateArrayObject:(inout __autoreleasing id *)ioValue forArrayKey:(NSString *)arrayKey error:(out NSError *__autoreleasing *)outError
@@ -282,19 +313,6 @@
     MJLog(@"Null value for key %@ in class %@", key, [self.class description]);
 }
 
-- (NSDateFormatter*)mts_validationDateFormatter
-{
-    static NSDateFormatter *dateFormatter = nil;
-    
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        dateFormatter = [[NSDateFormatter alloc] init];
-        dateFormatter.dateFormat = @"yyyy-MM-dd HH:mm:ss";
-    });
-    
-    return dateFormatter;
-}
-
 @end
 
 
@@ -306,6 +324,76 @@
 #pragma mark - Motis_Private
 
 @implementation NSObject (Motis_Private)
+
++ (NSDictionary*)mts_collectMotisMapping
+{
+    static NSMutableDictionary *allMotisMappings = nil;
+    
+    static dispatch_once_t onceToken1;
+    dispatch_once(&onceToken1, ^{
+        allMotisMappings = [NSMutableDictionary dictionary];
+    });
+    
+    NSString *className = NSStringFromClass(self);
+    NSDictionary *motisMapping = allMotisMappings[className];
+    
+    if (!motisMapping)
+    {
+        Class currentClass = self;
+        
+        NSMutableArray *mappings = [NSMutableArray array];
+        while ([currentClass isSubclassOfClass:NSObject.class])
+        {
+            [mappings addObject:[currentClass mts_motisMapping]];
+            currentClass = [currentClass superclass];
+        }
+        
+        NSMutableDictionary *mapping = [NSMutableDictionary dictionary];
+        [mappings enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+            [mapping addEntriesFromDictionary:obj];
+        }];
+        
+        motisMapping = [mapping copy];
+        allMotisMappings[className] = motisMapping;
+    }
+
+    return motisMapping;
+}
+
++ (NSDictionary*)mts_collectMotisArrayClassMapping
+{
+    static NSMutableDictionary *allMotisArrayClassMappings = nil;
+    
+    static dispatch_once_t onceToken1;
+    dispatch_once(&onceToken1, ^{
+        allMotisArrayClassMappings = [NSMutableDictionary dictionary];
+    });
+    
+    NSString *className = NSStringFromClass(self);
+    NSDictionary *motisArrayClassMapping = allMotisArrayClassMappings[className];
+    
+    if (!motisArrayClassMapping)
+    {
+        Class currentClass = self;
+        
+        NSMutableArray *mappings = [NSMutableArray array];
+        while ([currentClass isSubclassOfClass:NSObject.class])
+        {
+            [mappings addObject:[currentClass mts_motisArrayClassMapping]];
+            currentClass = [currentClass superclass];
+        }
+        
+        NSMutableDictionary *mapping = [NSMutableDictionary dictionary];
+        [mappings enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+            [mapping addEntriesFromDictionary:obj];
+        }];
+        
+        motisArrayClassMapping = [mapping copy];
+        allMotisArrayClassMappings[className] = motisArrayClassMapping;
+    }
+    
+    return motisArrayClassMapping;
+}
 
 - (NSString*)mts_typeAttributeForKey:(NSString*)key
 {
@@ -516,7 +604,7 @@
         }
         if ([typeClass isSubclassOfClass:NSDate.class])
         {
-            NSDateFormatter *dateFormatter = [self mts_validationDateFormatter];
+            NSDateFormatter *dateFormatter = [self.class mts_validationDateFormatter];
             *ioValue = [dateFormatter dateFromString:*ioValue];
             return *ioValue != nil;
         }

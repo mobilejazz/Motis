@@ -107,11 +107,11 @@
  ** ---------------------------------------------- **/
 
 /**
- * Returns the mapping to be used in the parsing. The default value is an empty dictionary.
+ * Returns the mapping to be used in the object mapping stage. The default value is an empty dictionary.
  * @return the mapping in a dictionary.
- * @discussion Subclasses must override this method and specify a custom mapping dictionary. As a good practice, always add the [super mts_motisMapping] dictionary inside the custom dictionary.
+ * @discussion Subclasses must override this method and specify a custom mapping dictionary for their class level. When needed, motis will collect all mapping dictionaries from each subclass level in the class hierarchy and create the overall mapping.
  **/
-- (NSDictionary*)mts_motisMapping;
++ (NSDictionary*)mts_motisMapping;
 
 /**
  
@@ -128,9 +128,9 @@
 /**
  * Return a mapping between the array property name to the contained object class type.
  * For example: @{@"myArrayPropertyName": User.class, ... };
- * @return A dictionary with the array content mapping.
+ * @return A dictionary with the array content mapping. When needed, motis will collect all mapping dictionaries from each subclass level in the class hierarchy and create the overall mapping.
  **/
-- (NSDictionary*)mts_motisArrayClassMapping;
++ (NSDictionary*)mts_motisArrayClassMapping;
 
 /**
  * While validating automatically your JSON objects, Motis object mapping might create new objects. This method is called just before new objects are created.
@@ -155,7 +155,7 @@
  * @return The date formatter.
  * @discussion The default date formatter format is "2011-08-23 10:52:00". Subclasses can override this method and provide a custom date formatter. In case of custom date formater for each key, you must validate manualy the property.
  **/
-- (NSDateFormatter*)mts_validationDateFormatter;
++ (NSDateFormatter*)mts_validationDateFormatter;
 
 /** ---------------------------------------------- **
  * @name Manual Validation

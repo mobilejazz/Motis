@@ -24,44 +24,23 @@
 #pragma mark Motis Subclassing
 
 // JSON keys to object properties mapping
-- (NSDictionary*)mts_motisMapping
++ (NSDictionary*)mts_motisMapping
 {
-    static NSDictionary *mapping = nil;
-    
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        NSDictionary *JSONMapping = @{@"video_id": NSStringFromSelector(@selector(videoId)),
-                                      @"view_count": NSStringFromSelector(@selector(viewCount)),
-                                      @"title": NSStringFromSelector(@selector(title)),
-                                      @"description": NSStringFromSelector(@selector(videoDescription)),
-                                      @"last_view_time": NSStringFromSelector(@selector(lastViewDate)),
-                                      @"uploader": NSStringFromSelector(@selector(uploader)),
-                                      @"users_cast": NSStringFromSelector(@selector(cast)),
-                                      @"likes_count": NSStringFromSelector(@selector(likesCount)),
-                                      };
-        NSMutableDictionary *mutableMapping = [[super mts_motisMapping] mutableCopy];
-        [mutableMapping addEntriesFromDictionary:JSONMapping];
-        mapping = mutableMapping;
-    });
-    
-    return mapping;
+    return @{@"video_id": NSStringFromSelector(@selector(videoId)),
+             @"view_count": NSStringFromSelector(@selector(viewCount)),
+             @"title": NSStringFromSelector(@selector(title)),
+             @"description": NSStringFromSelector(@selector(videoDescription)),
+             @"last_view_time": NSStringFromSelector(@selector(lastViewDate)),
+             @"uploader": NSStringFromSelector(@selector(uploader)),
+             @"users_cast": NSStringFromSelector(@selector(cast)),
+             @"likes_count": NSStringFromSelector(@selector(likesCount)),
+             };
 }
 
 // Automatic array validation mapping
-- (NSDictionary*)mts_motisArrayClassMapping
++ (NSDictionary*)mts_motisArrayClassMapping
 {
-    static NSDictionary *mapping = nil;
-    
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        NSDictionary *arrayMapping = @{NSStringFromSelector(@selector(cast)) : MJUser.class,
-                                       };
-        NSMutableDictionary *mutableMapping = [[super mts_motisArrayClassMapping] mutableCopy];
-        [mutableMapping addEntriesFromDictionary:arrayMapping];
-        mapping = mutableMapping;
-    });
-    
-    return mapping;
+    return @{NSStringFromSelector(@selector(cast)) : MJUser.class};
 }
 
 // Only accept values from the mapping

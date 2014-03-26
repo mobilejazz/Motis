@@ -12,27 +12,21 @@
 
 @implementation MJTestObject
 
-- (NSDictionary*)mts_motisMapping
++ (NSDictionary*)mts_motisMapping
 {
-    static NSDictionary *mapping = nil;
+    return @{@"bool": @"boolField",
+             
+             @"integer": @"integerField",
+             @"unsigned_integer": @"unsignedIntegerField",
+             
+             @"float": @"floatField",
+             @"double": @"doubleField",
+             
+             @"string": @"stringField",
+             @"number": @"numberField",
+             @"url": @"urlField",
+             };
     
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        mapping = @{@"bool": @"boolField",
-                    
-                    @"integer": @"integerField",
-                    @"unsigned_integer": @"unsignedIntegerField",
-                    
-                    @"float": @"floatField",
-                    @"double": @"doubleField",
-                    
-                    @"string": @"stringField",
-                    @"number": @"numberField",
-                    @"url": @"urlField",
-                    };
-    });
-    
-    return mapping;
 }
 
 + (BOOL)mts_motisShouldSetUndefinedKeys
