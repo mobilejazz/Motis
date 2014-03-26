@@ -9,10 +9,10 @@ Easy JSON to NSObject mapping using Cocoa's key value coding (KVC)
 ##How To
 ####1. Define the mapping keys
 
-Your custom object (subclass of `NSObject`) needs to override the method `mjz_motisMapping` and define the mappging from the JSON keys to the Objective-C property names.
+Your custom object (subclass of `NSObject`) needs to override the method `mts_motisMapping` and define the mappging from the JSON keys to the Objective-C property names.
 
 ```objective-c
-- (NSDictionary*)mjz_motisMapping
+- (NSDictionary*)mts_motisMapping
 {
 	return @{@"json_attribute_key_1" : @"class_property_name_1",
 		@"json_attribute_key_2" : @"class_property_name_2",
@@ -22,7 +22,7 @@ Your custom object (subclass of `NSObject`) needs to override the method `mjz_mo
 }
 ```
 	
-Remember that you might want to add also the dictionary from the call `[super mjz_motisMapping]` to your custom mapping.
+Remember that you might want to add also the dictionary from the call `[super mts_motisMapping]` to your custom mapping.
 
 ####2. Map and set your objects
 
@@ -38,7 +38,7 @@ After defining your mappings in step (1) you are ready to go:
 	MyClass instance = [[MyClass alloc] init];
 			
 	// Parsing and setting the values of the JSON object
-	[instance mjz_setValuesForKeysWithDictionary:jsonObject];
+	[instance mts_setValuesForKeysWithDictionary:jsonObject];
 }
 ```
 	
@@ -49,7 +49,7 @@ After defining your mappings in step (1) you are ready to go:
 
 Automatic validation is done by default if the user is not validating manually. 
 
-In order to support automatic validation for array content (objects inside of an array), you must override the method `-mjz_motisArrayClassMapping` and return a dictionary containing pairs of *array property name* and *class type* for its content.
+In order to support automatic validation for array content (objects inside of an array), you must override the method `-mts_motisArrayClassMapping` and return a dictionary containing pairs of *array property name* and *class type* for its content.
 
 ##### Manual Validation
 
@@ -68,7 +68,7 @@ If you prefer to do manual validation, you can override the KVC validation metho
 and for array contents:
 
 ```objective-c
-- (BOOL)mjz_validateArrayObject:(inout __autoreleasing id *)ioValue forArrayKey:(NSString *)arrayKey error:(out NSError *__autoreleasing *)outError;
+- (BOOL)mts_validateArrayObject:(inout __autoreleasing id *)ioValue forArrayKey:(NSString *)arrayKey error:(out NSError *__autoreleasing *)outError;
 {
 	// Check *ioValue and assign new value to ioValue if needed.
 	// Return YES if *ioValue can be included into the array, NO otherwise
