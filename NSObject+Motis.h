@@ -109,7 +109,7 @@
 /**
  * Returns the mapping to be used in the object mapping stage. The default value is an empty dictionary.
  * @return the mapping in a dictionary.
- * @discussion Subclasses must override this method and specify a custom mapping dictionary for their class level. When needed, motis will collect all mapping dictionaries from each subclass level in the class hierarchy and create the overall mapping.
+ * @discussion Subclasses must override this method and specify a custom mapping dictionary for their class level. When needed, motis will collect all mapping dictionaries from each subclass level in the class hierarchy and create the overall mapping. The returned mapping might be cached.
  **/
 + (NSDictionary*)mts_motisMapping;
 
