@@ -43,13 +43,13 @@
  * Collects all the mappings from each subclass layer.
  * @return The Motis Object Mapping.
  **/
-+ (NSDictionary*)mts_collectMotisMapping;
++ (NSDictionary*)mts_cachedMapping;
 
 /**
  * Collects all the array class mappings from each subclass layer.
  * @return The Motis Array Class Mapping.
  **/
-+ (NSDictionary*)mts_collectMotisArrayClassMapping;
++ (NSDictionary*)mts_cachedArrayClassMapping;
 
 /** ---------------------------------------------- **
  * @name Object Class Introspection
@@ -141,7 +141,7 @@
             // Automatic validation only if the value has not been manually validated
             if (object == validatedObject && validated)
             {
-                Class typeClass = [self.class mts_collectMotisArrayClassMapping][mappedKey];
+                Class typeClass = [self.class mts_cachedArrayClassMapping][mappedKey];
                 if (typeClass)
                     validated = [self mts_validateAutomaticallyValue:&validatedObject toClass:typeClass forKey:mappedKey];
             }
@@ -203,7 +203,7 @@
 - (NSString*)mts_extendedObjectDescription
 {
     NSString *description = self.description;
-    NSArray *keys = [[self.class mts_motisMapping] allValues];
+    NSArray *keys = [[self.class mts_cachedMapping] allValues];
     if (keys.count > 0)
     {
         NSDictionary *keyValues = [self dictionaryWithValuesForKeys:keys];
@@ -216,12 +216,12 @@
 
 - (NSString*)mts_mapKey:(NSString*)key
 {
-    NSString *mappedKey = [self.class mts_collectMotisMapping][key];
+    NSString *mappedKey = [self.class mts_cachedMapping][key];
     
     if (mappedKey)
         return mappedKey;
     
-    if ([self.class mts_motisShouldSetUndefinedKeys])
+    if ([self.class mts_shouldSetUndefinedKeys])
         return key;
     
     return nil;
@@ -239,19 +239,19 @@
 
 @implementation NSObject (Motis_Subclassing)
 
-+ (NSDictionary*)mts_motisMapping
++ (NSDictionary*)mts_mapping
 {
     // Subclasses must override, always adding super to the mapping!
     return @{};
 }
 
-+ (BOOL)mts_motisShouldSetUndefinedKeys
++ (BOOL)mts_shouldSetUndefinedKeys
 {
     // Subclasses might override.
     return YES;
 }
 
-+ (NSDictionary*)mts_motisArrayClassMapping
++ (NSDictionary*)mts_arrayClassMapping
 {
     // Subclasses might override.
     return @{};
@@ -325,74 +325,68 @@
 
 @implementation NSObject (Motis_Private)
 
-+ (NSDictionary*)mts_collectMotisMapping
++ (NSDictionary*)mts_cachedMapping
 {
-    static NSMutableDictionary *allMotisMappings = nil;
+    static NSMutableDictionary *mappings = nil;
     
     static dispatch_once_t onceToken1;
     dispatch_once(&onceToken1, ^{
-        allMotisMappings = [NSMutableDictionary dictionary];
+        mappings = [NSMutableDictionary dictionary];
     });
     
     NSString *className = NSStringFromClass(self);
-    NSDictionary *motisMapping = allMotisMappings[className];
+    NSDictionary *mapping = mappings[className];
     
-    if (!motisMapping)
+    if (!mapping)
     {
-        Class currentClass = self;
+        Class superClass = [self superclass];
         
-        NSMutableArray *mappings = [NSMutableArray array];
-        while ([currentClass isSubclassOfClass:NSObject.class])
-        {
-            [mappings addObject:[currentClass mts_motisMapping]];
-            currentClass = [currentClass superclass];
-        }
+        NSMutableDictionary *dictionary = nil;
         
-        NSMutableDictionary *mapping = [NSMutableDictionary dictionary];
-        [mappings enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-            [mapping addEntriesFromDictionary:obj];
-        }];
+        if ([superClass isSubclassOfClass:NSObject.class])
+            dictionary = [[superClass mts_cachedMapping] mutableCopy];
+        else
+            dictionary = [NSMutableDictionary dictionary];
         
-        motisMapping = [mapping copy];
-        allMotisMappings[className] = motisMapping;
+        [dictionary addEntriesFromDictionary:[self mts_mapping]];
+        
+        mapping = [dictionary copy];
+        mappings[className] = mapping;
     }
 
-    return motisMapping;
+    return mapping;
 }
 
-+ (NSDictionary*)mts_collectMotisArrayClassMapping
++ (NSDictionary*)mts_cachedArrayClassMapping
 {
-    static NSMutableDictionary *allMotisArrayClassMappings = nil;
+    static NSMutableDictionary *arrayClassMappings = nil;
     
     static dispatch_once_t onceToken1;
     dispatch_once(&onceToken1, ^{
-        allMotisArrayClassMappings = [NSMutableDictionary dictionary];
+        arrayClassMappings = [NSMutableDictionary dictionary];
     });
     
     NSString *className = NSStringFromClass(self);
-    NSDictionary *motisArrayClassMapping = allMotisArrayClassMappings[className];
+    NSDictionary *arrayClassMapping = arrayClassMappings[className];
     
-    if (!motisArrayClassMapping)
+    if (!arrayClassMapping)
     {
-        Class currentClass = self;
+        Class superClass = [self superclass];
         
-        NSMutableArray *mappings = [NSMutableArray array];
-        while ([currentClass isSubclassOfClass:NSObject.class])
-        {
-            [mappings addObject:[currentClass mts_motisArrayClassMapping]];
-            currentClass = [currentClass superclass];
-        }
+        NSMutableDictionary *mapping = nil;
         
-        NSMutableDictionary *mapping = [NSMutableDictionary dictionary];
-        [mappings enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-            [mapping addEntriesFromDictionary:obj];
-        }];
+        if ([superClass isSubclassOfClass:NSObject.class])
+            mapping = [[superClass mts_cachedArrayClassMapping] mutableCopy];
+        else
+            mapping = [NSMutableDictionary dictionary];
         
-        motisArrayClassMapping = [mapping copy];
-        allMotisArrayClassMappings[className] = motisArrayClassMapping;
+        [mapping addEntriesFromDictionary:[self mts_arrayClassMapping]];
+        
+        arrayClassMapping = [mapping copy];
+        arrayClassMappings[className] = arrayClassMapping;
     }
     
-    return motisArrayClassMapping;
+    return arrayClassMapping;
 }
 
 - (NSString*)mts_typeAttributeForKey:(NSString*)key

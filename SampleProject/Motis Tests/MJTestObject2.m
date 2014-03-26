@@ -10,7 +10,7 @@
 
 @implementation MJTestObject2
 
-+ (BOOL)mts_motisShouldSetUndefinedKeys
++ (BOOL)mts_shouldSetUndefinedKeys
 {
     return YES;
 }

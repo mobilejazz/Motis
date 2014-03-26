@@ -24,7 +24,7 @@
 #pragma mark Motis Subclassing
 
 // JSON keys to object properties mapping
-+ (NSDictionary*)mts_motisMapping
++ (NSDictionary*)mts_mapping
 {
     return @{@"video_id": NSStringFromSelector(@selector(videoId)),
              @"view_count": NSStringFromSelector(@selector(viewCount)),
@@ -38,13 +38,13 @@
 }
 
 // Automatic array validation mapping
-+ (NSDictionary*)mts_motisArrayClassMapping
++ (NSDictionary*)mts_arrayClassMapping
 {
     return @{NSStringFromSelector(@selector(cast)) : MJUser.class};
 }
 
 // Only accept values from the mapping
-+ (BOOL)mts_motisShouldSetUndefinedKeys
++ (BOOL)mts_shouldSetUndefinedKeys
 {
     return NO;
 }

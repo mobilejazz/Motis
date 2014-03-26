@@ -109,9 +109,9 @@
 /**
  * Returns the mapping to be used in the object mapping stage. The default value is an empty dictionary.
  * @return the mapping in a dictionary.
- * @discussion Subclasses must override this method and specify a custom mapping dictionary for their class level. When needed, motis will collect all mapping dictionaries from each subclass level in the class hierarchy and create the overall mapping. The returned mapping might be cached.
+ * @discussion Subclasses must override this method and specify a custom mapping dictionary for their class level. When needed, motis will collect all mapping dictionaries from each subclass level in the class hierarchy and create the overall mapping. The returned mapping will be cached.
  **/
-+ (NSDictionary*)mts_motisMapping;
++ (NSDictionary*)mts_mapping;
 
 /**
  
@@ -119,7 +119,7 @@
  * @return `YES` if Motis should set undefined keys, `NO` if only the keys defined `mts_motisMapping` can be set.
  * @discussion Subclasses may override to return `NO`.
  **/
-+ (BOOL)mts_motisShouldSetUndefinedKeys;
++ (BOOL)mts_shouldSetUndefinedKeys;
 
 /** ---------------------------------------------- **
  * @name Automatic Validation
@@ -130,7 +130,7 @@
  * For example: @{@"myArrayPropertyName": User.class, ... };
  * @return A dictionary with the array content mapping. When needed, motis will collect all mapping dictionaries from each subclass level in the class hierarchy and create the overall mapping.
  **/
-+ (NSDictionary*)mts_motisArrayClassMapping;
++ (NSDictionary*)mts_arrayClassMapping;
 
 /**
  * While validating automatically your JSON objects, Motis object mapping might create new objects. This method is called just before new objects are created.

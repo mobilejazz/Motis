@@ -12,7 +12,7 @@
 
 @implementation MJTestObject
 
-+ (NSDictionary*)mts_motisMapping
++ (NSDictionary*)mts_mapping
 {
     return @{@"bool": @"boolField",
              
@@ -29,7 +29,7 @@
     
 }
 
-+ (BOOL)mts_motisShouldSetUndefinedKeys
++ (BOOL)mts_shouldSetUndefinedKeys
 {
     return NO;
 }

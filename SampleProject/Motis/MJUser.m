@@ -20,7 +20,7 @@
 
 @implementation MJUser
 
-+ (NSDictionary*)mts_motisMapping
++ (NSDictionary*)mts_mapping
 {
     return  @{@"user_name": NSStringFromSelector(@selector(username)),
               @"user_id": NSStringFromSelector(@selector(userId)),
