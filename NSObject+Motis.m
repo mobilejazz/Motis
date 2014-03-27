@@ -448,16 +448,15 @@
     
     if ([self mts_isClassTypeTypeAttribute:typeAttribute])
     {
+        if (strcmp(rawPropertyType, @encode(id)) == 0)
+            return YES;
+        
         Class typeClass = [self mts_classForTypeAttribute:typeAttribute];
         
         if (typeClass != nil)
         {
             MJLog(@"%@ --> %@", key, NSStringFromClass(typeClass));
             return [self mts_validateAutomaticallyValue:ioValue toClass:typeClass forKey:key];
-        }
-        else if (strcmp(rawPropertyType, @encode(id)) == 0)
-        {
-            return YES;
         }
         
         return NO;
