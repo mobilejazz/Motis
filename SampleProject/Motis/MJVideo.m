@@ -26,21 +26,21 @@
 // JSON keys to object properties mapping
 + (NSDictionary*)mts_mapping
 {
-    return @{@"video_id": NSStringFromSelector(@selector(videoId)),
-             @"view_count": NSStringFromSelector(@selector(viewCount)),
-             @"title": NSStringFromSelector(@selector(title)),
-             @"description": NSStringFromSelector(@selector(videoDescription)),
-             @"last_view_time": NSStringFromSelector(@selector(lastViewDate)),
-             @"uploader": NSStringFromSelector(@selector(uploader)),
-             @"users_cast": NSStringFromSelector(@selector(cast)),
-             @"likes_count": NSStringFromSelector(@selector(likesCount)),
+    return @{@"video_id": mts_key(videoId),
+             @"view_count": mts_key(viewCount),
+             @"title": mts_key(title),
+             @"description": mts_key(videoDescription),
+             @"last_view_time": mts_key(lastViewDate),
+             @"uploader": mts_key(uploader),
+             @"users_cast": mts_key(cast),
+             @"likes_count": mts_key(likesCount),
              };
 }
 
 // Automatic array validation mapping
 + (NSDictionary*)mts_arrayClassMapping
 {
-    return @{NSStringFromSelector(@selector(cast)) : MJUser.class};
+    return @{mts_key(cast) : MJUser.class};
 }
 
 // Only accept values from the mapping
@@ -60,7 +60,7 @@
 {
     NSLog(@"[%@] Null value received for key: %@. Value should be manually set.",[self.class description], key);
     
-    if ([key isEqualToString:@"likesCount"])
+    if ([key isEqualToString:mts_key(likesCount)])
         _likesCount = -1; // <-- Generic default value
 }
 

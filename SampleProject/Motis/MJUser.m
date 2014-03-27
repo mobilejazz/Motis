@@ -22,9 +22,9 @@
 
 + (NSDictionary*)mts_mapping
 {
-    return  @{@"user_name": NSStringFromSelector(@selector(username)),
-              @"user_id": NSStringFromSelector(@selector(userId)),
-              @"followers": NSStringFromSelector(@selector(followers)),
+    return  @{@"user_name": mts_key(username),
+              @"user_id": mts_key(userId),
+              @"followers": mts_key(followers),
               };
 }
 @end

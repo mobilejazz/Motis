@@ -14,17 +14,17 @@
 
 + (NSDictionary*)mts_mapping
 {
-    return @{@"bool": @"boolField",
+    return @{@"bool": mts_key(boolField),
              
-             @"integer": @"integerField",
-             @"unsigned_integer": @"unsignedIntegerField",
+             @"integer": mts_key(integerField),
+             @"unsigned_integer": mts_key(unsignedIntegerField),
              
-             @"float": @"floatField",
-             @"double": @"doubleField",
+             @"float": mts_key(floatField),
+             @"double": mts_key(doubleField),
              
-             @"string": @"stringField",
-             @"number": @"numberField",
-             @"url": @"urlField",
+             @"string": mts_key(stringField),
+             @"number": mts_key(numberField),
+             @"url": mts_key(urlField),
              };
     
 }
@@ -41,7 +41,7 @@
 
 - (void)mts_nullValueForKey:(NSString *)key
 {
-    if ([key isEqualToString:@"boolField"])
+    if ([key isEqualToString:mts_key(boolField)])
         _boolField = NO;
 }
 
