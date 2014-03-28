@@ -12,7 +12,7 @@ Easy JSON to NSObject mapping using Cocoa's key value coding (KVC)
 Your custom object (subclass of `NSObject`) needs to override the method `mts_mapping` and define the mappging from the JSON keys to the Objective-C property names.
 
 ```objective-c
-- (NSDictionary*)mts_mapping
++ (NSDictionary*)mts_mapping
 {
 	return @{@"json_attribute_key_1" : @"class_property_name_1",
 		@"json_attribute_key_2" : @"class_property_name_2",
@@ -47,7 +47,7 @@ After defining your mappings in step (1) you are ready to go:
 
 Automatic validation is done by default if the user is not validating manually. 
 
-In order to support automatic validation for array content (objects inside of an array), you must override the method `-mts_motisArrayClassMapping` and return a dictionary containing pairs of *array property name* and *class type* for its content.
+In order to support automatic validation for array content (objects inside of an array), you must override the method `-mts_arrayClassMapping` and return a dictionary containing pairs of *array property name* and *class type* for its content.
 
 ##### Manual Validation
 
