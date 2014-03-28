@@ -9,10 +9,10 @@ Easy JSON to NSObject mapping using Cocoa's key value coding (KVC)
 ##How To
 ####1. Define the mapping keys
 
-Your custom object (subclass of `NSObject`) needs to override the method `mts_motisMapping` and define the mappging from the JSON keys to the Objective-C property names.
+Your custom object (subclass of `NSObject`) needs to override the method `mts_mapping` and define the mappging from the JSON keys to the Objective-C property names.
 
 ```objective-c
-- (NSDictionary*)mts_motisMapping
+- (NSDictionary*)mts_mapping
 {
 	return @{@"json_attribute_key_1" : @"class_property_name_1",
 		@"json_attribute_key_2" : @"class_property_name_2",
@@ -21,8 +21,6 @@ Your custom object (subclass of `NSObject`) needs to override the method `mts_mo
 	};
 }
 ```
-	
-Remember that you might want to add also the dictionary from the call `[super mts_motisMapping]` to your custom mapping.
 
 ####2. Map and set your objects
 
