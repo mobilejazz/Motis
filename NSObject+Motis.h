@@ -110,9 +110,9 @@
  | null       | undefined           | if property is basic type (*3). Check method '-mts_nullValueForKey:'               |
  +------------+---------------------+------------------------------------------------------------------------------------+
  *
- * (basic type (*1) : int, unsigned int, long, unsigned long, long long, unsigned long long, float, double)
- * (basic type (*2) : int, unsigned int, long, unsigned long, float, double)
- * (basic type (*3) : any basic type.
+ * basic type (*1) : int, unsigned int, long, unsigned long, long long, unsigned long long, float, double)
+ * basic type (*2) : int, unsigned int, long, unsigned long, float, double)
+ * basic type (*3) : any basic type.
  *
  */
 
