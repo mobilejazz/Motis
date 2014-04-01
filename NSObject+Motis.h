@@ -71,6 +71,51 @@
 @end
 
 
+/*
+ * MOTIS AUTOMATIC VALIDATION
+ *
+ * Motis object mapping adds automatic validation for your properties. This means the system will try to convert into your property type the input value.
+ * The following table indicates the supported validations in the current version:
+ *
+ +------------+---------------------+------------------------------------------------------------------------------------+
+ | JSON Type  | Property Type       | Comments                                                                           |
+ +------------+---------------------+------------------------------------------------------------------------------------+
+ | string     | NSString            | No validation is requried                                                          |
+ | number     | NSNumber            | No validation is requried                                                          |
+ | number     | basic type (*1)     | No validation is requried                                                          |
+ | array      | NSArray             | No validation is requried                                                          |
+ | dictionary | NSDictionary        | No validation is requried                                                          |
+ | -          | -                   | -                                                                                  |
+ | string     | bool                | string parsed with NSNumberFormatter (allowFloats enabled)                         |
+ | string     | unsigned long long  | string parsed with NSNumberFormatter (allowFloats disabled)                        |
+ | string     | basic types (*2)    | value generated automatically by KVC (NSString's '-intValue', '-longValue', etc)   |
+ | string     | NSNumber            | string parsed with NSNumberFormatter (allowFloats enabled)                         |
+ | string     | NSURL               | created using [NSURL URLWithString:]                                               |
+ | string     | NSData              | attempt to decode base64 encoded string                                            |
+ | string     | NSDate              | default date format "2011-08-23 10:52:00". Check '+mts_validationDateFormatter.'   |
+ | -          | -                   | -                                                                                  |
+ | number     | NSDate              | timestamp since 1970                                                               |
+ | number     | NSString            | string by calling NSNumber's '-stringValue'                                        |
+ | -          | -                   | -                                                                                  |
+ | array      | NSMutableArray      | creating new instance from original array                                          |
+ | array      | NSSet               | creating new instance from original array                                          |
+ | array      | NSMutableSet        | creating new instance from original array                                          |
+ | array      | NSOrderedSet        | creating new instance from original array                                          |
+ | array      | NSMutableOrderedSet | creating new instance from original array                                          |
+ | -          | -                   | -                                                                                  |
+ | dictionary | NSMutableDictionary | creating new instance from original dictionary                                     |
+ | dictionary | custom NSObject     | Motis recursive call. Check '-mts_willCreateObject..' and '-mtd_didCreateObject:'  |
+ | -          | -                   | -                                                                                  |
+ | null       | nil                 | if property is type object                                                         |
+ | null       | undefined           | if property is basic type (*3). Check method '-mts_nullValueForKey:'               |
+ +------------+---------------------+------------------------------------------------------------------------------------+
+ *
+ * (basic type (*1) : int, unsigned int, long, unsigned long, long long, unsigned long long, float, double)
+ * (basic type (*2) : int, unsigned int, long, unsigned long, float, double)
+ * (basic type (*3) : any basic type.
+ *
+ */
+
 /* *************************************************************************************************************************************** *
  * Motis Subclassing
  * *************************************************************************************************************************************** */
@@ -84,30 +129,28 @@
  *
  * In order to use Motis you must define mappings between JSON keys and object properties by overriding the following methods:
  *
- *  - `mts_motisMapping`: Subclasses must override this method and return the mapping between the JSON keys and the object properties.
- *  - `mts_motisShouldSetUndefinedKeys`: Optionally, subclasses can override this method to forbid Motis from automatically setting keys not found in the mapping. The default is `YES`.
- *
+ *  - `+mts_mapping`: Subclasses must override this method and return the mapping between the JSON keys and the object properties.
+ *  - `+mts_shouldSetUndefinedKeys`: Optionally, subclasses can override this method to forbid Motis from automatically setting keys not found in the mapping. The default is `YES`.
  *
  * VALIDATION METHODS
  *
- * Motis object mapping adds automatic validation for your properties. This means the system will try to convert into your property type the input value.
  * To support automatic validation you must override:
  *
- *  - `mts_motisArrayClassMapping`: If your objects has properties of type `NSArray`, override this method and define a mapping between the array property name and the expected content object class.
+ *  - `+mts_arrayClassMapping`: If your objects has properties of type `NSArray`, override this method and define a mapping between the array property name and the expected content object class.
  *
  * However, you can validate manually any value before the automatic validation is done. If you implements manually validation for a property, the system won't perform the automatic validation.
  * To implement manual validation you must override:
  *
- *  - `validate<Key>:error:` For each property to manually validate implement this method with <Key> being the name of the object property. This is a KVC validation method.
- *  - `mts_validateArrayObject:forArrayKey:`: For those property of type array, implement this method to validate their content.
+ *  - `-validate<Key>:error:` For each property to manually validate implement this method with <Key> being the name of the object property. This is a KVC validation method.
+ *  - `-mts_validateArrayObject:forArrayKey:`: For those property of type array, implement this method to validate their content.
  *
  *
  * OTHER METHODS TO SUBCLASS
  *
- *  - `setValue:forUndefinedKey:`: KVC Method to handle undefined keys. By default this method throws an exception.
- *  - `mts_ignoredSetValue:forUndefinedMappingKey`: If undefined keys are disabled (`mts_motisShouldSetUndefinedKeys`), this method will be called when a undefined mapping key is found.
- *  - `mts_invalidValue:forKey:error:`: If value is does not pass valiation, this method is called after aborting the value setting.
- *  - `mts_invalidValue:forArrayKey:error:`: if an array item does not pass validation, this method is called after aborting the item setting.
+ *  - `-setValue:forUndefinedKey:`: KVC Method to handle undefined keys. By default this method throws an exception.
+ *  - `-mts_ignoredSetValue:forUndefinedMappingKey`: If undefined keys are disabled (`mts_motisShouldSetUndefinedKeys`), this method will be called when a undefined mapping key is found.
+ *  - `-mts_invalidValue:forKey:error:`: If value is does not pass valiation, this method is called after aborting the value setting.
+ *  - `-mts_invalidValue:forArrayKey:error:`: if an array item does not pass validation, this method is called after aborting the item setting.
  **/
 @interface NSObject (Motis_Subclassing)
 
