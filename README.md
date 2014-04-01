@@ -49,7 +49,7 @@ Automatic validation is done by default if the user is not validating manually.
 
 In order to support automatic validation for array content (objects inside of an array), you must override the method `+mts_arrayClassMapping` and return a dictionary containing pairs of *array property name* and *class type* for its content.
 
-For more information about automatic validation, check the bottom table of the document of supported validations.
+For more information about automatic validations, check the bottom table of this document.
 
 ##### Manual Validation
 
