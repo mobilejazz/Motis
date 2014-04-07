@@ -44,7 +44,7 @@
 
 - (void)testNullToBasicTypeWithNullDefinition
 {
-    // check `-mts_nullValueForKey` method.
+    // check `-setNilValueForKey` method.
     
     _object.boolField = YES;
     [_object mts_setValue:[NSNull null] forKey:@"bool"];
@@ -55,7 +55,7 @@
 
 - (void)testNullToBasicTypeWithoutNullDefinition
 {
-    // check `-mts_nullValueForKey` method.
+    // check `-setNilValueForKey` method.
     
     _object.integerField = 42;
     [_object mts_setValue:[NSNull null] forKey:@"integer"];

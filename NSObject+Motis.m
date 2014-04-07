@@ -182,10 +182,7 @@
     
     if (validated)
     {
-        if (value == nil && ![self mts_isClassTypeTypeAttribute:[self mts_typeAttributeForKey:mappedKey]])
-            [self mts_nullValueForKey:mappedKey];
-        else
-            [self setValue:value forKey:mappedKey];
+        [self setValue:value forKey:mappedKey];
     }
     else
         [self mts_invalidValue:value forKey:mappedKey error:error];
@@ -305,12 +302,6 @@
 {
     // Subclasses might override.
     MJLog(@"Item for ArrayKey <%@> is not valid in class %@. Error: %@", key, [self.class description], error);
-}
-
-- (void)mts_nullValueForKey:(NSString *)key
-{
-    // Subclasses may override and reset scalar values for the given "key" property name.
-    MJLog(@"Null value for key %@ in class %@", key, [self.class description]);
 }
 
 @end

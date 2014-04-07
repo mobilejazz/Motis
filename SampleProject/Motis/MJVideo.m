@@ -56,7 +56,7 @@
 }
 
 // This method is called when received "null" in non-object types.
-- (void)mts_nullValueForKey:(NSString *)key
+- (void)setNilValueForKey:(NSString *)key
 {
     NSLog(@"[%@] Null value received for key: %@. Value should be manually set.",[self.class description], key);
     

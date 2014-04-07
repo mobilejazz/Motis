@@ -39,7 +39,7 @@
     NSLog(@"INVALID VALUE %@ FOR KEY %@", [value description], key);
 }
 
-- (void)mts_nullValueForKey:(NSString *)key
+- (void)setNilValueForKey:(NSString *)key
 {
     if ([key isEqualToString:mts_key(boolField)])
         _boolField = NO;

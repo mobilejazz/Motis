@@ -107,7 +107,7 @@
  | dictionary | custom NSObject     | Motis recursive call. Check '-mts_willCreateObject..' and '-mtd_didCreateObject:'  |
  | -          | -                   | -                                                                                  |
  | null       | nil                 | if property is type object                                                         |
- | null       | undefined           | if property is basic type (*3). Check method '-mts_nullValueForKey:'               |
+ | null       | undefined           | if property is basic type (*3). Check KVC method '-setNilValueForKey:'             |
  +------------+---------------------+------------------------------------------------------------------------------------+
  *
  * basic type (*1) : int, unsigned int, long, unsigned long, long long, unsigned long long, float, double)
@@ -144,10 +144,10 @@
  *  - `-validate<Key>:error:` For each property to manually validate implement this method with <Key> being the name of the object property. This is a KVC validation method.
  *  - `-mts_validateArrayObject:forArrayKey:`: For those property of type array, implement this method to validate their content.
  *
- *
  * OTHER METHODS TO SUBCLASS
  *
- *  - `-setValue:forUndefinedKey:`: KVC Method to handle undefined keys. By default this method throws an exception.
+ *  - `-setValue:forUndefinedKey:`: KVC Method to handle undefined keys. By default this method throws an exception. This method is called when a unknown json field is received.
+ *  - `-setNilValueForKey:`: KVC Method to nullify a basic type property. By default this method throws an exception. This method is called when a json field with value "null" is received.
  *  - `-mts_ignoredSetValue:forUndefinedMappingKey`: If undefined keys are disabled (`mts_motisShouldSetUndefinedKeys`), this method will be called when a undefined mapping key is found.
  *  - `-mts_invalidValue:forKey:error:`: If value is does not pass valiation, this method is called after aborting the value setting.
  *  - `-mts_invalidValue:forArrayKey:error:`: if an array item does not pass validation, this method is called after aborting the item setting.
@@ -248,12 +248,5 @@
  * @param error The validation error.
  **/
 - (void)mts_invalidValue:(id)value forArrayKey:(NSString *)key error:(NSError*)error;
-
-/**
- * When the JSON dictionary contains a null value, if the correspondent mapped property is an object it is nillifyed by default. However, scalar types cannot be nillified via KVC, therefore Motis is ignoring "null" values if the mapped type is basic. This method is called when a scalar type recives a "null".
- * @param key The key of the scalar/basic property.
- * @discussion Use this method to reset to "zero" your scalar types if needed.
- **/
-- (void)mts_nullValueForKey:(NSString *)key;
 
 @end
