@@ -82,13 +82,13 @@
  +------------+---------------------+------------------------------------------------------------------------------------+
  | string     | NSString            | No validation is requried                                                          |
  | number     | NSNumber            | No validation is requried                                                          |
- | number     | basic type (*1)     | No validation is requried                                                          |
+ | number     | basic type (1)      | No validation is requried                                                          |
  | array      | NSArray             | No validation is requried                                                          |
  | dictionary | NSDictionary        | No validation is requried                                                          |
  | -          | -                   | -                                                                                  |
  | string     | bool                | string parsed with NSNumberFormatter (allowFloats enabled)                         |
  | string     | unsigned long long  | string parsed with NSNumberFormatter (allowFloats disabled)                        |
- | string     | basic types (*2)    | value generated automatically by KVC (NSString's '-intValue', '-longValue', etc)   |
+ | string     | basic types (2)     | value generated automatically by KVC (NSString's '-intValue', '-longValue', etc)   |
  | string     | NSNumber            | string parsed with NSNumberFormatter (allowFloats enabled)                         |
  | string     | NSURL               | created using [NSURL URLWithString:]                                               |
  | string     | NSData              | attempt to decode base64 encoded string                                            |
@@ -107,7 +107,7 @@
  | dictionary | custom NSObject     | Motis recursive call. Check '-mts_willCreateObject..' and '-mtd_didCreateObject:'  |
  | -          | -                   | -                                                                                  |
  | null       | nil                 | if property is type object                                                         |
- | null       | undefined           | if property is basic type (*3). Check KVC method '-setNilValueForKey:'             |
+ | null       | undefined           | if property is basic type (3). Check KVC method '-setNilValueForKey:'              |
  +------------+---------------------+------------------------------------------------------------------------------------+
  *
  * basic type (*1) : int, unsigned int, long, unsigned long, long long, unsigned long long, float, double)

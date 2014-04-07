@@ -114,7 +114,7 @@ The following table indicates the supported validations in the current Motis ver
 | dictionary | custom NSObject     | Motis recursive call. Check '-mts_willCreateObject..' and '-mtd_didCreateObject:'  |
 | -          | -                   | -                                                                                  |
 | null       | nil                 | if property is type object                                                         |
-| null       | undefined           | if property is basic type (3). Check method '-mts_nullValueForKey:'                |
+| null       | undefined           | if property is basic type (3). Check KVC method '-setNilValueForKey:'              |
 +------------+---------------------+------------------------------------------------------------------------------------+
 
 basic type (1) : int, unsigned int, long, unsigned long, long long, unsigned long long, float, double
