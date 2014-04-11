@@ -43,6 +43,24 @@
 @property (nonatomic, assign) NSInteger likesCount;
 
 /**
+ * Number of start views (stats).
+ * @discussion This value is retrieved via keyPath access.
+ **/
+@property (nonatomic, assign) NSInteger startViews;
+
+/**
+ * Number of end views (stats).
+ * @discussion This value is retrieved via keyPath access.
+ **/
+@property (nonatomic, assign) NSInteger endViews;
+
+/**
+ * Stats date.
+ * @discussion This value is retrieved via keyPath access.
+ **/
+@property (nonatomic, assign) NSDate *statsDate;
+
+/**
  * Title of the video.
  **/
 @property (nonatomic, strong) NSString *title;
@@ -56,6 +74,12 @@
  * Last view date.
  **/
 @property (nonatomic, strong) NSDate *lastViewDate;
+
+/**
+ * The username of the uploader of the video.
+ * @discussion This value is part of the "uploader" entity. It is additionaly extracted and stored here via keyPath access.
+ **/
+@property (nonatomic, strong) NSString *uploaderUsername;
 
 /**
  * The uploader of the video.

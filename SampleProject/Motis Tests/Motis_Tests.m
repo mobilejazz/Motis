@@ -363,4 +363,24 @@
         XCTFail(@"Object must not assign values for undefined mappings");
 }
 
+#pragma mark - KEYPATH
+
+// ------------------------------------------------------------------------------------------------------------------------ //
+// KEY PATH TEST
+// ------------------------------------------------------------------------------------------------------------------------ //
+
+- (void)testKeyPath
+{
+    _object.stringField = nil;
+    
+    NSDictionary *dictionary = nil;
+    NSString *string = @"Hello";
+    
+    dictionary = @{@"string1": @{@"string2": @{@"string3": string}}};
+    [_object mts_setValuesForKeysWithDictionary:dictionary];
+    
+    if (![_object.stringField isEqualToString:string])
+        XCTFail(@"KeyPath acces failed");
+}
+
 @end

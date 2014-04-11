@@ -32,8 +32,12 @@
              @"description": mts_key(videoDescription),
              @"last_view_time": mts_key(lastViewDate),
              @"uploader": mts_key(uploader),
+             @"uploader.user_name": mts_key(uploaderUsername),
              @"users_cast": mts_key(cast),
              @"likes_count": mts_key(likesCount),
+             @"stats.start_views": mts_key(startViews),
+             @"stats.end_views": mts_key(endViews),
+             @"stats.info.date": mts_key(statsDate),
              };
 }
 
@@ -64,9 +68,8 @@
         _likesCount = -1; // <-- Generic default value
 }
 
-
 #pragma mark Validation
-//
+
 //- (BOOL)mts_validateUser:(inout __autoreleasing id *)ioValue error:(out NSError *__autoreleasing *)outError
 //{
 //    if ([*ioValue isKindOfClass:MJUser.class])

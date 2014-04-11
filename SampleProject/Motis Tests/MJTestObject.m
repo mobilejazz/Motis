@@ -25,6 +25,8 @@
              @"string": mts_key(stringField),
              @"number": mts_key(numberField),
              @"url": mts_key(urlField),
+             
+             @"string1.string2.string3" : mts_key(stringField),
              };
     
 }

@@ -27,4 +27,10 @@
               @"followers": mts_key(followers),
               };
 }
+
++ (BOOL)mts_shouldSetUndefinedKeys
+{
+    return NO;
+}
+
 @end
