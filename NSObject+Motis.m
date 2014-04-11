@@ -197,6 +197,7 @@
 {
     for (NSString *key in keyedValues)
     {
+        // ---------- KVC KeyPath Support ---------- //
         NSArray *allKeyPath = [self.class mts_keyPaths][key];
         
         for (NSString *keyPath in allKeyPath)
@@ -205,6 +206,11 @@
             if (value)
                 [self mts_setValue:value forKey:keyPath];
         }
+        // ----------------------------------------- //
+        
+//        id value = keyedValues[key];
+//        if (value)
+//            [self mts_setValue:value forKey:key];
     }
 }
 

@@ -32,12 +32,12 @@
              @"description": mts_key(videoDescription),
              @"last_view_time": mts_key(lastViewDate),
              @"uploader": mts_key(uploader),
-             @"uploader.user_name": mts_key(uploaderUsername),
+             @"uploader.user_name": mts_key(uploaderUsername), // <-- KeyPath Access
              @"users_cast": mts_key(cast),
              @"likes_count": mts_key(likesCount),
-             @"stats.start_views": mts_key(startViews),
-             @"stats.end_views": mts_key(endViews),
-             @"stats.info.date": mts_key(statsDate),
+             @"stats.start_views": mts_key(startViews), // <-- KeyPath Access
+             @"stats.end_views": mts_key(endViews), // <-- KeyPath Access
+             @"stats.info.date": mts_key(statsDate), // <-- KeyPath Access
              };
 }
 
