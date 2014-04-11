@@ -52,7 +52,9 @@
 + (NSDictionary*)mts_cachedArrayClassMapping;
 
 /**
- * TODO
+ * KVC KeyPath support. 
+ * @return Dictionary of keyPaths.
+ * @discussion This method is grouping mts_mapping keys per each "first key path key". For example: {"keyA":["keyA.key1.key2", "keyA.key3", "keyA.key4.key5", ...], "keyB":["keyB.key6.key7", "keyB.key8", ...], ...}. Each array object is a mts_mapping key. 
  **/
 + (NSDictionary*)mts_keyPaths;
 
