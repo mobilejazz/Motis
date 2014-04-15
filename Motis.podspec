@@ -19,7 +19,7 @@ Pod::Spec.new do |s|
   s.author             = { "Mobile Jazz" => "info@mobilejazz.cat" }
   s.social_media_url = "http://twitter.com/mobilejazzcat"
   s.source       = { :git => "https://github.com/mobilejazz/Motis.git", :tag => "0.3.2" }
-  s.source_files = 'NSObject+Motis.{h,m}'
+  s.source_files = 'Motis.h', 'NSObject+Motis.{h,m}'
   s.framework  = 'Foundation'
   s.requires_arc = true
   

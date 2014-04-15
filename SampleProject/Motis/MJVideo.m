@@ -17,7 +17,7 @@
 #import "MJVideo.h"
 #import "MJUser.h"
 
-#import "NSObject+Motis.h"
+#import "Motis.h"
 
 @implementation MJVideo
 
