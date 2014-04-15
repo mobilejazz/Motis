@@ -9,20 +9,18 @@ Easy JSON to NSObject mapping using Cocoa's key value coding (KVC)
 ##How To
 ####1. Define the mapping keys
 
-Your custom object (subclass of `NSObject`) needs to override the method `mjz_motisMapping` and define the mappging from the JSON keys to the Objective-C property names.
+Your custom object (subclass of `NSObject`) needs to override the method `+mts_mapping` and define the mappging from the JSON keys to the Objective-C property names.
 
 ```objective-c
-- (NSDictionary*)mjz_motisMapping
++ (NSDictionary*)mts_mapping
 {
 	return @{@"json_attribute_key_1" : @"class_property_name_1",
 		@"json_attribute_key_2" : @"class_property_name_2",
 		...
-		@"json_attribute_key_N" : @"class_property_name_N",
+		@"json_attribute_key_N" : @"class_property_name_M",
 	};
 }
 ```
-	
-Remember that you might want to add also the dictionary from the call `[super mjz_motisMapping]` to your custom mapping.
 
 ####2. Map and set your objects
 
@@ -38,7 +36,7 @@ After defining your mappings in step (1) you are ready to go:
 	MyClass instance = [[MyClass alloc] init];
 			
 	// Parsing and setting the values of the JSON object
-	[instance mjz_setValuesForKeysWithDictionary:jsonObject];
+	[instance mts_setValuesForKeysWithDictionary:jsonObject];
 }
 ```
 	
@@ -49,7 +47,9 @@ After defining your mappings in step (1) you are ready to go:
 
 Automatic validation is done by default if the user is not validating manually. 
 
-In order to support automatic validation for array content (objects inside of an array), you must override the method `-mjz_arrayClassTypeMappingForAutomaticValidation` and return a dictionary containing pairs of *array property name* and *class type* for its content.
+In order to support automatic validation for array content (objects inside of an array), you must override the method `+mts_arrayClassMapping` and return a dictionary containing pairs of *array property name* and *class type* for its content.
+
+For more information about automatic validations, check the bottom table of this document.
 
 ##### Manual Validation
 
@@ -68,7 +68,7 @@ If you prefer to do manual validation, you can override the KVC validation metho
 and for array contents:
 
 ```objective-c
-- (BOOL)mjz_validateArrayObject:(inout __autoreleasing id *)ioValue forArrayKey:(NSString *)arrayKey error:(out NSError *__autoreleasing *)outError;
+- (BOOL)mts_validateArrayObject:(inout __autoreleasing id *)ioValue forArrayKey:(NSString *)arrayKey error:(out NSError *__autoreleasing *)outError;
 {
 	// Check *ioValue and assign new value to ioValue if needed.
 	// Return YES if *ioValue can be included into the array, NO otherwise
@@ -78,4 +78,49 @@ and for array contents:
 ```
 
 ---
+#### 4. Appendix
+ 
+##### Automatic Validation 
+The following table indicates the supported validations in the current Motis version:
+
+```
++------------+---------------------+------------------------------------------------------------------------------------+
+| JSON Type  | Property Type       | Comments                                                                           |
++------------+---------------------+------------------------------------------------------------------------------------+
+| string     | NSString            | No validation is requried                                                          |
+| number     | NSNumber            | No validation is requried                                                          |
+| number     | basic type (1)      | No validation is requried                                                          |
+| array      | NSArray             | No validation is requried                                                          |
+| dictionary | NSDictionary        | No validation is requried                                                          |
+| -          | -                   | -                                                                                  |
+| string     | bool                | string parsed with NSNumberFormatter (allowFloats enabled)                         |
+| string     | unsigned long long  | string parsed with NSNumberFormatter (allowFloats disabled)                        |
+| string     | basic types (2)     | value generated automatically by KVC (NSString's '-intValue', '-longValue', etc)   |
+| string     | NSNumber            | string parsed with NSNumberFormatter (allowFloats enabled)                         |
+| string     | NSURL               | created using [NSURL URLWithString:]                                               |
+| string     | NSData              | attempt to decode base64 encoded string                                            |
+| string     | NSDate              | default date format "2011-08-23 10:52:00". Check '+mts_validationDateFormatter.'   |
+| -          | -                   | -                                                                                  |
+| number     | NSDate              | timestamp since 1970                                                               |
+| number     | NSString            | string by calling NSNumber's '-stringValue'                                        |
+| -          | -                   | -                                                                                  |
+| array      | NSMutableArray      | creating new instance from original array                                          |
+| array      | NSSet               | creating new instance from original array                                          |
+| array      | NSMutableSet        | creating new instance from original array                                          |
+| array      | NSOrderedSet        | creating new instance from original array                                          |
+| array      | NSMutableOrderedSet | creating new instance from original array                                          |
+| -          | -                   | -                                                                                  |
+| dictionary | NSMutableDictionary | creating new instance from original dictionary                                     |
+| dictionary | custom NSObject     | Motis recursive call. Check '-mts_willCreateObject..' and '-mtd_didCreateObject:'  |
+| -          | -                   | -                                                                                  |
+| null       | nil                 | if property is type object                                                         |
+| null       | undefined           | if property is basic type (3). Check KVC method '-setNilValueForKey:'              |
++------------+---------------------+------------------------------------------------------------------------------------+
+
+basic type (1) : int, unsigned int, long, unsigned long, long long, unsigned long long, float, double
+basic type (2) : int, unsigned int, long, unsigned long, float, double
+basic type (3) : any basic type
+```
+
+--- 
 *Motis was called before KVCParsing.

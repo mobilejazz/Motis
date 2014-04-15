@@ -38,6 +38,11 @@
 @property (nonatomic, assign) NSInteger viewCount;
 
 /**
+ * Number of video likes.
+ **/
+@property (nonatomic, assign) NSInteger likesCount;
+
+/**
  * Title of the video.
  **/
 @property (nonatomic, strong) NSString *title;
@@ -67,7 +72,7 @@
  ** ********************************************************* **/
 
 /**
- * This property is an example of non-JSON field. It is not included in the mapping defined in `mjz_motisMapping`.
+ * This property is an example of non-JSON field. It is not included in the mapping defined in `mts_motisMapping`.
  * However, for test purposes, the JSON will include a field of generic type (can be any type) with that key. 
  * Our goal is to avoid setting the property.
  **/

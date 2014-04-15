@@ -23,105 +23,116 @@
 
 #pragma mark Motis Subclassing
 
-- (NSDictionary*)mjz_motisMapping
+// JSON keys to object properties mapping
++ (NSDictionary*)mts_mapping
 {
-    static NSDictionary *mapping = nil;
-    
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        NSDictionary *JSONMapping = @{@"video_id": NSStringFromSelector(@selector(videoId)),
-                                      @"view_count": NSStringFromSelector(@selector(viewCount)),
-                                      @"title": NSStringFromSelector(@selector(title)),
-                                      @"description": NSStringFromSelector(@selector(videoDescription)),
-                                      @"last_view_time": NSStringFromSelector(@selector(lastViewDate)),
-                                      @"uploader": NSStringFromSelector(@selector(uploader)),
-                                      @"users_cast": NSStringFromSelector(@selector(cast)),
-                                      };
-        NSMutableDictionary *mutableMapping = [[super mjz_motisMapping] mutableCopy];
-        [mutableMapping addEntriesFromDictionary:JSONMapping];
-        mapping = mutableMapping;
-    });
-    
-    return mapping;
+    return @{@"video_id": mts_key(videoId),
+             @"view_count": mts_key(viewCount),
+             @"title": mts_key(title),
+             @"description": mts_key(videoDescription),
+             @"last_view_time": mts_key(lastViewDate),
+             @"uploader": mts_key(uploader),
+             @"users_cast": mts_key(cast),
+             @"likes_count": mts_key(likesCount),
+             };
 }
 
-+ (BOOL)mjz_motisShouldSetUndefinedKeys
+// Automatic array validation mapping
++ (NSDictionary*)mts_arrayClassMapping
+{
+    return @{mts_key(cast) : MJUser.class};
+}
+
+// Only accept values from the mapping
++ (BOOL)mts_shouldSetUndefinedKeys
 {
     return NO;
 }
 
-- (void)mjz_restrictSetValue:(id)value forUndefinedMappingKey:(NSString *)key
+// Log undefined mapping keys
+- (void)mts_restrictSetValue:(id)value forUndefinedMappingKey:(NSString *)key
 {
-    NSLog(@"[WARNING]: Undefined mapping key: <%@> value: <%@>. Value has not been setted.", key, [value description]);
+    NSLog(@"[%@] Undefined mapping key: <%@> value: <%@>. Value has not been set.", [self.class description], key, [value description]);
 }
 
-#pragma mark Motis Validation
-
-// Automatic array validation mapping
-- (NSDictionary*)mjz_motisArrayClassMapping
+// This method is called when received "null" in non-object types.
+- (void)setNilValueForKey:(NSString *)key
 {
-    static NSDictionary *mapping = nil;
+    NSLog(@"[%@] Null value received for key: %@. Value should be manually set.",[self.class description], key);
     
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        NSDictionary *arrayMapping = @{NSStringFromSelector(@selector(cast)) : MJUser.class,
-                                      };
-        NSMutableDictionary *mutableMapping = [[super mjz_motisArrayClassMapping] mutableCopy];
-        [mutableMapping addEntriesFromDictionary:arrayMapping];
-        mapping = mutableMapping;
-    });
-    
-    return mapping;
+    if ([key isEqualToString:mts_key(likesCount)])
+        _likesCount = -1; // <-- Generic default value
 }
 
-//- (id)mjz_willCreateObjectForKey:(NSString*)key ofClass:(Class)typeClass withDictionary:(NSDictionary*)dictionary abort:(BOOL*)abort
-//{
-//    // Subclasses might override.
-//    NSLog(@"WILL CREATE: %@ OF CLASS %@", key, NSStringFromClass(typeClass));
-//    return nil;
-//}
 
-// Automatic validation does the job!
-//- (BOOL)validateUploader:(id *)ioValue error:(NSError * __autoreleasing *)outError
+#pragma mark Validation
+//
+//- (BOOL)mts_validateUser:(inout __autoreleasing id *)ioValue error:(out NSError *__autoreleasing *)outError
 //{
-//    if ([*ioValue isKindOfClass:[NSDictionary class]])
+//    if ([*ioValue isKindOfClass:MJUser.class])
+//    {
+//        return YES;
+//    }
+//    else if ([*ioValue isKindOfClass:NSDictionary.class])
 //    {
 //        MJUser *user = [[MJUser alloc] init];
-//        [user mjz_parseValuesForKeysWithDictionary:*ioValue];
-//        
+//        [user mts_setValuesForKeysWithDictionary:*ioValue];
 //        *ioValue = user;
+//        
+//        return *ioValue != nil;
 //    }
 //    
-//    return YES;
+//    return NO;
 //}
-
-// Automatic validation does the job!
-//- (BOOL)validateLastViewDate:(id *)ioValue error:(NSError * __autoreleasing *)outError
+//
+//- (BOOL)validateUploader:(inout __autoreleasing id *)ioValue error:(out NSError *__autoreleasing *)outError
 //{
-//    if ([*ioValue isKindOfClass:NSNumber.class])
+//    return [self mts_validateUser:ioValue error:outError];
+//}
+//
+//- (BOOL)validateCast:(inout __autoreleasing id *)ioValue error:(out NSError *__autoreleasing *)outError
+//{
+//    if ([*ioValue isKindOfClass:NSArray.class])
 //    {
-//        NSDate *date = [NSDate dateWithTimeIntervalSince1970:[*ioValue doubleValue]];
-//        *ioValue = date;
+//        __block NSMutableArray *array = nil;
+//        
+//        [*ioValue enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+//            if ([obj isKindOfClass:MJUser.class])
+//            {
+//                // Nothing to do
+//            }
+//            else
+//            {
+//                if (!array)
+//                    array = [*ioValue mutableCopy];
+//                
+//                id object = obj;
+//                BOOL valid = [self mts_validateUser:&object error:nil];
+//                
+//                if (valid)
+//                    [array replaceObjectAtIndex:idx withObject:object];
+//                else
+//                    [array removeObjectAtIndex:idx];
+//            }
+//        }];
+//        
+//        if (array)
+//            *ioValue = [array copy];
+//
+//        return YES;
 //    }
 //    
-//    return YES;
+//    return NO;
 //}
-
-// Automatic array validation does the job!
-//- (BOOL)mjz_validateArrayObject:(inout __autoreleasing id *)ioValue arrayKey:(NSString *)arrayKey arrayOriginalKey:(NSString *)arrayOriginalKey
+//
+//- (BOOL)mts_validateArrayObject:(inout __autoreleasing id *)ioValue forArrayKey:(NSString *)arrayKey error:(out NSError *__autoreleasing *)outError
 //{
 //    if ([arrayKey isEqualToString:@"cast"])
 //    {
-//        if ([*ioValue isKindOfClass:NSDictionary.class])
-//        {
-//            MJUser *user = [[MJUser alloc] init];
-//            [user mjz_parseValuesForKeysWithDictionary:*ioValue];
-//            
-//            *ioValue = user;
-//        }
+//        return [self mts_validateUser:ioValue error:outError];
 //    }
 //    
-//    return YES;
+//    return NO;
 //}
 
 @end

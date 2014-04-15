@@ -20,22 +20,11 @@
 
 @implementation MJUser
 
-- (NSDictionary*)mjz_motisMapping
++ (NSDictionary*)mts_mapping
 {
-    static NSDictionary *mapping = nil;
-    
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        NSDictionary *JSONMapping = @{@"user_name": NSStringFromSelector(@selector(username)),
-                                      @"user_id": NSStringFromSelector(@selector(userId)),
-                                      @"followers": NSStringFromSelector(@selector(followers)),
-                                      };
-        NSMutableDictionary *mutableMapping = [[super mjz_motisMapping] mutableCopy];
-        [mutableMapping addEntriesFromDictionary:JSONMapping];
-        mapping = mutableMapping;
-    });
-    
-    return mapping;
+    return  @{@"user_name": mts_key(username),
+              @"user_id": mts_key(userId),
+              @"followers": mts_key(followers),
+              };
 }
-
 @end
