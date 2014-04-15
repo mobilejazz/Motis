@@ -37,6 +37,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		8758B81E18FD289C00666680 /* Motis.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Motis.h; path = ../../Motis.h; sourceTree = "<group>"; };
 		D201AA0718DC2ED200E5F26D /* MJTestObject2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MJTestObject2.h; sourceTree = "<group>"; };
 		D201AA0818DC2ED200E5F26D /* MJTestObject2.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MJTestObject2.m; sourceTree = "<group>"; };
 		D21D6FB118D7470D000E620B /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = InfoPlist.strings; sourceTree = "<group>"; };
@@ -155,15 +156,16 @@
 		D2C3463C18959EF2005B6B5C /* Motis */ = {
 			isa = PBXGroup;
 			children = (
+				D2DF758018D746AF00163BA8 /* Images.xcassets */,
 				D2DF757718D746A800163BA8 /* MJAppDelegate.h */,
 				D2DF757818D746A800163BA8 /* MJAppDelegate.m */,
-				D21D6FB318D74717000E620B /* NSObject+Motis.h */,
-				D21D6FB418D74717000E620B /* NSObject+Motis.m */,
 				D2DF757918D746A800163BA8 /* MJUser.h */,
 				D2DF757A18D746A800163BA8 /* MJUser.m */,
 				D2DF757B18D746A800163BA8 /* MJVideo.h */,
 				D2DF757C18D746A800163BA8 /* MJVideo.m */,
-				D2DF758018D746AF00163BA8 /* Images.xcassets */,
+				8758B81E18FD289C00666680 /* Motis.h */,
+				D21D6FB318D74717000E620B /* NSObject+Motis.h */,
+				D21D6FB418D74717000E620B /* NSObject+Motis.m */,
 				D2C3463D18959EF2005B6B5C /* Supporting Files */,
 			);
 			path = Motis;

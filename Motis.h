@@ -1,5 +1,5 @@
 //
-//  MJUser.m
+//  Motis.h
 //  Copyright 2014 Mobile Jazz
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,23 +14,4 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import "MJUser.h"
-
-#import "Motis.h"
-
-@implementation MJUser
-
-+ (NSDictionary*)mts_mapping
-{
-    return  @{@"user_name": mts_key(username),
-              @"user_id": mts_key(userId),
-              @"followers": mts_key(followers),
-              };
-}
-
-+ (BOOL)mts_shouldSetUndefinedKeys
-{
-    return NO;
-}
-
-@end
+#import "NSObject+Motis.h"
