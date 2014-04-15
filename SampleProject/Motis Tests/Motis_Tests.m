@@ -369,6 +369,10 @@
 // KEY PATH TEST
 // ------------------------------------------------------------------------------------------------------------------------ //
 
+/*
+ * The defined mapping is "string1.string2.string3" and points to a NSString property.
+ * In this test we are mapping a dictionary {string1:{string2:{string3:"HELLO"}}} to our object.
+ */
 - (void)testKeyPath
 {
     _object.stringField = nil;
@@ -380,6 +384,43 @@
     [_object mts_setValuesForKeysWithDictionary:dictionary];
     
     if (![_object.stringField isEqualToString:string])
+        XCTFail(@"KeyPath acces failed");
+}
+
+/*
+ * The defined mapping is "url1.url2.url3" and points to a NSURL property.
+ * In this test we are mapping a dictionary {url1:{url2:{url3:"http://website.com"}}} to our object and we are testing automatic validation (from NSString to NSURL).
+ */
+- (void)testKeyPathValidation
+{
+    _object.urlField = nil;
+    
+    NSDictionary *dictionary = nil;
+    NSString *string = @"http://www.mobilejazz.cat";
+    
+    dictionary = @{@"url1": @{@"url2": @{@"url3": string}}};
+    [_object mts_setValuesForKeysWithDictionary:dictionary];
+    
+    if (![_object.urlField isKindOfClass:NSURL.class])
+        XCTFail(@"KeyPath validation failed");
+}
+
+/*
+ * The defined mapping is "string1.string2.string3" and points to a NSString property.
+ * In this test we are mapping a dictionary {string1:{string2:"HELLO"}} to our object.
+ * When motis will try to map the keyPath "string1.string2.string3", will have to abort thus "HELLO" is not a dictionary and motis cannot access to "string3" property.
+ */
+- (void)testKeyPathIncorrectAccess
+{
+    _object.stringField = nil;
+    
+    NSDictionary *dictionary = nil;
+    NSString *string = @"Hello";
+    
+    dictionary = @{@"string1": @{@"string2": string}};
+    [_object mts_setValuesForKeysWithDictionary:dictionary];
+    
+    if (_object.stringField != nil)
         XCTFail(@"KeyPath acces failed");
 }
 

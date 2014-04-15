@@ -33,6 +33,30 @@
 
 #pragma mark - Motis_Private
 
+@interface MTSKeyPath : NSObject
+
+- (id)initWithKeyPath:(NSString*)keyPath;
+
+@property (nonatomic, strong, readonly) NSString *key;
+@property (nonatomic, strong, readonly) NSArray *components;
+
+@end
+
+@implementation MTSKeyPath
+
+- (id)initWithKeyPath:(NSString*)keyPath
+{
+    self = [super init];
+    if (self)
+    {
+        _key = keyPath;
+        _components = [keyPath componentsSeparatedByString:@"."];
+    }
+    return self;
+}
+
+@end
+
 @interface NSObject (Motis_Private)
 
 /** ---------------------------------------------- **
@@ -199,20 +223,44 @@
 {
     for (NSString *key in keyedValues)
     {
-        // ---------- KVC KeyPath Support ---------- //
+        // For each key-value pair in the dictionary
+        
         NSArray *allKeyPath = [self.class mts_keyPaths][key];
         
-        for (NSString *keyPath in allKeyPath)
+        for (MTSKeyPath *keyPath in allKeyPath)
         {
-            id value = [keyedValues valueForKeyPath:keyPath];
-            if (value)
-                [self mts_setValue:value forKey:keyPath];
+            // For each key related keyPath
+            
+            BOOL validKeyPath = NO;
+            id value = keyedValues;
+            
+            NSUInteger count = keyPath.components.count;
+            
+            for (NSInteger i=0; i<count; ++i)
+            {
+                // For each keyPath component
+                
+                NSString *path = keyPath.components[i];
+                value = [value valueForKey:path];
+                
+                if (i < count - 1)
+                {
+                    if (![value isKindOfClass:NSDictionary.class]) // <-- Checking that the KeyPath is only accessing dictionary objects.
+                        break;
+                }
+                else
+                {
+                    validKeyPath = YES;
+                }
+            }
+            
+            if (value && validKeyPath)
+                [self mts_setValue:value forKey:keyPath.key];
+            
+//            id value = [keyedValues valueForKeyPath:keyPath.key];
+//            if (value)
+//                [self mts_setValue:value forKey:keyPath.key];
         }
-        // ----------------------------------------- //
-        
-//        id value = keyedValues[key];
-//        if (value)
-//            [self mts_setValue:value forKey:key];
     }
 }
 
@@ -425,18 +473,17 @@
         NSDictionary *mapping = [self mts_mapping];
         for (NSString *key in mapping)
         {
-            NSArray *array = [key componentsSeparatedByString:@"."];
+            MTSKeyPath *keyPath = [[MTSKeyPath alloc] initWithKeyPath:key];
+            NSString *firstPath = keyPath.components[0];
             
-            NSString *firstKey = array[0];
-            
-            NSMutableArray *listOfKeyPaths = dict[firstKey];
+            NSMutableArray *listOfKeyPaths = dict[firstPath];
             if (!listOfKeyPaths)
             {
                 listOfKeyPaths = [NSMutableArray array];
-                dict[firstKey] = listOfKeyPaths;
+                dict[firstPath] = listOfKeyPaths;
             }
             
-            [listOfKeyPaths addObject:key];
+            [listOfKeyPaths addObject:keyPath];
         }
         
         keyPaths = [dict copy];
