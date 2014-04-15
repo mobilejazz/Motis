@@ -14,10 +14,10 @@ Your custom object (subclass of `NSObject`) needs to override the method `+mts_m
 ```objective-c
 + (NSDictionary*)mts_mapping
 {
-	return @{@"json__key_1" : @"class_property_name_1",
-		@"json_key_2" : @"class_property_name_2",
-		@"json_key_3.json_key_4" : @"class_property_name_3",
-		...
+	return @{@"json_key_1" : @"propertyName1",
+	  	     @"json_key_2" : @"propertyName2",
+		     @"json_key_3.json_key_4" : @"propertyName3",
+		     ...
 	};
 }
 ```
