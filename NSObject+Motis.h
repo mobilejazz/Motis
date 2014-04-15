@@ -59,6 +59,25 @@
 - (void)mts_setValuesForKeysWithDictionary:(NSDictionary *)dictionary;
 
 /** ---------------------------------------------- **
+ * @name Key-Mapping Getters
+ ** ---------------------------------------------- **/
+
+/**
+ * Retrieve an object value for a given key. The key is mapped via the motis mapping.
+ * @param key The key (will be mapped)
+ * @return The corresponding value for the given key if available, otherwise nil.
+ **/
+- (id)mts_valueForKey:(NSString*)key;
+
+/**
+ * Returns a dictionary containing the given keys and the corresponding values.
+ * @param keys An array with keys.
+ * @return The dictionary with key-values.
+ * @discussion This method uses the motis mapping to retrieve the values for the given keys. The keys used in the returned dictionary are the ones specified in the given array. WARNING: this method may not return a JSON serializable dictionary, just returns the object values.
+ **/
+- (NSDictionary*)mts_dictionaryWithValuesForKeys:(NSArray *)keys;
+
+/** ---------------------------------------------- **
  * @name Logging objects
  ** ---------------------------------------------- **/
 

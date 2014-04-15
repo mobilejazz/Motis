@@ -277,6 +277,34 @@
     }
 }
 
+- (id)mts_valueForKey:(NSString*)key
+{
+    NSString *mappedKey = [self mts_mapKey:key];
+    
+    if (!mappedKey)
+        return nil;
+    
+    id value = [self valueForKey:mappedKey];
+        
+    return value;
+}
+
+- (NSDictionary*)mts_dictionaryWithValuesForKeys:(NSArray *)keys
+{
+    NSMutableDictionary *dictionary = [NSMutableDictionary dictionaryWithCapacity:keys.count];
+    
+    for (NSString *key in keys)
+    {
+        id value = [self mts_valueForKey:key];
+        if (!value)
+            value = [NSNull null];
+        
+        [dictionary setObject:value forKey:key];
+    }
+    
+    return [dictionary copy];
+}
+
 - (NSString*)mts_extendedObjectDescription
 {
     NSString *description = self.description;
@@ -791,7 +819,7 @@
     return NO;
 }
 
-#pragma mark Helpers
+#pragma mark Private Helpers
 
 + (NSNumberFormatter*)mts_decimalFormatterAllowFloats
 {
