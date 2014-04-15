@@ -33,11 +33,24 @@
 
 #pragma mark - Motis_Private
 
+/**
+ * Stores a KeyPath and its path components.
+ **/
 @interface MTSKeyPath : NSObject
 
+/**
+ * Default initializer
+ **/
 - (id)initWithKeyPath:(NSString*)keyPath;
 
+/**
+ * The key (or KeyPath).
+ **/
 @property (nonatomic, strong, readonly) NSString *key;
+
+/**
+ * The KeyPath components.
+ **/
 @property (nonatomic, strong, readonly) NSArray *components;
 
 @end
