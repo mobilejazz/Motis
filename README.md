@@ -14,13 +14,15 @@ Your custom object (subclass of `NSObject`) needs to override the method `+mts_m
 ```objective-c
 + (NSDictionary*)mts_mapping
 {
-	return @{@"json_attribute_key_1" : @"class_property_name_1",
-		@"json_attribute_key_2" : @"class_property_name_2",
+	return @{@"json__key_1" : @"class_property_name_1",
+		@"json_key_2" : @"class_property_name_2",
+		@"json_key_3.json_key_4" : @"class_property_name_3",
 		...
-		@"json_attribute_key_N" : @"class_property_name_M",
 	};
 }
 ```
+
+You can also use KeyPath to reference JSON content of dictionaries.
 
 ####2. Map and set your objects
 
