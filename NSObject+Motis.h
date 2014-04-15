@@ -20,9 +20,9 @@
  * MACROS
  * *************************************************************************************************************************************** */
 
-/*
+/**
  * Use the mts_key(name) macro to create strings for property names.
- */
+ **/
 #define mts_key(name) NSStringFromSelector(@selector(name))
 
 /* *************************************************************************************************************************************** *
@@ -32,10 +32,8 @@
 #pragma mark - Motis
 
 /**
- * Motis
- *
  * Extends NSObject adding parsing capabilities from JSON dictionaries.
- * To parse and set the object from the JSON dictionary, use the methods `parseValue:forKey:` or `parseValuesForKeysWithDictionary:`.
+ * To parse and set the object from the JSON dictionary, use the methods `mts_setValue:forKey:` or `mts_setValuesForKeysWithDictionary:`.
  **/
 @interface NSObject (Motis)
 
