@@ -128,7 +128,7 @@ However, if you have multiple formats for different keys, you will have to valid
 
 In order to support automatic validation for array content (objects inside of an array), you must override the method `+mts_arrayClassMapping` and return a dictionary containing pairs of *array property name* and *class type* for its content.
 
-
+For example, having the following JSON:
 
 ```objective-c
 {
@@ -152,6 +152,8 @@ In order to support automatic validation for array content (objects inside of an
 
 ```
 
+Therefore, our `User` class has an `NSArray` property called `followers` that contain a list of objects of type `User`, we would override the method and implement it as it follows:
+
 ```objective-c
 @implementation User
 
@@ -171,7 +173,32 @@ In order to support automatic validation for array content (objects inside of an
 
 @end
 ```
+##### Automatic Object Creation
 
+When validating autmatically, Motis might attempt to create new instances of your custom objects. For example, if a JSON value is a dictionary and the key-associated property type is a custom object, Motis will try to create recursively a new object of the corresponding type and set it via `+mts_setValuesForKeysWithDictionary:`.
+
+This automatic "object creation", that is also done for contents of an array, can be customized and tracked by using the following two methods: one "will"-styled method to notify the user that an object will be created and one "did"-styled method to notify the user that an object has been created.
+
+```objective-c
+@implementation User
+
+- (id)mts_willCreateObjectOfClass:(Class)typeClass withDictionary:(NSDictionary*)dictionary forKey:(NSString*)key abort:(BOOL*)abort
+{
+    // Return "nil" if you want Motis to handle the object creation and mapping.
+    // Otherwise, create/reuse an object of the given "typeClass" and map the values from the dictionary and return it.
+    // If you set "abort" to yes, the value for the given "key" won't be set.
+
+    // This method is also used for array contents. In this case, "key" will be the name of the array.
+} 
+
+- (void)mts_didCreateObject:(id)object forKey:(NSString *)key
+{
+    // Motis notifies you the new created object.
+    // This method is also used for array contents. In this case, "key" will be the name of the array.
+}
+
+@end
+```
 #### Manual Validation
 
 If you prefer to do manual validation, you can override the KVC validation method for each key. Remember that by doing manual validation, automatic validation won't be performed and you will be fully responsible of the validation for those values you are valiating manually.
@@ -206,9 +233,9 @@ To manually validate array content you must override the following method:
 
 
 ---
-#### 4. Appendix
+## Appendix
  
-##### Automatic Validation 
+### Automatic Validation 
 The following table indicates the supported validations in the current Motis version:
 
 ```
