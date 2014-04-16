@@ -117,9 +117,60 @@ Automatic validation will be performed always unless the user is validating manu
 
 ##### Automatic Date Validation
 
+Whenever you specify a property type as a `NSDate`, Motis will attempt to convert the received JSON value in to a date.
+
+1. If the JSON value is a number, Motis will create the date considering that the number is the number of seconds elapsed since 1979-1-1. 
+2. If the JSON value is a string, Motis will use the `NSDateFormatter` returned by the method `+mts_validationDateFormatter`. This date formatter uses the format "2011-08-23 10:52:00". If you want to use another format, override the method and return a customzied date formatter. 
+
+However, if you have multiple formats for different keys, you will have to validate your dates using manual validation (see below).
+
 ##### Automatic Array Validation
 
 In order to support automatic validation for array content (objects inside of an array), you must override the method `+mts_arrayClassMapping` and return a dictionary containing pairs of *array property name* and *class type* for its content.
+
+
+
+```objective-c
+{
+  "user_name": "john.doe",
+  "user_id" : 42,
+  ...
+  "user_followers": [
+                      {
+                        "user_name": "william",
+                        "user_id": 55,
+                        ...
+                      },
+                      {
+                        "user_name": "jenny",
+                        "user_id": 14,
+                        ...
+                      },
+                      ...
+                    ]
+}
+
+```
+
+```objective-c
+@implementation User
+
++ (NSDictionary*)mts_mapping
+{
+    return @{@"user_name": @"name",
+             @"user_id": @"userId",
+             ...
+             @"user_followers": @"followers",
+            };
+}
+
++ (NSDictionary)mts_arrayClassMapping
+{
+    return @{@"followers": User.class}; 
+}
+
+@end
+```
 
 #### Manual Validation
 
@@ -135,6 +186,8 @@ For example:
 	return YES; 
 }
 ```
+
+##### Manual Array Validation
 
 You can also perform manual validation on array content. When mapping an array, motis will attempt to validate array content for the type define in the method `+mts_arrayClassMapping`. However, you can perform the validation manually if you prefer. By validating manually, automatic validation won't be performed.
 
