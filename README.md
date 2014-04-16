@@ -74,12 +74,12 @@ Then, in our `User` class entity (`NSObject` subclass) we would define the `+mts
 
 + (NSDictionary*)mts_mapping
 {
-    return @{@"user_name": @"name",
-             @"user_id": @"userId",
-             @"creation_date": @"creationDate",
-             @"website": @"website",
-             @"user_stats.views": @"views",  // <-- KeyPath access
-             @"user_stats.ranking": @"ranking", // <-- KeyPath access
+    return @{@"user_name": mts_key(name),
+             @"user_id": mts_key(userId),
+             @"creation_date": mts_key(creationDate),
+             @"website": mts_key(website),
+             @"user_stats.views": mts_key(views),  // <-- KeyPath access
+             @"user_stats.ranking": mts_key(ranking), // <-- KeyPath access
             };
 }
 
@@ -159,16 +159,16 @@ Therefore, our `User` class has an `NSArray` property called `followers` that co
 
 + (NSDictionary*)mts_mapping
 {
-    return @{@"user_name": @"name",
-             @"user_id": @"userId",
+    return @{@"user_name": mts_key(name),
+             @"user_id": mts_key(userId),
              ...
-             @"user_followers": @"followers",
+             @"user_followers": mts_key(followers),
             };
 }
 
 + (NSDictionary)mts_arrayClassMapping
 {
-    return @{@"followers": User.class}; 
+    return @{mts_key(followers): User.class}; 
 }
 
 @end
