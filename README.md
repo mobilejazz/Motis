@@ -6,6 +6,8 @@ Easy JSON to NSObject mapping using Cocoa's key value coding (KVC)
 
 **Motis** is a user-friendly interface with Key Value Coding that provides your NSObjects   tools to map key-values stored in dictionaries into themselves. With **Motis** your objects will be responsible for each mapping (distributed mapping definitions) and you won't have to worry for data validation, as **Motis** will validate your object types for you.
 
+Check our blog post entry [Using KVC to parse JSON](http://blog.mobilejazz.cat/ios-using-kvc-to-parse-json) to get a deeper idea of Motis foundations.
+
 #How To
 
 ## Get Motis
