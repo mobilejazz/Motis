@@ -8,6 +8,10 @@ Easy JSON to NSObject mapping using Cocoa's key value coding (KVC)
 
 #How To
 
+## Get Motis
+
+If you use Cocoa Pods, you can get Motis by adding to your podfile `pod 'Motis', '~>0.4.0'`. Otherwise, you will need to download the files `NSObject+Motis.h`, `NSObject+Motis.m` and `Motis.h`.
+
 ##Using Motis
 
 1. Import the file `#import <Motis/Motis.h>`
