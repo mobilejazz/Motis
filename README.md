@@ -1,6 +1,6 @@
 Motis Object Mapping*
 ==========
-
+![Motis](https://raw.githubusercontent.com/mobilejazz/Motis/master/Images/Motis.png)
 
 Easy JSON to NSObject mapping using Cocoa's key value coding (KVC)
 
