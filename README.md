@@ -8,6 +8,10 @@ Easy JSON to NSObject mapping using Cocoa's key value coding (KVC)
 
 #How To
 
+## Get Motis
+
+If you use Cocoa Pods, you can get Motis by adding to your podfile `pod 'Motis', '~>0.4.0'`. Otherwise, you will need to download the files `NSObject+Motis.h`, `NSObject+Motis.m` and `Motis.h`.
+
 ##Using Motis
 
 1. Import the file `#import <Motis/Motis.h>`
@@ -90,7 +94,7 @@ As shown in the example above, KeyPath access is supported to reference JSON con
 
 Also, as you might see, we are specifying custom types as `NSDate` or `NSURL`. Motis automatically attempt to convert JSON values to the object defined types. Check below for more information on automatic validation.
 
-#### Mapping Filtering
+####1.1 Mapping Filtering
 
 By default, Motis attempt to set via KVC any property name. Therefore, even if you don't define a mapping in the method `+mts_mapping:` but your JSON dictionary contains keys that match the name of your object properties, motis will assign and validate those values.
 
@@ -107,7 +111,7 @@ This might be problematic if you have no control over your JSON dictionaries. Th
 
 ###2. Value Validation
 
-#### Automatic Validation
+####2.1 Automatic Validation
 
 **Motis** checks the object type of your values when mapping from a JSON response. The system will try to fit your defined property types (making introspection in your classes). JSON objects contains only strings, numbers, dictionaries and arrays. Automatic validation will try to convert from these types to your property types. If cannot be achieved, the mapping of those property won't be performed and the value won't be set.
 
@@ -115,7 +119,7 @@ For example, if you specify a property type as a `NSURL` and your JSON is sendin
 
 Automatic validation will be performed always unless the user is validating manually, thus in this case the user will be responsible of validating correctly the values.
 
-##### Automatic Date Validation
+#####2.1.1 Automatic Date Validation
 
 Whenever you specify a property type as a `NSDate`, Motis will attempt to convert the received JSON value in to a date.
 
@@ -124,7 +128,7 @@ Whenever you specify a property type as a `NSDate`, Motis will attempt to conver
 
 However, if you have multiple formats for different keys, you will have to validate your dates using manual validation (see below).
 
-##### Automatic Array Validation
+#####2.1.2 Automatic Array Validation
 
 In order to support automatic validation for array content (objects inside of an array), you must override the method `+mts_arrayClassMapping` and return a dictionary containing pairs of *array property name* and *class type* for its content.
 
@@ -173,7 +177,7 @@ Therefore, our `User` class has an `NSArray` property called `followers` that co
 
 @end
 ```
-##### Automatic Object Creation
+#####2.1.3 Automatic Object Creation
 
 When validating autmatically, Motis might attempt to create new instances of your custom objects. For example, if a JSON value is a dictionary and the key-associated property type is a custom object, Motis will try to create recursively a new object of the corresponding type and set it via `+mts_setValuesForKeysWithDictionary:`.
 
@@ -199,7 +203,7 @@ This automatic "object creation", that is also done for contents of an array, ca
 
 @end
 ```
-#### Manual Validation
+####2.2 Manual Validation
 
 If you prefer to do manual validation, you can override the KVC validation method for each key. Remember that by doing manual validation, automatic validation won't be performed and you will be fully responsible of the validation for those values you are valiating manually.
 
@@ -214,7 +218,7 @@ For example:
 }
 ```
 
-##### Manual Array Validation
+#####2.2.1 Manual Array Validation
 
 You can also perform manual validation on array content. When mapping an array, motis will attempt to validate array content for the type define in the method `+mts_arrayClassMapping`. However, you can perform the validation manually if you prefer. By validating manually, automatic validation won't be performed.
 
