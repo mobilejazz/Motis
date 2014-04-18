@@ -175,6 +175,30 @@
     }
 }
 
+#pragma mark to id
+
+- (void)testNumberToId
+{
+    for (NSNumber *number in [self mts_arrayWithNumbers])
+    {
+        _object.idField = nil;
+        [_object mts_setValue:number forKey:@"id"];
+        if (![_object.idField isEqualToNumber:number])
+            XCTFail(@"Failed to map number value %@", number.description);
+    }
+}
+
+- (void)testNumberToIdProtocol
+{
+    for (NSNumber *number in [self mts_arrayWithNumbers])
+    {
+        _object.idField = nil;
+        [_object mts_setValue:number forKey:@"id_protocol"];
+        if (![(NSNumber*)_object.idProtocolField isEqualToNumber:number])
+            XCTFail(@"Failed to map number value %@", number.description);
+    }
+}
+
 #pragma mark - FROM STRING
 
 // ------------------------------------------------------------------------------------------------------------------------ //
@@ -271,6 +295,26 @@
     [_object mts_setValue:string forKey:@"url"];
     
     if (![_object.urlField.absoluteString isEqualToString:string])
+        XCTFail(@"Failed to map string value %@", string);
+}
+
+#pragma mark to id
+
+- (void)testStringToId
+{
+    NSString *string = @"Hello World";
+    [_object mts_setValue:string forKey:@"id"];
+    
+    if (![_object.idField isEqualToString:string])
+        XCTFail(@"Failed to map string value %@", string);
+}
+
+- (void)testStringToIdProtocol
+{
+    NSString *string = @"Hello World";
+    [_object mts_setValue:string forKey:@"id_protocol"];
+    
+    if (![(NSString*)_object.idProtocolField isEqualToString:string])
         XCTFail(@"Failed to map string value %@", string);
 }
 

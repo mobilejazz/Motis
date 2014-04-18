@@ -70,6 +70,11 @@
 
 @end
 
+#pragma mark -
+// ------------------------------------------------------------------------------------------------------------------------------------------------------------------ //
+// ------------------------------------------------------------------------------------------------------------------------------------------------------------------ //
+// ------------------------------------------------------------------------------------------------------------------------------------------------------------------ //
+
 @interface NSObject (Motis_Private)
 
 /** ---------------------------------------------- **
@@ -114,12 +119,12 @@
 - (BOOL)mts_isClassTypeTypeAttribute:(NSString*)typeAttribute;
 
 /**
- * Returns the class object for the given attribute type or nil if cannot be created.
+ * Retrieve the class name and the array of protocols that the property implements.
+ * @param className The returning class name.
+ * @param protocols The returning array of protocols.
  * @param typeAttribute The value returned by `-mts_typeAttributeForKey:`.
- * @return The related class object.
  */
-- (Class)mts_classForTypeAttribute:(NSString*)typeAttribute;
-
+- (void)mts_getClassName:(out NSString *__autoreleasing*)className protocols:(out NSArray *__autoreleasing*)protocols fromTypeAttribute:(NSString*)typeAttribute;
 
 /** ---------------------------------------------- **
  * @name Automatic Validation
@@ -567,15 +572,28 @@
     return [typeAttribute hasPrefix:@"T@"] && ([typeAttribute length] > 1);
 }
 
-- (Class)mts_classForTypeAttribute:(NSString*)typeAttribute
+- (void)mts_getClassName:(out NSString *__autoreleasing*)className protocols:(out NSArray *__autoreleasing*)protocols fromTypeAttribute:(NSString*)typeAttribute
 {
     if ([self mts_isClassTypeTypeAttribute:typeAttribute])
     {
-        NSString *typeClassName = [typeAttribute substringWithRange:NSMakeRange(3, [typeAttribute length]-4)];
-        return NSClassFromString(typeClassName);
+        typeAttribute = [typeAttribute substringWithRange:NSMakeRange(3, typeAttribute.length-4)];
+        
+        NSString *protocolNames = nil;
+        
+        NSScanner *scanner = [NSScanner scannerWithString:typeAttribute];
+        [scanner scanUpToString:@"<" intoString:className];
+        [scanner scanUpToString:@">" intoString:&protocolNames];
+        
+        if (*className == nil)
+            *className = @"";
+        
+        if (protocolNames.length > 0)
+        {
+            protocolNames = [protocolNames substringFromIndex:1];
+            protocolNames = [protocolNames stringByReplacingOccurrencesOfString:@" " withString:@""];
+            *protocols = [protocolNames componentsSeparatedByString:@","];
+        }
     }
-    
-    return nil;
 }
 
 - (BOOL)mts_validateAutomaticallyValue:(inout __autoreleasing id *)ioValue forKey:(NSString*)key
@@ -593,15 +611,35 @@
     
     if ([self mts_isClassTypeTypeAttribute:typeAttribute])
     {
-        if (strcmp(rawPropertyType, @encode(id)) == 0)
-            return YES;
+        NSString *className = nil;
+        NSArray *protocols = nil;
         
-        Class typeClass = [self mts_classForTypeAttribute:typeAttribute];
+        [self mts_getClassName:&className protocols:&protocols fromTypeAttribute:typeAttribute];
         
-        if (typeClass != nil)
+        if (className.length == 0)
         {
-            MJLog(@"%@ --> %@", key, NSStringFromClass(typeClass));
-            return [self mts_validateAutomaticallyValue:ioValue toClass:typeClass forKey:key];
+            // It's an "id".
+            
+            // Actually, we should make a compare like this:
+            // if (strcmp(rawPropertyType, @encode(id)) == 0)
+            //    return YES;
+            //
+            // However, becuase of the "if" statements, we know that our typeAttribute begins with a "@" and
+            // if "className.length" == 0 means that the "rawPropertyType" to be compared is exactly an @encode(id).
+            //
+            // Therefore, we return directly YES.
+            
+            return YES;
+        }
+        else
+        {
+            Class typeClass = NSClassFromString(className);
+            
+            if (typeClass)
+            {
+                MJLog(@"%@ --> %@", key, NSStringFromClass(typeClass));
+                return [self mts_validateAutomaticallyValue:ioValue toClass:typeClass forKey:key];
+            }
         }
         
         return NO;

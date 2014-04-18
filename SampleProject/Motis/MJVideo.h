@@ -16,7 +16,7 @@
 
 #import <Foundation/Foundation.h>
 
-@class MJUser;
+#import "MJUser.h"
 
 /** ********************************************************* **
  *  @name JSON Entity Attributes
@@ -62,8 +62,9 @@
 
 /**
  * Title of the video.
+ * @discussion Just for testing porpuses we set the NSString type as an id <NSObject>.
  **/
-@property (nonatomic, strong) NSString *title;
+@property (nonatomic, strong) id <NSObject> title;
 
 /**
  * Description of the video.

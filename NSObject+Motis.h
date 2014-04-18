@@ -87,7 +87,6 @@
 
 @end
 
-
 /*
  * MOTIS AUTOMATIC VALIDATION
  *

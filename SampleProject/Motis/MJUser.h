@@ -16,6 +16,8 @@
 
 #import <Foundation/Foundation.h>
 
+#import "Motis.h"
+
 @interface MJUser : NSObject
 
 @property (nonatomic, assign) NSNumber *userId;
