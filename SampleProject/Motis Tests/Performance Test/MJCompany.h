@@ -16,8 +16,8 @@
 @property (nonatomic, assign) NSInteger identifier;
 
 @property (nonatomic, assign) BOOL isActive;
-@property (nonatomic, assign) NSInteger yearlyIncome;
-@property (nonatomic, assign) NSInteger previousYearIncome;
+@property (nonatomic, assign) CGFloat yearlyIncome;
+@property (nonatomic, assign) CGFloat previousYearIncome;
 
 @property (nonatomic, strong) NSString *name;
 @property (nonatomic, strong) NSString *address;

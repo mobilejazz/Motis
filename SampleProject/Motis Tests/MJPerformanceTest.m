@@ -82,8 +82,8 @@ NSString* uniqueString()
 
 - (void)testParser
 {
-    MJCountry *country = [MJParser parseCountry:_jsonDictionary];
-    (void)country;
+    MJCountry *country = nil;
+    country = [MJParser parseCountry:_jsonDictionary];
 }
 
 @end

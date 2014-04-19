@@ -17,7 +17,7 @@
     return @{@"id": mts_key(identifier),
              @"name": mts_key(name),
              @"email": mts_key(email),
-             @"description": mts_key(about),
+             @"about": mts_key(about),
              @"age": mts_key(age),
              };
 }

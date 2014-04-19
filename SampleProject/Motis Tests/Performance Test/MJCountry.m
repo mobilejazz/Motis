@@ -25,4 +25,9 @@
     return @{mts_key(companies): MJCompany.class};
 }
 
+- (NSString*)description
+{
+    return [NSString stringWithFormat:@"[%@ - identifier:%d - name:%@ - companies:%@]", [super description], _identifier, _name, _companies.description];
+}
+
 @end

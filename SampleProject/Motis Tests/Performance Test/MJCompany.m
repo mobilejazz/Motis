@@ -42,4 +42,9 @@
     return NO;
 }
 
+- (NSString*)description
+{
+    return [NSString stringWithFormat:@"[%@ - identifier:%d - isActive:%d - yearlyIncome:%f - previousYearIncome:%f - name:%@]", [super description], _identifier, _isActive, _yearlyIncome, _previousYearIncome, _name];
+}
+
 @end
