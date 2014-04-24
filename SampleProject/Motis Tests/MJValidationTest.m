@@ -175,6 +175,20 @@
     }
 }
 
+#pragma mark to date
+
+- (void)testNumberToDate
+{
+    NSTimeInterval timeInterval = 1398333352.0;
+    
+    [_object mts_setValue:@(timeInterval) forKey:@"date"];
+    
+    NSTimeInterval finalTimeInterval = [_object.dateField timeIntervalSince1970];
+    
+    if (timeInterval != finalTimeInterval)
+        XCTFail(@"Failed to map number value %f", timeInterval);
+}
+
 #pragma mark to id
 
 - (void)testNumberToId
@@ -295,6 +309,33 @@
     [_object mts_setValue:string forKey:@"url"];
     
     if (![_object.urlField.absoluteString isEqualToString:string])
+        XCTFail(@"Failed to map string value %@", string);
+}
+
+- (void)testStringFormatToDate
+{
+    // Motis default format "yyyy-MM-dd HH:mm:ss"
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    dateFormatter.dateFormat = @"yyyy-MM-dd HH:mm:ss";
+    
+    NSDate *date = [dateFormatter dateFromString:@"2014-04-23 12:00:00"];
+    NSString *string = [dateFormatter stringFromDate:date];
+    [_object mts_setValue:string forKey:@"date"];
+
+    if (![date isEqualToDate:_object.dateField])
+        XCTFail(@"Failed to map string value %@", string);
+}
+
+- (void)testStringNumberToDate
+{
+    NSTimeInterval timeInterval = 1398333352.0;
+    
+    NSString *string = [NSString stringWithFormat:@"%f", timeInterval];
+    [_object mts_setValue:string forKey:@"date"];
+    
+    NSTimeInterval finalTimeInterval = [_object.dateField timeIntervalSince1970];
+    
+    if (timeInterval != finalTimeInterval)
         XCTFail(@"Failed to map string value %@", string);
 }
 

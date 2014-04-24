@@ -25,6 +25,7 @@
              @"string": mts_key(stringField),
              @"number": mts_key(numberField),
              @"url": mts_key(urlField),
+             @"date": mts_key(dateField),
              
              @"id": mts_key(idField),
              @"id_protocol": mts_key(idProtocolField),
