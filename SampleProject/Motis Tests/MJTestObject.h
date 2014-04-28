@@ -21,6 +21,7 @@
 @property (nonatomic, strong) NSString *stringField;
 @property (nonatomic, strong) NSNumber *numberField;
 @property (nonatomic, strong) NSURL *urlField;
+@property (nonatomic, strong) NSDate *dateField;
 
 @property (nonatomic, strong) id idField;
 @property (nonatomic, strong) id <NSObject> idProtocolField;

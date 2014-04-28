@@ -202,7 +202,7 @@
                     if (!modifiedArray)
                         modifiedArray = [value mutableCopy];
                     
-                    [modifiedArray replaceObjectAtIndex:idx withObject:validatedObject];
+                    modifiedArray[idx] = validatedObject;
                 }
             }
             else
@@ -304,7 +304,7 @@
         if (!value)
             value = [NSNull null];
         
-        [dictionary setObject:value forKey:key];
+        dictionary[key] = value;
     }
     
     return [dictionary copy];
@@ -558,9 +558,9 @@
     
     const char * type = property_getAttributes(property);
     
-    NSString * typeString = [NSString stringWithUTF8String:type];
+    NSString * typeString = @(type);
     NSArray * attributes = [typeString componentsSeparatedByString:@","];
-    typeAttribute = [attributes objectAtIndex:0];
+    typeAttribute = attributes[0];
     
     typeAttributes[key] = typeAttribute;
     

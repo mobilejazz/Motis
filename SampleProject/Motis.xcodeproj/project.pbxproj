@@ -10,11 +10,19 @@
 		D201AA0918DC2ED200E5F26D /* MJTestObject2.m in Sources */ = {isa = PBXBuildFile; fileRef = D201AA0818DC2ED200E5F26D /* MJTestObject2.m */; };
 		D21D6FB218D7470D000E620B /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = D21D6FB018D7470D000E620B /* InfoPlist.strings */; };
 		D21D6FB518D74717000E620B /* NSObject+Motis.m in Sources */ = {isa = PBXBuildFile; fileRef = D21D6FB418D74717000E620B /* NSObject+Motis.m */; };
+		D232B3EC19018BDA00B8D2A5 /* sample_data.json in Resources */ = {isa = PBXBuildFile; fileRef = D232B3EB19018BDA00B8D2A5 /* sample_data.json */; };
+		D232B3F019018D4E00B8D2A5 /* MJParser.m in Sources */ = {isa = PBXBuildFile; fileRef = D232B3EE19018C6100B8D2A5 /* MJParser.m */; };
+		D259644419017CA20055799F /* MJPerformanceTest.m in Sources */ = {isa = PBXBuildFile; fileRef = D259644319017CA20055799F /* MJPerformanceTest.m */; };
+		D259644819017D670055799F /* Twitter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D259644719017D670055799F /* Twitter.framework */; };
+		D259644B19017F6B0055799F /* MJCompany.m in Sources */ = {isa = PBXBuildFile; fileRef = D259644A19017F6B0055799F /* MJCompany.m */; };
+		D259644E19017F7D0055799F /* MJPerson.m in Sources */ = {isa = PBXBuildFile; fileRef = D259644D19017F7D0055799F /* MJPerson.m */; };
+		D259645119017F900055799F /* MJProject.m in Sources */ = {isa = PBXBuildFile; fileRef = D259645019017F900055799F /* MJProject.m */; };
+		D2596454190187220055799F /* MJCountry.m in Sources */ = {isa = PBXBuildFile; fileRef = D2596453190187220055799F /* MJCountry.m */; };
 		D2A0544418D8A5B80050DE68 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D2C3464F18959EF2005B6B5C /* XCTest.framework */; };
 		D2A0544518D8A5B80050DE68 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D2C3463618959EF2005B6B5C /* Foundation.framework */; };
 		D2A0544618D8A5B80050DE68 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D2C3463A18959EF2005B6B5C /* UIKit.framework */; };
 		D2A0544C18D8A5B80050DE68 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = D2A0544A18D8A5B80050DE68 /* InfoPlist.strings */; };
-		D2A0544E18D8A5B80050DE68 /* Motis_Tests.m in Sources */ = {isa = PBXBuildFile; fileRef = D2A0544D18D8A5B80050DE68 /* Motis_Tests.m */; };
+		D2A0544E18D8A5B80050DE68 /* MJValidationTest.m in Sources */ = {isa = PBXBuildFile; fileRef = D2A0544D18D8A5B80050DE68 /* MJValidationTest.m */; };
 		D2A0545718D8A5CE0050DE68 /* MJTestObject.m in Sources */ = {isa = PBXBuildFile; fileRef = D2A0545618D8A5CE0050DE68 /* MJTestObject.m */; };
 		D2C3463718959EF2005B6B5C /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D2C3463618959EF2005B6B5C /* Foundation.framework */; };
 		D2C3463918959EF2005B6B5C /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D2C3463818959EF2005B6B5C /* CoreGraphics.framework */; };
@@ -43,10 +51,23 @@
 		D21D6FB118D7470D000E620B /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = InfoPlist.strings; sourceTree = "<group>"; };
 		D21D6FB318D74717000E620B /* NSObject+Motis.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSObject+Motis.h"; path = "../../NSObject+Motis.h"; sourceTree = "<group>"; };
 		D21D6FB418D74717000E620B /* NSObject+Motis.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSObject+Motis.m"; path = "../../NSObject+Motis.m"; sourceTree = "<group>"; };
+		D232B3EB19018BDA00B8D2A5 /* sample_data.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = sample_data.json; path = "Performance Test/sample_data.json"; sourceTree = "<group>"; };
+		D232B3ED19018C6100B8D2A5 /* MJParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MJParser.h; path = "Performance Test/MJParser.h"; sourceTree = "<group>"; };
+		D232B3EE19018C6100B8D2A5 /* MJParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MJParser.m; path = "Performance Test/MJParser.m"; sourceTree = "<group>"; };
+		D259644319017CA20055799F /* MJPerformanceTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MJPerformanceTest.m; sourceTree = "<group>"; };
+		D259644719017D670055799F /* Twitter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Twitter.framework; path = System/Library/Frameworks/Twitter.framework; sourceTree = SDKROOT; };
+		D259644919017F6B0055799F /* MJCompany.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MJCompany.h; path = "Performance Test/MJCompany.h"; sourceTree = "<group>"; };
+		D259644A19017F6B0055799F /* MJCompany.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MJCompany.m; path = "Performance Test/MJCompany.m"; sourceTree = "<group>"; };
+		D259644C19017F7D0055799F /* MJPerson.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MJPerson.h; path = "Performance Test/MJPerson.h"; sourceTree = "<group>"; };
+		D259644D19017F7D0055799F /* MJPerson.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MJPerson.m; path = "Performance Test/MJPerson.m"; sourceTree = "<group>"; };
+		D259644F19017F900055799F /* MJProject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MJProject.h; path = "Performance Test/MJProject.h"; sourceTree = "<group>"; };
+		D259645019017F900055799F /* MJProject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MJProject.m; path = "Performance Test/MJProject.m"; sourceTree = "<group>"; };
+		D2596452190187220055799F /* MJCountry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MJCountry.h; path = "Performance Test/MJCountry.h"; sourceTree = "<group>"; };
+		D2596453190187220055799F /* MJCountry.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MJCountry.m; path = "Performance Test/MJCountry.m"; sourceTree = "<group>"; };
 		D2A0544318D8A5B80050DE68 /* Motis Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Motis Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D2A0544918D8A5B80050DE68 /* Motis Tests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Motis Tests-Info.plist"; sourceTree = "<group>"; };
 		D2A0544B18D8A5B80050DE68 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		D2A0544D18D8A5B80050DE68 /* Motis_Tests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Motis_Tests.m; sourceTree = "<group>"; };
+		D2A0544D18D8A5B80050DE68 /* MJValidationTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MJValidationTest.m; sourceTree = "<group>"; };
 		D2A0544F18D8A5B80050DE68 /* Motis Tests-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Motis Tests-Prefix.pch"; sourceTree = "<group>"; };
 		D2A0545518D8A5CE0050DE68 /* MJTestObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MJTestObject.h; sourceTree = "<group>"; };
 		D2A0545618D8A5CE0050DE68 /* MJTestObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MJTestObject.m; sourceTree = "<group>"; };
@@ -72,6 +93,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D259644819017D670055799F /* Twitter.framework in Frameworks */,
 				D2A0544418D8A5B80050DE68 /* XCTest.framework in Frameworks */,
 				D2A0544618D8A5B80050DE68 /* UIKit.framework in Frameworks */,
 				D2A0544518D8A5B80050DE68 /* Foundation.framework in Frameworks */,
@@ -100,15 +122,43 @@
 			path = Motis/en.lproj;
 			sourceTree = SOURCE_ROOT;
 		};
-		D2A0544718D8A5B80050DE68 /* Motis Tests */ = {
+		D259644519017CCE0055799F /* Validation Test */ = {
 			isa = PBXGroup;
 			children = (
-				D2A0544D18D8A5B80050DE68 /* Motis_Tests.m */,
-				D2A0544818D8A5B80050DE68 /* Supporting Files */,
 				D2A0545518D8A5CE0050DE68 /* MJTestObject.h */,
 				D2A0545618D8A5CE0050DE68 /* MJTestObject.m */,
 				D201AA0718DC2ED200E5F26D /* MJTestObject2.h */,
 				D201AA0818DC2ED200E5F26D /* MJTestObject2.m */,
+			);
+			name = "Validation Test";
+			sourceTree = "<group>";
+		};
+		D259644619017CD80055799F /* Performance Test */ = {
+			isa = PBXGroup;
+			children = (
+				D232B3ED19018C6100B8D2A5 /* MJParser.h */,
+				D232B3EE19018C6100B8D2A5 /* MJParser.m */,
+				D2596452190187220055799F /* MJCountry.h */,
+				D2596453190187220055799F /* MJCountry.m */,
+				D259644919017F6B0055799F /* MJCompany.h */,
+				D259644A19017F6B0055799F /* MJCompany.m */,
+				D259644C19017F7D0055799F /* MJPerson.h */,
+				D259644D19017F7D0055799F /* MJPerson.m */,
+				D259644F19017F900055799F /* MJProject.h */,
+				D259645019017F900055799F /* MJProject.m */,
+				D232B3EB19018BDA00B8D2A5 /* sample_data.json */,
+			);
+			name = "Performance Test";
+			sourceTree = "<group>";
+		};
+		D2A0544718D8A5B80050DE68 /* Motis Tests */ = {
+			isa = PBXGroup;
+			children = (
+				D2A0544D18D8A5B80050DE68 /* MJValidationTest.m */,
+				D259644519017CCE0055799F /* Validation Test */,
+				D259644319017CA20055799F /* MJPerformanceTest.m */,
+				D259644619017CD80055799F /* Performance Test */,
+				D2A0544818D8A5B80050DE68 /* Supporting Files */,
 			);
 			path = "Motis Tests";
 			sourceTree = "<group>";
@@ -145,6 +195,7 @@
 		D2C3463518959EF2005B6B5C /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				D259644719017D670055799F /* Twitter.framework */,
 				D2C3463618959EF2005B6B5C /* Foundation.framework */,
 				D2C3463818959EF2005B6B5C /* CoreGraphics.framework */,
 				D2C3463A18959EF2005B6B5C /* UIKit.framework */,
@@ -259,6 +310,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D2A0544C18D8A5B80050DE68 /* InfoPlist.strings in Resources */,
+				D232B3EC19018BDA00B8D2A5 /* sample_data.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -278,9 +330,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D2A0544E18D8A5B80050DE68 /* Motis_Tests.m in Sources */,
+				D259644B19017F6B0055799F /* MJCompany.m in Sources */,
+				D2596454190187220055799F /* MJCountry.m in Sources */,
+				D2A0544E18D8A5B80050DE68 /* MJValidationTest.m in Sources */,
+				D259645119017F900055799F /* MJProject.m in Sources */,
 				D201AA0918DC2ED200E5F26D /* MJTestObject2.m in Sources */,
+				D259644E19017F7D0055799F /* MJPerson.m in Sources */,
 				D2A0545718D8A5CE0050DE68 /* MJTestObject.m in Sources */,
+				D232B3F019018D4E00B8D2A5 /* MJParser.m in Sources */,
+				D259644419017CA20055799F /* MJPerformanceTest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
