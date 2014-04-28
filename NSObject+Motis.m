@@ -33,6 +33,48 @@
 
 #pragma mark - Motis_Private
 
+/**
+ * Stores a KeyPath and its path components.
+ **/
+@interface MTSKeyPath : NSObject
+
+/**
+ * Default initializer
+ **/
+- (id)initWithKeyPath:(NSString*)keyPath;
+
+/**
+ * The key (or KeyPath).
+ **/
+@property (nonatomic, strong, readonly) NSString *key;
+
+/**
+ * The KeyPath components.
+ **/
+@property (nonatomic, strong, readonly) NSArray *components;
+
+@end
+
+@implementation MTSKeyPath
+
+- (id)initWithKeyPath:(NSString*)keyPath
+{
+    self = [super init];
+    if (self)
+    {
+        _key = keyPath;
+        _components = [keyPath componentsSeparatedByString:@"."];
+    }
+    return self;
+}
+
+@end
+
+#pragma mark -
+// ------------------------------------------------------------------------------------------------------------------------------------------------------------------ //
+// ------------------------------------------------------------------------------------------------------------------------------------------------------------------ //
+// ------------------------------------------------------------------------------------------------------------------------------------------------------------------ //
+
 @interface NSObject (Motis_Private)
 
 /** ---------------------------------------------- **
@@ -50,6 +92,13 @@
  * @return The Motis Array Class Mapping.
  **/
 + (NSDictionary*)mts_cachedArrayClassMapping;
+
+/**
+ * KVC KeyPath support. 
+ * @return Dictionary of keyPaths.
+ * @discussion This method is grouping mts_mapping keys per each "first key path key". For example: {"keyA":["keyA.key1.key2", "keyA.key3", "keyA.key4.key5", ...], "keyB":["keyB.key6.key7", "keyB.key8", ...], ...}. Each array object is a mts_mapping key. 
+ **/
++ (NSDictionary*)mts_keyPaths;
 
 /** ---------------------------------------------- **
  * @name Object Class Introspection
@@ -70,12 +119,12 @@
 - (BOOL)mts_isClassTypeTypeAttribute:(NSString*)typeAttribute;
 
 /**
- * Returns the class object for the given attribute type or nil if cannot be created.
+ * Retrieve the class name and the array of protocols that the property implements.
+ * @param className The returning class name.
+ * @param protocols The returning array of protocols.
  * @param typeAttribute The value returned by `-mts_typeAttributeForKey:`.
- * @return The related class object.
  */
-- (Class)mts_classForTypeAttribute:(NSString*)typeAttribute;
-
+- (void)mts_getClassName:(out NSString *__autoreleasing*)className protocols:(out NSArray *__autoreleasing*)protocols fromTypeAttribute:(NSString*)typeAttribute;
 
 /** ---------------------------------------------- **
  * @name Automatic Validation
@@ -192,9 +241,73 @@
 {
     for (NSString *key in keyedValues)
     {
-        id value = keyedValues[key];
-        [self mts_setValue:value forKey:key];
+        // For each key-value pair in the dictionary
+        
+        NSArray *allKeyPath = [self.class mts_keyPaths][key];
+        
+        for (MTSKeyPath *keyPath in allKeyPath)
+        {
+            // For each key related keyPath
+            
+            BOOL validKeyPath = NO;
+            id value = keyedValues;
+            
+            NSUInteger count = keyPath.components.count;
+            
+            for (NSInteger i=0; i<count; ++i)
+            {
+                // For each keyPath component
+                
+                NSString *path = keyPath.components[i];
+                value = [value valueForKey:path];
+                
+                if (i < count - 1)
+                {
+                    if (![value isKindOfClass:NSDictionary.class]) // <-- Checking that the KeyPath is only accessing dictionary objects.
+                        break;
+                }
+                else
+                {
+                    validKeyPath = YES;
+                }
+            }
+            
+            if (value && validKeyPath)
+                [self mts_setValue:value forKey:keyPath.key];
+            
+//            id value = [keyedValues valueForKeyPath:keyPath.key];
+//            if (value)
+//                [self mts_setValue:value forKey:keyPath.key];
+        }
     }
+}
+
+- (id)mts_valueForKey:(NSString*)key
+{
+    NSString *mappedKey = [self mts_mapKey:key];
+    
+    if (!mappedKey)
+        return nil;
+    
+    id value = [self valueForKey:mappedKey];
+        
+    return value;
+}
+
+- (NSDictionary*)mts_dictionaryWithValuesForKeys:(NSArray *)keys
+{
+    NSMutableDictionary *dictionary = [NSMutableDictionary dictionaryWithCapacity:keys.count];
+    
+    for (NSString *key in keys)
+    {
+        id value = [self mts_valueForKey:key];
+        if (!value)
+            value = [NSNull null];
+        
+        [dictionary setObject:value forKey:key];
+    }
+    
+    return [dictionary copy];
 }
 
 - (NSString*)mts_extendedObjectDescription
@@ -380,6 +493,52 @@
     return arrayClassMapping;
 }
 
++ (NSDictionary*)mts_keyPaths
+{
+    static NSMutableDictionary *classKeyPaths = nil;
+    
+    static dispatch_once_t onceToken1;
+    dispatch_once(&onceToken1, ^{
+        classKeyPaths = [NSMutableDictionary dictionary];
+    });
+    
+    NSString *className = NSStringFromClass(self);
+    NSDictionary *keyPaths = classKeyPaths[className];
+    
+    if (!keyPaths)
+    {
+        Class superClass = [self superclass];
+        
+        NSMutableDictionary *dict = nil;
+        
+        if ([superClass isSubclassOfClass:NSObject.class])
+            dict = [[superClass mts_keyPaths] mutableCopy];
+        else
+            dict = [NSMutableDictionary dictionary];
+        
+        NSDictionary *mapping = [self mts_mapping];
+        for (NSString *key in mapping)
+        {
+            MTSKeyPath *keyPath = [[MTSKeyPath alloc] initWithKeyPath:key];
+            NSString *firstPath = keyPath.components[0];
+            
+            NSMutableArray *listOfKeyPaths = dict[firstPath];
+            if (!listOfKeyPaths)
+            {
+                listOfKeyPaths = [NSMutableArray array];
+                dict[firstPath] = listOfKeyPaths;
+            }
+            
+            [listOfKeyPaths addObject:keyPath];
+        }
+        
+        keyPaths = [dict copy];
+        classKeyPaths[className] = keyPaths;
+    }
+    
+    return keyPaths;
+}
+
 - (NSString*)mts_typeAttributeForKey:(NSString*)key
 {
     static NSMutableDictionary *typeAttributes = nil;
@@ -413,15 +572,28 @@
     return [typeAttribute hasPrefix:@"T@"] && ([typeAttribute length] > 1);
 }
 
-- (Class)mts_classForTypeAttribute:(NSString*)typeAttribute
+- (void)mts_getClassName:(out NSString *__autoreleasing*)className protocols:(out NSArray *__autoreleasing*)protocols fromTypeAttribute:(NSString*)typeAttribute
 {
     if ([self mts_isClassTypeTypeAttribute:typeAttribute])
     {
-        NSString *typeClassName = [typeAttribute substringWithRange:NSMakeRange(3, [typeAttribute length]-4)];
-        return NSClassFromString(typeClassName);
+        typeAttribute = [typeAttribute substringWithRange:NSMakeRange(3, typeAttribute.length-4)];
+        
+        NSString *protocolNames = nil;
+        
+        NSScanner *scanner = [NSScanner scannerWithString:typeAttribute];
+        [scanner scanUpToString:@"<" intoString:className];
+        [scanner scanUpToString:@">" intoString:&protocolNames];
+        
+        if (*className == nil)
+            *className = @"";
+        
+        if (protocolNames.length > 0)
+        {
+            protocolNames = [protocolNames substringFromIndex:1];
+            protocolNames = [protocolNames stringByReplacingOccurrencesOfString:@" " withString:@""];
+            *protocols = [protocolNames componentsSeparatedByString:@","];
+        }
     }
-    
-    return nil;
 }
 
 - (BOOL)mts_validateAutomaticallyValue:(inout __autoreleasing id *)ioValue forKey:(NSString*)key
@@ -439,15 +611,35 @@
     
     if ([self mts_isClassTypeTypeAttribute:typeAttribute])
     {
-        if (strcmp(rawPropertyType, @encode(id)) == 0)
-            return YES;
+        NSString *className = nil;
+        NSArray *protocols = nil;
         
-        Class typeClass = [self mts_classForTypeAttribute:typeAttribute];
+        [self mts_getClassName:&className protocols:&protocols fromTypeAttribute:typeAttribute];
         
-        if (typeClass != nil)
+        if (className.length == 0)
         {
-            MJLog(@"%@ --> %@", key, NSStringFromClass(typeClass));
-            return [self mts_validateAutomaticallyValue:ioValue toClass:typeClass forKey:key];
+            // It's an "id".
+            
+            // Actually, we should make a compare like this:
+            // if (strcmp(rawPropertyType, @encode(id)) == 0)
+            //    return YES;
+            //
+            // However, becuase of the "if" statements, we know that our typeAttribute begins with a "@" and
+            // if "className.length" == 0 means that the "rawPropertyType" to be compared is exactly an @encode(id).
+            //
+            // Therefore, we return directly YES.
+            
+            return YES;
+        }
+        else
+        {
+            Class typeClass = NSClassFromString(className);
+            
+            if (typeClass)
+            {
+                MJLog(@"%@ --> %@", key, NSStringFromClass(typeClass));
+                return [self mts_validateAutomaticallyValue:ioValue toClass:typeClass forKey:key];
+            }
         }
         
         return NO;
@@ -665,7 +857,7 @@
     return NO;
 }
 
-#pragma mark Helpers
+#pragma mark Private Helpers
 
 + (NSNumberFormatter*)mts_decimalFormatterAllowFloats
 {

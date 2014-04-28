@@ -25,6 +25,12 @@
              @"string": mts_key(stringField),
              @"number": mts_key(numberField),
              @"url": mts_key(urlField),
+             
+             @"id": mts_key(idField),
+             @"id_protocol": mts_key(idProtocolField),
+             
+             @"string1.string2.string3" : mts_key(stringField),
+             @"url1.url2.url3" : mts_key(urlField),
              };
     
 }

@@ -16,7 +16,7 @@
 
 #import <Foundation/Foundation.h>
 
-@class MJUser;
+#import "MJUser.h"
 
 /** ********************************************************* **
  *  @name JSON Entity Attributes
@@ -43,9 +43,28 @@
 @property (nonatomic, assign) NSInteger likesCount;
 
 /**
- * Title of the video.
+ * Number of start views (stats).
+ * @discussion This value is retrieved via keyPath access.
  **/
-@property (nonatomic, strong) NSString *title;
+@property (nonatomic, assign) NSInteger startViews;
+
+/**
+ * Number of end views (stats).
+ * @discussion This value is retrieved via keyPath access.
+ **/
+@property (nonatomic, assign) NSInteger endViews;
+
+/**
+ * Stats date.
+ * @discussion This value is retrieved via keyPath access.
+ **/
+@property (nonatomic, assign) NSDate *statsDate;
+
+/**
+ * Title of the video.
+ * @discussion Just for testing porpuses we set the NSString type as an id <NSObject>.
+ **/
+@property (nonatomic, strong) id <NSObject> title;
 
 /**
  * Description of the video.
@@ -56,6 +75,12 @@
  * Last view date.
  **/
 @property (nonatomic, strong) NSDate *lastViewDate;
+
+/**
+ * The username of the uploader of the video.
+ * @discussion This value is part of the "uploader" entity. It is additionaly extracted and stored here via keyPath access.
+ **/
+@property (nonatomic, strong) NSString *uploaderUsername;
 
 /**
  * The uploader of the video.

@@ -22,6 +22,9 @@
 @property (nonatomic, strong) NSNumber *numberField;
 @property (nonatomic, strong) NSURL *urlField;
 
+@property (nonatomic, strong) id idField;
+@property (nonatomic, strong) id <NSObject> idProtocolField;
+
 
 // This property is not included in the mapping
 @property (nonatomic, strong) NSString *privateStringField;

@@ -25,7 +25,7 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    [self performTest];
+    [self performTest]; // <--- UNCOMMENT FOR TESTING
     
     UIWindow *window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     window.rootViewController = [[UIViewController alloc] init];
@@ -47,6 +47,12 @@
                                @"title": @"Dancing worldwide",
                                @"description": @"Dancing worldwide is the awesomest video ever!",
                                @"last_view_time": @1390767064.0,
+                               @"stats": @{@"start_views": @321,
+                                           @"end_views": @123,
+                                           @"info": @{@"identifier": @"pDL39Ksn3",
+                                                      @"date": @1390767064.0,
+                                                     },
+                                           },
                                @"likes_count": [NSNull null],
                                @"uploader":@{@"user_name":@"Joan",
                                              @"user_id": @7,

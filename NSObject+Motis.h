@@ -20,9 +20,9 @@
  * MACROS
  * *************************************************************************************************************************************** */
 
-/*
+/**
  * Use the mts_key(name) macro to create strings for property names.
- */
+ **/
 #define mts_key(name) NSStringFromSelector(@selector(name))
 
 /* *************************************************************************************************************************************** *
@@ -32,10 +32,8 @@
 #pragma mark - Motis
 
 /**
- * Motis
- *
  * Extends NSObject adding parsing capabilities from JSON dictionaries.
- * To parse and set the object from the JSON dictionary, use the methods `parseValue:forKey:` or `parseValuesForKeysWithDictionary:`.
+ * To parse and set the object from the JSON dictionary, use the methods `mts_setValue:forKey:` or `mts_setValuesForKeysWithDictionary:`.
  **/
 @interface NSObject (Motis)
 
@@ -59,6 +57,25 @@
 - (void)mts_setValuesForKeysWithDictionary:(NSDictionary *)dictionary;
 
 /** ---------------------------------------------- **
+ * @name Key-Mapping Getters
+ ** ---------------------------------------------- **/
+
+/**
+ * Retrieve an object value for a given key. The key is mapped via the motis mapping.
+ * @param key The key (will be mapped)
+ * @return The corresponding value for the given key if available, otherwise nil.
+ **/
+- (id)mts_valueForKey:(NSString*)key;
+
+/**
+ * Returns a dictionary containing the given keys and the corresponding values.
+ * @param keys An array with keys.
+ * @return The dictionary with key-values.
+ * @discussion This method uses the motis mapping to retrieve the values for the given keys. The keys used in the returned dictionary are the ones specified in the given array. WARNING: this method may not return a JSON serializable dictionary, just returns the object values.
+ **/
+- (NSDictionary*)mts_dictionaryWithValuesForKeys:(NSArray *)keys;
+
+/** ---------------------------------------------- **
  * @name Logging objects
  ** ---------------------------------------------- **/
 
@@ -69,7 +86,6 @@
 - (NSString*)mts_extendedObjectDescription;
 
 @end
-
 
 /*
  * MOTIS AUTOMATIC VALIDATION
@@ -129,7 +145,7 @@
  *
  * In order to use Motis you must define mappings between JSON keys and object properties by overriding the following methods:
  *
- *  - `+mts_mapping`: Subclasses must override this method and return the mapping between the JSON keys and the object properties.
+ *  - `+mts_mapping`: Subclasses must override this method and return the mapping between the JSON keys and the object properties. The mapping may contain KeyPath to JSON values.
  *  - `+mts_shouldSetUndefinedKeys`: Optionally, subclasses can override this method to forbid Motis from automatically setting keys not found in the mapping. The default is `YES`.
  *
  * VALIDATION METHODS
