@@ -219,7 +219,7 @@
 - (void)mts_didCreateObject:(id)object forKey:(NSString *)key;
 
 /**
- * Returns a date formatter for automatic validation from string to date.
+ * Returns a date formatter for automatic validation from string to date (default is nil).
  * @return The date formatter.
  * @discussion The default date formatter format is nil, meaning that strings will be validated into dates only if they represent a timestamp. Subclasses can override this method and provide a custom date formatter. If different keys have different date formats, you must validate manually the property.
  **/

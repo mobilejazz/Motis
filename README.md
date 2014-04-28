@@ -125,8 +125,8 @@ Automatic validation will be performed always unless the user is validating manu
 
 Whenever you specify a property type as a `NSDate`, Motis will attempt to convert the received JSON value in to a date.
 
-1. If the JSON value is a number, Motis will create the date considering that the number is the number of seconds elapsed since 1979-1-1. 
-2. If the JSON value is a string, Motis will use the `NSDateFormatter` returned by the method `+mts_validationDateFormatter`. This date formatter uses the format "2011-08-23 10:52:00". If you want to use another format, override the method and return a customzied date formatter. 
+1. If the JSON value is a number or an string containing a number, Motis will create the date considering that the number is the number of seconds elapsed since 1979-1-1. 
+2. If the JSON value is a string, Motis will use the `NSDateFormatter` returned by the method `+mts_validationDateFormatter`. Motis does not implement any defautl date formatter (therefore, this method return nil by default). It is your responsibility to provide a default date formatter.
 
 However, if you have multiple formats for different keys, you will have to validate your dates using manual validation (see below).
 
