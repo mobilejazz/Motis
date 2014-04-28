@@ -1,8 +1,8 @@
 //
-//  MJPerformanceTest.m
-//  Motis
+//  Motis_Performance_Tests.m
+//  Motis Performance Tests
 //
-//  Created by Joan Martin on 18/04/14.
+//  Created by Joan Martin on 28/04/14.
 //  Copyright (c) 2014 Mobile Jazz. All rights reserved.
 //
 
@@ -24,11 +24,12 @@ NSString* uniqueString()
     return uuidString;
 }
 
-@interface MJPerformanceTest : XCTestCase
+
+@interface Motis_Performance_Tests : XCTestCase
 
 @end
 
-@implementation MJPerformanceTest
+@implementation Motis_Performance_Tests
 {
     NSDictionary *_jsonDictionary;
 }

@@ -64,8 +64,7 @@
     _object.boolField = YES;
     [_object mts_setValue:[NSNull null] forKey:@"bool"];
 
-    if (_object.boolField != NO)
-        XCTFail(@"Basic type value must change to the new reseted value.");
+    XCTAssert(_object.boolField == NO, @"Basic type value must change to the new reseted value.");
 }
 
 - (void)testNullToBasicTypeWithoutNullDefinition
@@ -75,8 +74,7 @@
     _object.integerField = 42;
     [_object mts_setValue:[NSNull null] forKey:@"integer"];
     
-    if (_object.integerField != 42)
-        XCTFail(@"Basic type value must not change");
+    XCTAssert(_object.integerField == 42, @"Basic type value must not change");
 }
 
 #pragma mark to object
@@ -86,8 +84,7 @@
     _object.numberField = @(42);
     [_object mts_setValue:[NSNull null] forKey:@"number"];
     
-    if (_object.numberField != nil)
-        XCTFail(@"Failed to nullify object");
+    XCTAssertNil(_object.numberField, @"Failed to nullify object");
 }
 
 - (void)testNilToObject
@@ -95,8 +92,7 @@
     _object.numberField = @(42);
     [_object mts_setValue:nil forKey:@"number"];
     
-    if (_object.numberField != nil)
-        XCTFail(@"Failed to nillify object");
+    XCTAssertNil(_object.numberField, @"Failed to nillify object");
 }
 
 #pragma mark - FROM NUMBER
@@ -131,8 +127,7 @@
     {
         _object.boolField = NO;
         [_object mts_setValue:number forKey:@"bool"];
-        if (_object.boolField != number.boolValue)
-            XCTFail(@"Failed to map number value %@ (%d) --> %d", number.description, number.boolValue, _object.boolField);
+        XCTAssertEqual(_object.boolField, number.boolValue, @"Failed to map number value");
     }
 }
 
@@ -142,8 +137,7 @@
     {
         _object.integerField = 0;
         [_object mts_setValue:number forKey:@"integer"];
-        if (_object.integerField != number.integerValue)
-            XCTFail(@"Failed to map number value %@", number.description);
+        XCTAssertEqual(_object.integerField, number.integerValue, @"Failed to map number value");
     }
 }
 
@@ -153,8 +147,7 @@
     {
         _object.unsignedIntegerField = 0;
         [_object mts_setValue:number forKey:@"unsigned_integer"];
-        if (_object.unsignedIntegerField != number.unsignedIntegerValue)
-            XCTFail(@"Failed to map number value %@", number.description);
+        XCTAssertEqual(_object.unsignedIntegerField, number.unsignedIntegerValue, @"Failed to map number value");
     }
 }
 
@@ -162,9 +155,9 @@
 {
     for (NSNumber *number in [self mts_arrayWithNumbers])
     {
+        _object.floatField = 0.0f;
         [_object mts_setValue:number forKey:@"float"];
-        if (_object.floatField != number.floatValue)
-            XCTFail(@"Failed to map number value %@", number.description);
+        XCTAssertEqual(_object.floatField, number.floatValue, @"Failed to map number value");
     }
 }
 
@@ -172,9 +165,9 @@
 {
     for (NSNumber *number in [self mts_arrayWithNumbers])
     {
+        _object.doubleField = 0.0;
         [_object mts_setValue:number forKey:@"double"];
-        if (_object.doubleField != number.doubleValue)
-            XCTFail(@"Failed to map number value %@", number.description);
+        XCTAssertEqual(_object.doubleField, number.doubleValue, @"Failed to map number value");
     }
 }
 
@@ -184,9 +177,9 @@
 {
     for (NSNumber *number in [self mts_arrayWithNumbers])
     {
+        _object.stringField = nil;
         [_object mts_setValue:number forKey:@"string"];
-        if (![_object.stringField isEqualToString:number.stringValue])
-            XCTFail(@"Failed to map number value %@", number.description);
+        XCTAssertEqualObjects(_object.stringField, number.stringValue, @"Failed to map number value");
     }
 }
 
@@ -200,8 +193,7 @@
     
     NSTimeInterval finalTimeInterval = [_object.dateField timeIntervalSince1970];
     
-    if (timeInterval != finalTimeInterval)
-        XCTFail(@"Failed to map number value %f", timeInterval);
+    XCTAssertEqual(timeInterval, finalTimeInterval, @"Failed to map number value to date");
 }
 
 #pragma mark to id
@@ -212,8 +204,7 @@
     {
         _object.idField = nil;
         [_object mts_setValue:number forKey:@"id"];
-        if (![_object.idField isEqualToNumber:number])
-            XCTFail(@"Failed to map number value %@", number.description);
+        XCTAssertEqualObjects(_object.idField, number, @"Failed to map number value to id");
     }
 }
 
@@ -223,8 +214,7 @@
     {
         _object.idField = nil;
         [_object mts_setValue:number forKey:@"id_protocol"];
-        if (![(NSNumber*)_object.idProtocolField isEqualToNumber:number])
-            XCTFail(@"Failed to map number value %@", number.description);
+        XCTAssertEqualObjects(_object.idProtocolField, number, @"Failed to map number value to id <Protocol>");
     }
 }
 
@@ -262,9 +252,7 @@
         
         _object.boolField = NO;
         [_object mts_setValue:string forKey:@"bool"];
-        
-        if (_object.boolField != originalNumber.boolValue)
-            XCTFail(@"Failed to map number value %@ --> %d", originalNumber.description, _object.boolField);
+        XCTAssertEqual(_object.boolField, originalNumber.boolValue, @"Failed to map string number value");
     }
 }
 
@@ -278,9 +266,7 @@
         
         _object.integerField = 0;
         [_object mts_setValue:string forKey:@"integer"];
-        
-        if (_object.integerField != number.integerValue)
-            XCTFail(@"Failed to map number value %@ --> %ld", string, (long)_object.integerField);
+        XCTAssertEqual(_object.integerField, number.integerValue, @"Failed to map string number value");
     }
 }
 
@@ -294,9 +280,7 @@
         
         _object.unsignedIntegerField = 0;
         [_object mts_setValue:string forKey:@"unsigned_integer"];
-        
-        if (_object.unsignedIntegerField !=  number.unsignedIntegerValue)
-            XCTFail(@"Failed to map number value %@ --> %llu", string, (unsigned long long)_object.unsignedIntegerField);
+        XCTAssertEqual(_object.unsignedIntegerField, number.unsignedIntegerValue, @"Failed to map string number value");
     }
 }
 
@@ -310,9 +294,7 @@
         
         _object.numberField = nil;
         [_object mts_setValue:string forKey:@"number"];
-        
-        if (![_object.numberField isEqualToNumber:originalNumber])
-            XCTFail(@"Failed to map string value %@ --> %@", string, _object.numberField.description);
+        XCTAssertEqualObjects(_object.numberField, originalNumber, @"Failed to map string number value.");
     }
 }
 
@@ -322,9 +304,7 @@
 {
     NSString *string = @"http://www.google.com";
     [_object mts_setValue:string forKey:@"url"];
-    
-    if (![_object.urlField.absoluteString isEqualToString:string])
-        XCTFail(@"Failed to map string value %@", string);
+    XCTAssertEqualObjects(_object.urlField.absoluteString, string, @"Failed to map string value to URL");
 }
 
 #pragma mark to date
@@ -333,7 +313,6 @@
 {
     NSString *string = @"2014-04-23 12:00:00";
     [_object mts_setValue:string forKey:@"date"];
-
     XCTAssertNil(_object.dateField, @"Failed to invalidate string value %@", string);
 }
 
@@ -342,7 +321,6 @@
     const NSTimeInterval timeInterval = 1398333352.0;
     NSString *string = [NSString stringWithFormat:@"%f", timeInterval];
     [_object mts_setValue:string forKey:@"date"];
-    
     XCTAssertEqual([_object.dateField timeIntervalSince1970], timeInterval, @"Failed to map string value %@", string);
 }
 
@@ -375,18 +353,14 @@
 {
     NSString *string = @"Hello World";
     [_object mts_setValue:string forKey:@"id"];
-    
-    if (![_object.idField isEqualToString:string])
-        XCTFail(@"Failed to map string value %@", string);
+    XCTAssertEqualObjects(_object.idField, string, @"Failed to map string value");
 }
 
 - (void)testStringToIdProtocol
 {
     NSString *string = @"Hello World";
     [_object mts_setValue:string forKey:@"id_protocol"];
-    
-    if (![(NSString*)_object.idProtocolField isEqualToString:string])
-        XCTFail(@"Failed to map string value %@", string);
+    XCTAssertEqualObjects(_object.idProtocolField, string, @"Failed to map string value");
 }
 
 #pragma mark - FROM DICTIONARY
@@ -425,19 +399,14 @@
 {
     MJTestObject2 *object = [MJTestObject2 new];
     
-    BOOL foundException = NO;
-    
     @try
     {
         [object mts_setValue:@"hello world" forKey:@"lorem_ipsum_sir_dolor_amet"];
     }
     @catch (NSException *exception)
     {
-        foundException = YES;
+        XCTAssertNotNil(exception, @"Object must throw exception if key is unknown");
     }
-    
-    if (!foundException)
-        XCTFail(@"Object must throw exception if key is unknown");
 }
 
 - (void)testUndefinedMappingWithUndefinedPropertyRestricted
@@ -448,7 +417,7 @@
     }
     @catch (NSException *exception)
     {
-        XCTFail(@"Object must not throw exception if key is unknown");
+        XCTAssertNil(exception, @"Object must not throw exception if key is unknown");
     }
 }
 
@@ -461,21 +430,15 @@
     MJTestObject2 *object = [MJTestObject2 new];
     
     object.privateIntegerField = 42;
-    
     [object mts_setValue:@0 forKey:@"privateIntegerField"];
-    
-    if (object.privateIntegerField != 0)
-        XCTFail(@"Object must assign values for undefined mappings");
+    XCTAssertEqual(object.privateIntegerField, 0, @"Object must assign values for undefined mappings");
 }
 
 - (void)testUndefinedMappingWithDefinedPropertyRestricted
 {
     _object.privateIntegerField = 42;
-    
     [_object mts_setValue:@0 forKey:@"privateIntegerField"];
-    
-    if (_object.privateIntegerField != 42)
-        XCTFail(@"Object must not assign values for undefined mappings");
+    XCTAssertEqual(_object.privateIntegerField, 42, @"Object must not assign values for undefined mappings");
 }
 
 #pragma mark - KEYPATH
@@ -497,9 +460,7 @@
     
     dictionary = @{@"string1": @{@"string2": @{@"string3": string}}};
     [_object mts_setValuesForKeysWithDictionary:dictionary];
-    
-    if (![_object.stringField isEqualToString:string])
-        XCTFail(@"KeyPath acces failed");
+    XCTAssertEqualObjects(_object.stringField, string, @"KeyPath acces failed");
 }
 
 /*
@@ -516,8 +477,7 @@
     dictionary = @{@"url1": @{@"url2": @{@"url3": string}}};
     [_object mts_setValuesForKeysWithDictionary:dictionary];
     
-    if (![_object.urlField isKindOfClass:NSURL.class])
-        XCTFail(@"KeyPath validation failed");
+    XCTAssertEqualObjects(_object.urlField.class, NSURL.class, @"KeyPath validation failed");
 }
 
 /*
@@ -534,9 +494,7 @@
     
     dictionary = @{@"string1": @{@"string2": string}};
     [_object mts_setValuesForKeysWithDictionary:dictionary];
-    
-    if (_object.stringField != nil)
-        XCTFail(@"KeyPath acces failed");
+    XCTAssertNil(_object.stringField, @"KeyPath acces failed");
 }
 
 @end

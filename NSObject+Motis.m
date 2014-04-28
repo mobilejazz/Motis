@@ -574,6 +574,12 @@
 {
     if ([self mts_isClassTypeTypeAttribute:typeAttribute])
     {
+        if (typeAttribute.length < 3)
+        {
+            *className = @"";
+            return;
+        }
+        
         typeAttribute = [typeAttribute substringWithRange:NSMakeRange(3, typeAttribute.length-4)];
         
         NSString *protocolNames = nil;
