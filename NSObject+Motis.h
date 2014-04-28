@@ -221,7 +221,7 @@
 /**
  * Returns a date formatter for automatic validation from string to date.
  * @return The date formatter.
- * @discussion The default date formatter format is "2011-08-23 10:52:00". Subclasses can override this method and provide a custom date formatter. In case of custom date formater for each key, you must validate manualy the property.
+ * @discussion The default date formatter format is nil, meaning that strings will be validated into dates only if they represent a timestamp. Subclasses can override this method and provide a custom date formatter. If different keys have different date formats, you must validate manually the property.
  **/
 + (NSDateFormatter*)mts_validationDateFormatter;
 

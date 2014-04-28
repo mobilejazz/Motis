@@ -12,6 +12,21 @@
 #import "MJTestObject.h"
 #import "MJTestObject2.h"
 
+@interface MJTestObjectWithFormatter : MJTestObject
+
+@end
+
+@implementation MJTestObjectWithFormatter
+
++ (NSDateFormatter*)mts_validationDateFormatter
+{
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    formatter.dateFormat = @"yyyy-MM-dd HH:mm:ss";
+    return formatter;
+}
+
+@end
+
 @interface MJValidationTest : XCTestCase
 
 @property (nonatomic, strong) MJTestObject *object;
@@ -312,31 +327,46 @@
         XCTFail(@"Failed to map string value %@", string);
 }
 
-- (void)testStringFormatToDate
+#pragma mark to date
+
+- (void)testStringFormatToDate_Default
 {
-    // Motis default format "yyyy-MM-dd HH:mm:ss"
-    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-    dateFormatter.dateFormat = @"yyyy-MM-dd HH:mm:ss";
-    
-    NSDate *date = [dateFormatter dateFromString:@"2014-04-23 12:00:00"];
-    NSString *string = [dateFormatter stringFromDate:date];
+    NSString *string = @"2014-04-23 12:00:00";
     [_object mts_setValue:string forKey:@"date"];
 
-    if (![date isEqualToDate:_object.dateField])
-        XCTFail(@"Failed to map string value %@", string);
+    XCTAssertNil(_object.dateField, @"Failed to invalidate string value %@", string);
 }
 
-- (void)testStringNumberToDate
+- (void)testStringTimeIntervalToDate_Default
 {
-    NSTimeInterval timeInterval = 1398333352.0;
+    const NSTimeInterval timeInterval = 1398333352.0;
+    NSString *string = [NSString stringWithFormat:@"%f", timeInterval];
+    [_object mts_setValue:string forKey:@"date"];
+    
+    XCTAssertEqual([_object.dateField timeIntervalSince1970], timeInterval, @"Failed to map string value %@", string);
+}
+
+- (void)testStringFormatToDate_CustomDateFormatter
+{
+    _object = [MJTestObjectWithFormatter new];
+    NSString *string = @"2014-04-23 12:00:00";
+    [_object mts_setValue:string forKey:@"date"];
+
+    NSDateFormatter *formatter = [_object.class mts_validationDateFormatter];
+    NSDate *date = [formatter dateFromString:string];
+    XCTAssertEqualObjects(_object.dateField, date, @"Failed to map string value %@", string);
+}
+
+- (void)testStringTimeIntervalToDate_CustomDateFormatter
+{
+    _object = [MJTestObjectWithFormatter new];
+    
+    const NSTimeInterval timeInterval = 1398333352.0;
     
     NSString *string = [NSString stringWithFormat:@"%f", timeInterval];
     [_object mts_setValue:string forKey:@"date"];
     
-    NSTimeInterval finalTimeInterval = [_object.dateField timeIntervalSince1970];
-    
-    if (timeInterval != finalTimeInterval)
-        XCTFail(@"Failed to map string value %@", string);
+    XCTAssertNil(_object.dateField, @"Failed to invalidate string value %@", string);
 }
 
 #pragma mark to id

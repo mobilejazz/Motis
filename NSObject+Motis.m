@@ -381,16 +381,7 @@
 + (NSDateFormatter*)mts_validationDateFormatter
 {
     // Subclasses may override and return a custom formatter.
-    
-    static NSDateFormatter *dateFormatter = nil;
-    
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        dateFormatter = [[NSDateFormatter alloc] init];
-        dateFormatter.dateFormat = @"yyyy-MM-dd HH:mm:ss";
-    });
-    
-    return dateFormatter;
+    return nil;
 }
 
 - (BOOL)mts_validateArrayObject:(inout __autoreleasing id *)ioValue forArrayKey:(NSString *)arrayKey error:(out NSError *__autoreleasing *)outError
@@ -788,8 +779,22 @@
         if ([typeClass isSubclassOfClass:NSDate.class])
         {
             NSDateFormatter *dateFormatter = [self.class mts_validationDateFormatter];
-            *ioValue = [dateFormatter dateFromString:*ioValue];
-            return *ioValue != nil;
+            if (dateFormatter)
+            {
+                *ioValue = [dateFormatter dateFromString:*ioValue];
+                return *ioValue != nil;
+            }
+            else
+            {
+                NSNumberFormatter *formatter = [self.class mts_decimalFormatterAllowFloats];
+                NSNumber *number = [formatter numberFromString:*ioValue];
+                if (number)
+                {
+                    const NSTimeInterval timestamp = [number doubleValue];
+                    *ioValue = [NSDate dateWithTimeIntervalSince1970:timestamp];
+                    return *ioValue != nil;
+                }
+            }
         }
     }
     else if ([*ioValue isKindOfClass:NSNumber.class]) // <-- NUMBERS
