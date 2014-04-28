@@ -32,6 +32,10 @@
 		D2DF757F18D746A800163BA8 /* MJVideo.m in Sources */ = {isa = PBXBuildFile; fileRef = D2DF757C18D746A800163BA8 /* MJVideo.m */; };
 		D2DF758118D746AF00163BA8 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D2DF758018D746AF00163BA8 /* Images.xcassets */; };
 		D2DF758518D746C200163BA8 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = D2DF758218D746C200163BA8 /* main.m */; };
+		D2E3E030190E8D82002BD141 /* MJHierarchyTest.m in Sources */ = {isa = PBXBuildFile; fileRef = D2E3E02F190E8D82002BD141 /* MJHierarchyTest.m */; };
+		D2E3E034190E8D9E002BD141 /* MJParentObject.m in Sources */ = {isa = PBXBuildFile; fileRef = D2E3E033190E8D9E002BD141 /* MJParentObject.m */; };
+		D2E3E038190E8DBF002BD141 /* MJChildA.m in Sources */ = {isa = PBXBuildFile; fileRef = D2E3E037190E8DBF002BD141 /* MJChildA.m */; };
+		D2E3E03B190E8DCA002BD141 /* MJChildB.m in Sources */ = {isa = PBXBuildFile; fileRef = D2E3E03A190E8DCA002BD141 /* MJChildB.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -86,6 +90,13 @@
 		D2DF758218D746C200163BA8 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = Motis/main.m; sourceTree = SOURCE_ROOT; };
 		D2DF758318D746C200163BA8 /* Motis-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "Motis-Info.plist"; path = "Motis/Motis-Info.plist"; sourceTree = SOURCE_ROOT; };
 		D2DF758418D746C200163BA8 /* Motis-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "Motis-Prefix.pch"; path = "Motis/Motis-Prefix.pch"; sourceTree = SOURCE_ROOT; };
+		D2E3E02F190E8D82002BD141 /* MJHierarchyTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MJHierarchyTest.m; sourceTree = "<group>"; };
+		D2E3E032190E8D9E002BD141 /* MJParentObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MJParentObject.h; path = "Hierarchy Test/MJParentObject.h"; sourceTree = "<group>"; };
+		D2E3E033190E8D9E002BD141 /* MJParentObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MJParentObject.m; path = "Hierarchy Test/MJParentObject.m"; sourceTree = "<group>"; };
+		D2E3E036190E8DBF002BD141 /* MJChildA.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MJChildA.h; path = "Hierarchy Test/MJChildA.h"; sourceTree = "<group>"; };
+		D2E3E037190E8DBF002BD141 /* MJChildA.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MJChildA.m; path = "Hierarchy Test/MJChildA.m"; sourceTree = "<group>"; };
+		D2E3E039190E8DCA002BD141 /* MJChildB.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MJChildB.h; path = "Hierarchy Test/MJChildB.h"; sourceTree = "<group>"; };
+		D2E3E03A190E8DCA002BD141 /* MJChildB.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MJChildB.m; path = "Hierarchy Test/MJChildB.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -158,6 +169,8 @@
 				D259644519017CCE0055799F /* Validation Test */,
 				D259644319017CA20055799F /* MJPerformanceTest.m */,
 				D259644619017CD80055799F /* Performance Test */,
+				D2E3E02F190E8D82002BD141 /* MJHierarchyTest.m */,
+				D2E3E031190E8D88002BD141 /* Hierarchy Test */,
 				D2A0544818D8A5B80050DE68 /* Supporting Files */,
 			);
 			path = "Motis Tests";
@@ -231,6 +244,19 @@
 				D21D6FAF18D7470D000E620B /* en.lproj */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		D2E3E031190E8D88002BD141 /* Hierarchy Test */ = {
+			isa = PBXGroup;
+			children = (
+				D2E3E032190E8D9E002BD141 /* MJParentObject.h */,
+				D2E3E033190E8D9E002BD141 /* MJParentObject.m */,
+				D2E3E036190E8DBF002BD141 /* MJChildA.h */,
+				D2E3E037190E8DBF002BD141 /* MJChildA.m */,
+				D2E3E039190E8DCA002BD141 /* MJChildB.h */,
+				D2E3E03A190E8DCA002BD141 /* MJChildB.m */,
+			);
+			name = "Hierarchy Test";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -334,10 +360,14 @@
 				D2596454190187220055799F /* MJCountry.m in Sources */,
 				D2A0544E18D8A5B80050DE68 /* MJValidationTest.m in Sources */,
 				D259645119017F900055799F /* MJProject.m in Sources */,
+				D2E3E03B190E8DCA002BD141 /* MJChildB.m in Sources */,
 				D201AA0918DC2ED200E5F26D /* MJTestObject2.m in Sources */,
+				D2E3E038190E8DBF002BD141 /* MJChildA.m in Sources */,
 				D259644E19017F7D0055799F /* MJPerson.m in Sources */,
 				D2A0545718D8A5CE0050DE68 /* MJTestObject.m in Sources */,
 				D232B3F019018D4E00B8D2A5 /* MJParser.m in Sources */,
+				D2E3E034190E8D9E002BD141 /* MJParentObject.m in Sources */,
+				D2E3E030190E8D82002BD141 /* MJHierarchyTest.m in Sources */,
 				D259644419017CA20055799F /* MJPerformanceTest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -547,7 +547,14 @@
         typeAttributes = [NSMutableDictionary dictionary];
     });
     
-    NSString *typeAttribute = typeAttributes[key];
+    NSMutableDictionary *classTypeAttributes = typeAttributes[NSStringFromClass(self.class)];
+    if (!classTypeAttributes)
+    {
+        classTypeAttributes = [NSMutableDictionary dictionary];
+        typeAttributes[NSStringFromClass(self.class)] = classTypeAttributes;
+    }
+    
+    NSString *typeAttribute = classTypeAttributes[key];
     if (typeAttribute)
         return typeAttribute;
     
@@ -562,7 +569,7 @@
     NSArray * attributes = [typeString componentsSeparatedByString:@","];
     typeAttribute = attributes[0];
     
-    typeAttributes[key] = typeAttribute;
+    classTypeAttributes[key] = typeAttribute;
     
     return typeAttribute;
 }
