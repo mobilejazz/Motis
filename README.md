@@ -172,7 +172,7 @@ Therefore, our `User` class has an `NSArray` property called `followers` that co
             };
 }
 
-+ (NSDictionary)mts_arrayClassMapping
++ (NSDictionary*)mts_arrayClassMapping
 {
     return @{mts_key(followers): User.class}; 
 }
