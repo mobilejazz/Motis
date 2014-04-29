@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link href='https://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
+
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <title>Motis by mobilejazz</title>
+  </head>
+
+  <body>
+    <header>
+      <div class="inner">
+        <h1>Motis</h1>
+        <h2>Easy JSON to NSObject mapping using Cocoa&#39;s key value coding (KVC)</h2>
+        <a href="https://github.com/mobilejazz/Motis" class="button"><small>View project on</small>GitHub</a>
+      </div>
+    </header>
+
+    <div id="content-wrapper">
+      <div class="inner clearfix">
+        <section id="main-content">
+          <h1>
+<a name="motis-object-mapping" class="anchor" href="#motis-object-mapping"><span class="octicon octicon-link"></span></a>Motis Object Mapping*</h1>
+
+<p><img src="https://raw.githubusercontent.com/mobilejazz/Motis/master/Images/Motis.png" alt="Motis"></p>
+
+<p>Easy JSON to NSObject mapping using Cocoa's key value coding (KVC)</p>
+
+<p><strong>Motis</strong> is a user-friendly interface with Key Value Coding that provides your NSObjects   tools to map key-values stored in dictionaries into themselves. With <strong>Motis</strong> your objects will be responsible for each mapping (distributed mapping definitions) and you won't have to worry for data validation, as <strong>Motis</strong> will validate your object types for you.</p>
+
+<p>Check our blog post entry <a href="http://blog.mobilejazz.cat/ios-using-kvc-to-parse-json">Using KVC to parse JSON</a> to get a deeper idea of Motis foundations.</p>
+
+<h1>
+<a name="how-to" class="anchor" href="#how-to"><span class="octicon octicon-link"></span></a>How To</h1>
+
+<h2>
+<a name="get-motis" class="anchor" href="#get-motis"><span class="octicon octicon-link"></span></a>Get Motis</h2>
+
+<p>If you use Cocoa Pods, you can get Motis by adding to your podfile <code>pod 'Motis', '~&gt;0.4.2'</code>. Otherwise, you will need to download the files <code>NSObject+Motis.h</code>, <code>NSObject+Motis.m</code> and <code>Motis.h</code>.</p>
+
+<h2>
+<a name="using-motis" class="anchor" href="#using-motis"><span class="octicon octicon-link"></span></a>Using Motis</h2>
+
+<ol>
+<li>Import the file <code>#import &lt;Motis/Motis.h&gt;</code>
+</li>
+<li>Setup your motis objects (see below).</li>
+<li>Get some JSON to be mapped in your model objects.</li>
+<li>Call <code>mts_setValuesForKeysWithDictionary:</code> on your model object, using as argument the JSON dictionary to be mapped. </li>
+</ol><div class="highlight highlight-objective-c"><pre><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">motisTest</span>
+<span class="p">{</span>
+    <span class="c1">// Some JSON object</span>
+    <span class="n">NSDictionary</span> <span class="o">*</span><span class="n">jsonObject</span> <span class="o">=</span> <span class="p">[...];</span>
+
+    <span class="c1">// Creating an instance of your class</span>
+    <span class="n">MyClass</span> <span class="n">instance</span> <span class="o">=</span> <span class="p">[[</span><span class="n">MyClass</span> <span class="n">alloc</span><span class="p">]</span> <span class="n">init</span><span class="p">];</span>
+
+    <span class="c1">// Parsing and setting the values of the JSON object</span>
+    <span class="p">[</span><span class="n">instance</span> <span class="n">mts_setValuesForKeysWithDictionary</span><span class="o">:</span><span class="n">jsonObject</span><span class="p">];</span>
+<span class="p">}</span>
+</pre></div>
+
+<h2>
+<a name="setup-motis-objects" class="anchor" href="#setup-motis-objects"><span class="octicon octicon-link"></span></a>Setup Motis Objects</h2>
+
+<h3>
+<a name="1-define-the-motis-mapping-dictionary" class="anchor" href="#1-define-the-motis-mapping-dictionary"><span class="octicon octicon-link"></span></a>1. Define the motis mapping dictionary</h3>
+
+<p>Your custom object (subclass of <code>NSObject</code>) needs to override the method <code>+mts_mapping</code> and define the mappging from the JSON keys to the Objective-C property names.</p>
+
+<p>For example, if receiving the following JSON:</p>
+
+<div class="highlight highlight-objective-c"><pre><span class="p">{</span>
+  <span class="p">{</span>
+    <span class="s">"user_name"</span> <span class="o">:</span> <span class="s">"john.doe"</span><span class="p">,</span>
+    <span class="s">"user_id"</span> <span class="o">:</span> <span class="mi">42</span><span class="p">,</span>
+    <span class="s">"creation_date"</span> <span class="o">:</span>  <span class="s">"1979-11-07 17:23:51"</span>
+    <span class="s">"webiste"</span> <span class="o">:</span> <span class="s">"http://www.domain.com"</span>
+    <span class="s">"user_stats"</span> <span class="o">:</span> <span class="p">{</span>
+                     <span class="s">"views"</span> <span class="o">:</span> <span class="mi">431</span><span class="p">,</span>
+                     <span class="s">"ranking"</span> <span class="o">:</span> <span class="mi">12</span><span class="p">,</span>
+                   <span class="p">}</span> 
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+
+<p>Then, in our <code>User</code> class entity (<code>NSObject</code> subclass) we would define the <code>+mts_mapping</code> method as follows:</p>
+
+<div class="highlight highlight-objective-c"><pre>
+<span class="c1">// --- User.h --- //</span>
+
+<span class="k">@interface</span> <span class="nc">User</span> : <span class="nc">NSObject</span>
+
+<span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">strong</span><span class="p">)</span> <span class="n">NSString</span> <span class="o">*</span><span class="n">name</span><span class="p">;</span>
+<span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">assign</span><span class="p">)</span> <span class="n">NSIntger</span> <span class="n">userId</span><span class="p">;</span>
+<span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">strong</span><span class="p">)</span> <span class="n">NSDate</span> <span class="o">*</span><span class="n">creationDate</span><span class="p">;</span>
+<span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">strong</span><span class="p">)</span> <span class="n">NSURL</span> <span class="o">*</span><span class="n">website</span><span class="p">;</span>
+<span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">assing</span><span class="p">)</span> <span class="n">NSInteger</span> <span class="n">views</span><span class="p">;</span>
+<span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">assing</span><span class="p">)</span> <span class="n">NSInteger</span> <span class="n">ranking</span><span class="p">;</span>
+
+<span class="k">@end</span>
+
+<span class="c1">// --- User.m --- //</span>
+
+<span class="k">@implementation</span> <span class="nc">User</span>
+
+<span class="k">+</span> <span class="p">(</span><span class="n">NSDictionary</span><span class="o">*</span><span class="p">)</span><span class="nf">mts_mapping</span>
+<span class="p">{</span>
+    <span class="k">return</span> <span class="p">@{</span><span class="s">@"user_name"</span><span class="o">:</span> <span class="n">mts_key</span><span class="p">(</span><span class="n">name</span><span class="p">),</span>
+             <span class="s">@"user_id"</span><span class="o">:</span> <span class="n">mts_key</span><span class="p">(</span><span class="n">userId</span><span class="p">),</span>
+             <span class="s">@"creation_date"</span><span class="o">:</span> <span class="n">mts_key</span><span class="p">(</span><span class="n">creationDate</span><span class="p">),</span>
+             <span class="s">@"website"</span><span class="o">:</span> <span class="n">mts_key</span><span class="p">(</span><span class="n">website</span><span class="p">),</span>
+             <span class="s">@"user_stats.views"</span><span class="o">:</span> <span class="n">mts_key</span><span class="p">(</span><span class="n">views</span><span class="p">),</span>  <span class="c1">// &lt;-- KeyPath access</span>
+             <span class="s">@"user_stats.ranking"</span><span class="o">:</span> <span class="n">mts_key</span><span class="p">(</span><span class="n">ranking</span><span class="p">),</span> <span class="c1">// &lt;-- KeyPath access</span>
+            <span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">@end</span>
+</pre></div>
+
+<p>As shown in the example above, KeyPath access is supported to reference JSON content of dictionaries.</p>
+
+<p>Also, as you might see, we are specifying custom types as <code>NSDate</code> or <code>NSURL</code>. Motis automatically attempt to convert JSON values to the object defined types. Check below for more information on automatic validation.</p>
+
+<h4>
+<a name="11-mapping-filtering" class="anchor" href="#11-mapping-filtering"><span class="octicon octicon-link"></span></a>1.1 Mapping Filtering</h4>
+
+<p>By default, Motis attempt to set via KVC any property name. Therefore, even if you don't define a mapping in the method <code>+mts_mapping:</code> but your JSON dictionary contains keys that match the name of your object properties, motis will assign and validate those values.</p>
+
+<p>This might be problematic if you have no control over your JSON dictionaries. Therefore, Motis can restrict the accepted mapping keys to the ones defined in the motis mapping. You can active this behaviour by overriding the method <code>+mts_shouldSetUndefinedKeys</code> and return NO (default is YES).</p>
+
+<div class="highlight highlight-objective-c"><pre><span class="k">+</span> <span class="p">(</span><span class="kt">BOOL</span><span class="p">)</span><span class="nf">mts_shouldSetUndefinedKeys</span>
+<span class="p">{</span>
+    <span class="c1">// By default this method return YES.</span>
+    <span class="c1">// You can override it and return NO to only accept the keys defined in mts_mapping.</span>
+    <span class="k">return</span> <span class="nb">NO</span><span class="p">;</span> 
+<span class="p">}</span>
+</pre></div>
+
+<h3>
+<a name="2-value-validation" class="anchor" href="#2-value-validation"><span class="octicon octicon-link"></span></a>2. Value Validation</h3>
+
+<h4>
+<a name="21-automatic-validation" class="anchor" href="#21-automatic-validation"><span class="octicon octicon-link"></span></a>2.1 Automatic Validation</h4>
+
+<p><strong>Motis</strong> checks the object type of your values when mapping from a JSON response. The system will try to fit your defined property types (making introspection in your classes). JSON objects contains only strings, numbers, dictionaries and arrays. Automatic validation will try to convert from these types to your property types. If cannot be achieved, the mapping of those property won't be performed and the value won't be set.</p>
+
+<p>For example, if you specify a property type as a <code>NSURL</code> and your JSON is sending a string value, Motis will convert the string into a NSURL automatically. However, if your property type is a "UIImage" and your json is sending a number, Motis will ignore the value and won't set it. Automatic validation done for types as <code>NSURL</code>, <code>NSData</code>, <code>NSDate</code>, <code>NSNumber</code>, and a few more. For more information check the table on the bottom of this file.</p>
+
+<p>Automatic validation will be performed always unless the user is validating manually, thus in this case the user will be responsible of validating correctly the values.</p>
+
+<h5>
+<a name="211-automatic-date-validation" class="anchor" href="#211-automatic-date-validation"><span class="octicon octicon-link"></span></a>2.1.1 Automatic Date Validation</h5>
+
+<p>Whenever you specify a property type as a <code>NSDate</code>, Motis will attempt to convert the received JSON value in to a date.</p>
+
+<ol>
+<li>If the JSON value is a number or an string containing a number, Motis will create the date considering that the number is the number of seconds elapsed since 1979-1-1. </li>
+<li>If the JSON value is a string, Motis will use the <code>NSDateFormatter</code> returned by the method <code>+mts_validationDateFormatter</code>. Motis does not implement any defautl date formatter (therefore, this method return nil by default). It is your responsibility to provide a default date formatter.</li>
+</ol><p>However, if you have multiple formats for different keys, you will have to validate your dates using manual validation (see below).</p>
+
+<h5>
+<a name="212-automatic-array-validation" class="anchor" href="#212-automatic-array-validation"><span class="octicon octicon-link"></span></a>2.1.2 Automatic Array Validation</h5>
+
+<p>In order to support automatic validation for array content (objects inside of an array), you must override the method <code>+mts_arrayClassMapping</code> and return a dictionary containing pairs of <em>array property name</em> and <em>class type</em> for its content.</p>
+
+<p>For example, having the following JSON:</p>
+
+<div class="highlight highlight-objective-c"><pre><span class="p">{</span>
+  <span class="s">"user_name"</span><span class="o">:</span> <span class="s">"john.doe"</span><span class="p">,</span>
+  <span class="s">"user_id"</span> <span class="o">:</span> <span class="mi">42</span><span class="p">,</span>
+  <span class="p">...</span>
+  <span class="s">"user_followers"</span><span class="o">:</span> <span class="p">[</span>
+                      <span class="p">{</span>
+                        <span class="s">"user_name"</span><span class="o">:</span> <span class="s">"william"</span><span class="p">,</span>
+                        <span class="s">"user_id"</span><span class="o">:</span> <span class="mi">55</span><span class="p">,</span>
+                        <span class="p">...</span>
+                      <span class="p">},</span>
+                      <span class="p">{</span>
+                        <span class="s">"user_name"</span><span class="o">:</span> <span class="s">"jenny"</span><span class="p">,</span>
+                        <span class="s">"user_id"</span><span class="o">:</span> <span class="mi">14</span><span class="p">,</span>
+                        <span class="p">...</span>
+                      <span class="p">},</span>
+                      <span class="p">...</span>
+                    <span class="p">]</span>
+<span class="p">}</span>
+
+</pre></div>
+
+<p>Therefore, our <code>User</code> class has an <code>NSArray</code> property called <code>followers</code> that contain a list of objects of type <code>User</code>, we would override the method and implement it as it follows:</p>
+
+<div class="highlight highlight-objective-c"><pre><span class="k">@implementation</span> <span class="nc">User</span>
+
+<span class="k">+</span> <span class="p">(</span><span class="n">NSDictionary</span><span class="o">*</span><span class="p">)</span><span class="nf">mts_mapping</span>
+<span class="p">{</span>
+    <span class="k">return</span> <span class="p">@{</span><span class="s">@"user_name"</span><span class="o">:</span> <span class="n">mts_key</span><span class="p">(</span><span class="n">name</span><span class="p">),</span>
+             <span class="s">@"user_id"</span><span class="o">:</span> <span class="n">mts_key</span><span class="p">(</span><span class="n">userId</span><span class="p">),</span>
+             <span class="p">...</span>
+             <span class="s">@"user_followers"</span><span class="o">:</span> <span class="n">mts_key</span><span class="p">(</span><span class="n">followers</span><span class="p">),</span>
+            <span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">+</span> <span class="p">(</span><span class="n">NSDictionary</span><span class="p">)</span><span class="nf">mts_arrayClassMapping</span>
+<span class="p">{</span>
+    <span class="k">return</span> <span class="p">@{</span><span class="n">mts_key</span><span class="p">(</span><span class="n">followers</span><span class="p">)</span><span class="o">:</span> <span class="n">User</span><span class="p">.</span><span class="n">class</span><span class="p">};</span> 
+<span class="p">}</span>
+
+<span class="k">@end</span>
+</pre></div>
+
+<h5>
+<a name="213-automatic-object-creation" class="anchor" href="#213-automatic-object-creation"><span class="octicon octicon-link"></span></a>2.1.3 Automatic Object Creation</h5>
+
+<p>When validating autmatically, Motis might attempt to create new instances of your custom objects. For example, if a JSON value is a dictionary and the key-associated property type is a custom object, Motis will try to create recursively a new object of the corresponding type and set it via <code>+mts_setValuesForKeysWithDictionary:</code>.</p>
+
+<p>This automatic "object creation", that is also done for contents of an array, can be customized and tracked by using the following two methods: one "will"-styled method to notify the user that an object will be created and one "did"-styled method to notify the user that an object has been created.</p>
+
+<div class="highlight highlight-objective-c"><pre><span class="k">@implementation</span> <span class="nc">User</span>
+
+<span class="k">-</span> <span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="nf">mts_willCreateObjectOfClass:</span><span class="p">(</span><span class="kt">Class</span><span class="p">)</span><span class="nv">typeClass</span> <span class="nf">withDictionary:</span><span class="p">(</span><span class="n">NSDictionary</span><span class="o">*</span><span class="p">)</span><span class="nv">dictionary</span> <span class="nf">forKey:</span><span class="p">(</span><span class="n">NSString</span><span class="o">*</span><span class="p">)</span><span class="nv">key</span> <span class="nf">abort:</span><span class="p">(</span><span class="kt">BOOL</span><span class="o">*</span><span class="p">)</span><span class="nv">abort</span>
+<span class="p">{</span>
+    <span class="c1">// Return "nil" if you want Motis to handle the object creation and mapping.</span>
+    <span class="c1">// Otherwise, create/reuse an object of the given "typeClass" and map the values from the dictionary and return it.</span>
+    <span class="c1">// If you set "abort" to yes, the value for the given "key" won't be set.</span>
+
+    <span class="c1">// This method is also used for array contents. In this case, "key" will be the name of the array.</span>
+<span class="p">}</span> 
+
+<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">mts_didCreateObject:</span><span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="nv">object</span> <span class="nf">forKey:</span><span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">key</span>
+<span class="p">{</span>
+    <span class="c1">// Motis notifies you the new created object.</span>
+    <span class="c1">// This method is also used for array contents. In this case, "key" will be the name of the array.</span>
+<span class="p">}</span>
+
+<span class="k">@end</span>
+</pre></div>
+
+<h4>
+<a name="22-manual-validation" class="anchor" href="#22-manual-validation"><span class="octicon octicon-link"></span></a>2.2 Manual Validation</h4>
+
+<p>If you prefer to do manual validation, you can override the KVC validation method for each key. Remember that by doing manual validation, automatic validation won't be performed and you will be fully responsible of the validation for those values you are valiating manually.</p>
+
+<p>For example:</p>
+
+<div class="highlight highlight-objective-c"><pre><span class="k">-</span> <span class="p">(</span><span class="kt">BOOL</span><span class="p">)</span><span class="nf">validate</span><span class="o">&lt;</span><span class="n">Key</span><span class="o">&gt;:</span><span class="p">(</span><span class="kt">id</span> <span class="o">*</span><span class="p">)</span><span class="n">ioValue</span> <span class="n">error</span><span class="o">:</span><span class="p">(</span><span class="n">NSError</span> <span class="o">*</span> <span class="n">__autoreleasing</span> <span class="o">*</span><span class="p">)</span><span class="n">outError</span>
+<span class="p">{</span>
+    <span class="c1">// Check *ioValue and assign new value to ioValue if needed.</span>
+    <span class="c1">// Return YES if *ioValue can be assigned to the attribute, NO otherwise</span>
+    <span class="k">return</span> <span class="nb">YES</span><span class="p">;</span> 
+<span class="p">}</span>
+</pre></div>
+
+<h5>
+<a name="221-manual-array-validation" class="anchor" href="#221-manual-array-validation"><span class="octicon octicon-link"></span></a>2.2.1 Manual Array Validation</h5>
+
+<p>You can also perform manual validation on array content. When mapping an array, motis will attempt to validate array content for the type define in the method <code>+mts_arrayClassMapping</code>. However, you can perform the validation manually if you prefer. By validating manually, automatic validation won't be performed.</p>
+
+<p>To manually validate array content you must override the following method:</p>
+
+<div class="highlight highlight-objective-c"><pre><span class="k">-</span> <span class="p">(</span><span class="kt">BOOL</span><span class="p">)</span><span class="nf">mts_validateArrayObject:</span><span class="p">(</span><span class="n">inout</span> <span class="n">__autoreleasing</span> <span class="kt">id</span> <span class="o">*</span><span class="p">)</span><span class="nv">ioValue</span> <span class="nf">forArrayKey:</span><span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">arrayKey</span> <span class="nf">error:</span><span class="p">(</span><span class="n">out</span> <span class="n">NSError</span> <span class="o">*</span><span class="n">__autoreleasing</span> <span class="o">*</span><span class="p">)</span><span class="nv">outError</span><span class="p">;</span>
+<span class="p">{</span>
+    <span class="c1">// Check *ioValue and assign new value to ioValue if needed.</span>
+    <span class="c1">// Return YES if *ioValue can be included into the array, NO otherwise</span>
+
+    <span class="k">return</span> <span class="nb">YES</span><span class="p">;</span> 
+<span class="p">}</span>
+</pre></div>
+
+<hr><h2>
+<a name="appendix" class="anchor" href="#appendix"><span class="octicon octicon-link"></span></a>Appendix</h2>
+
+<h3>
+<a name="automatic-validation" class="anchor" href="#automatic-validation"><span class="octicon octicon-link"></span></a>Automatic Validation</h3>
+
+<p>The following table indicates the supported validations in the current Motis version:</p>
+
+<pre><code>+------------+---------------------+------------------------------------------------------------------------------------+
+| JSON Type  | Property Type       | Comments                                                                           |
++------------+---------------------+------------------------------------------------------------------------------------+
+| string     | NSString            | No validation is requried                                                          |
+| number     | NSNumber            | No validation is requried                                                          |
+| number     | basic type (1)      | No validation is requried                                                          |
+| array      | NSArray             | No validation is requried                                                          |
+| dictionary | NSDictionary        | No validation is requried                                                          |
+| -          | -                   | -                                                                                  |
+| string     | bool                | string parsed with NSNumberFormatter (allowFloats enabled)                         |
+| string     | unsigned long long  | string parsed with NSNumberFormatter (allowFloats disabled)                        |
+| string     | basic types (2)     | value generated automatically by KVC (NSString's '-intValue', '-longValue', etc)   |
+| string     | NSNumber            | string parsed with NSNumberFormatter (allowFloats enabled)                         |
+| string     | NSURL               | created using [NSURL URLWithString:]                                               |
+| string     | NSData              | attempt to decode base64 encoded string                                            |
+| string     | NSDate              | default date format "2011-08-23 10:52:00". Check '+mts_validationDateFormatter.'   |
+| -          | -                   | -                                                                                  |
+| number     | NSDate              | timestamp since 1970                                                               |
+| number     | NSString            | string by calling NSNumber's '-stringValue'                                        |
+| -          | -                   | -                                                                                  |
+| array      | NSMutableArray      | creating new instance from original array                                          |
+| array      | NSSet               | creating new instance from original array                                          |
+| array      | NSMutableSet        | creating new instance from original array                                          |
+| array      | NSOrderedSet        | creating new instance from original array                                          |
+| array      | NSMutableOrderedSet | creating new instance from original array                                          |
+| -          | -                   | -                                                                                  |
+| dictionary | NSMutableDictionary | creating new instance from original dictionary                                     |
+| dictionary | custom NSObject     | Motis recursive call. Check '-mts_willCreateObject..' and '-mtd_didCreateObject:'  |
+| -          | -                   | -                                                                                  |
+| null       | nil                 | if property is type object                                                         |
+| null       | undefined           | if property is basic type (3). Check KVC method '-setNilValueForKey:'              |
++------------+---------------------+------------------------------------------------------------------------------------+
+
+basic type (1) : int, unsigned int, long, unsigned long, long long, unsigned long long, float, double
+basic type (2) : int, unsigned int, long, unsigned long, float, double
+basic type (3) : any basic type
+</code></pre>
+
+<hr><p>*Motis was called before KVCParsing.</p>
+        </section>
+
+        <aside id="sidebar">
+          <a href="https://github.com/mobilejazz/Motis/zipball/master" class="button">
+            <small>Download</small>
+            .zip file
+          </a>
+          <a href="https://github.com/mobilejazz/Motis/tarball/master" class="button">
+            <small>Download</small>
+            .tar.gz file
+          </a>
+
+          <p class="repo-owner"><a href="https://github.com/mobilejazz/Motis"></a> is maintained by <a href="https://github.com/mobilejazz">mobilejazz</a>.</p>
+
+          <p>This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the Architect theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.</p>
+        </aside>
+      </div>
+    </div>
+
+  
+  </body>
+</html>
