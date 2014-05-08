@@ -109,7 +109,7 @@
     dispatch_once(&onceToken, ^{
         // Float types are not supported in JSON, therefore we are only using integers, decimals and exponentials.
         
-        array = @[@0, @1,
+        array = @[@0, @1, @(-1),
                   @YES, @NO,
                   @(NSIntegerMax), @(NSIntegerMin), @(NSUIntegerMax),
                   @0.1, @0.6, @0.999,
@@ -248,11 +248,14 @@
 {
     for (NSNumber *originalNumber in [self mts_arrayWithNumbers])
     {
+        if (originalNumber.integerValue == NSIntegerMin) // <-- Bug on NSIntegerMin with boolValue: [@(NSIntegerMin) boolValue] is 0, when is supposed to be 1.
+            continue;
+        
         NSString *string = originalNumber.stringValue;
         
         _object.boolField = NO;
         [_object mts_setValue:string forKey:@"bool"];
-        XCTAssertEqual(_object.boolField, originalNumber.boolValue, @"Failed to map string number value");
+        XCTAssertEqual(_object.boolField, originalNumber.boolValue, @"Failed to map string number value %@", originalNumber.stringValue);
     }
 }
 

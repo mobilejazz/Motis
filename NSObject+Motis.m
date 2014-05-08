@@ -30,6 +30,47 @@
 // ------------------------------------------------------------------------------------------------------------------------------------------------------------------ //
 // ------------------------------------------------------------------------------------------------------------------------------------------------------------------ //
 
+static NSString* stringFromClass(Class theClass)
+{
+    static NSMapTable *map = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        map = [NSMapTable mapTableWithKeyOptions:NSPointerFunctionsWeakMemory valueOptions:NSPointerFunctionsStrongMemory];
+    });
+    
+    NSString *string = [map objectForKey:theClass];
+    
+    if (!string)
+    {
+        string = NSStringFromClass(theClass);
+        [map setObject:string forKey:theClass];
+    }
+    
+    return string;
+}
+
+static Class classFromString(NSString *string)
+{
+    static NSMapTable *map = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        map = [NSMapTable mapTableWithKeyOptions:NSPointerFunctionsStrongMemory valueOptions:NSPointerFunctionsWeakMemory];
+    });
+    
+    Class theClass = [map objectForKey:string];
+    
+    if (!theClass)
+    {
+        theClass = NSClassFromString(string);
+        [map setObject:theClass forKey:string];
+    }
+    
+    return theClass;
+}
+
+// ------------------------------------------------------------------------------------------------------------------------------------------------------------------ //
+// ------------------------------------------------------------------------------------------------------------------------------------------------------------------ //
+// ------------------------------------------------------------------------------------------------------------------------------------------------------------------ //
 
 #pragma mark - Motis_Private
 
@@ -420,6 +461,16 @@
 
 @implementation NSObject (Motis_Private)
 
+__attribute__((constructor))
+static void mts_motisInitialization()
+{
+    [NSObject mts_cachedMapping];
+    [NSObject mts_cachedArrayClassMapping];
+    [NSObject mts_keyPaths];
+    [NSObject mts_decimalFormatterAllowFloats];
+    [NSObject mts_decimalFormatterNoFloats];
+}
+
 + (NSDictionary*)mts_cachedMapping
 {
     static NSMutableDictionary *mappings = nil;
@@ -429,7 +480,7 @@
         mappings = [NSMutableDictionary dictionary];
     });
     
-    NSString *className = NSStringFromClass(self);
+    NSString *className = stringFromClass(self);
     NSDictionary *mapping = mappings[className];
     
     if (!mapping)
@@ -461,7 +512,7 @@
         arrayClassMappings = [NSMutableDictionary dictionary];
     });
     
-    NSString *className = NSStringFromClass(self);
+    NSString *className = stringFromClass(self);
     NSDictionary *arrayClassMapping = arrayClassMappings[className];
     
     if (!arrayClassMapping)
@@ -493,7 +544,7 @@
         classKeyPaths = [NSMutableDictionary dictionary];
     });
     
-    NSString *className = NSStringFromClass(self);
+    NSString *className = stringFromClass(self);
     NSDictionary *keyPaths = classKeyPaths[className];
     
     if (!keyPaths)
@@ -538,11 +589,11 @@
         typeAttributes = [NSMutableDictionary dictionary];
     });
     
-    NSMutableDictionary *classTypeAttributes = typeAttributes[NSStringFromClass(self.class)];
+    NSMutableDictionary *classTypeAttributes = typeAttributes[stringFromClass(self.class)];
     if (!classTypeAttributes)
     {
         classTypeAttributes = [NSMutableDictionary dictionary];
-        typeAttributes[NSStringFromClass(self.class)] = classTypeAttributes;
+        typeAttributes[stringFromClass(self.class)] = classTypeAttributes;
     }
     
     NSString *typeAttribute = classTypeAttributes[key];
@@ -567,11 +618,41 @@
 
 - (BOOL)mts_isClassTypeTypeAttribute:(NSString*)typeAttribute
 {
-    return [typeAttribute hasPrefix:@"T@"] && ([typeAttribute length] > 1);
+    static NSMutableDictionary *dictionary = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        dictionary = [NSMutableDictionary dictionary];
+    });
+    
+    NSNumber *isClassType = dictionary[typeAttribute];
+    if (!isClassType)
+    {
+        isClassType = @([typeAttribute hasPrefix:@"T@"] && ([typeAttribute length] > 1));
+        dictionary[typeAttribute] = isClassType;
+    }
+    
+    return isClassType.boolValue;
 }
 
 - (void)mts_getClassName:(out NSString *__autoreleasing*)className protocols:(out NSArray *__autoreleasing*)protocols fromTypeAttribute:(NSString*)typeAttribute
 {
+    static NSMutableDictionary *dictionary = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        dictionary = [NSMutableDictionary dictionary];
+    });
+    
+    NSArray *array = dictionary[typeAttribute];
+    if (array)
+    {
+        if (array.count > 0)
+        {
+            *className = array[0];
+            *protocols = array[1];
+        }
+        return;
+    }
+    
     if ([self mts_isClassTypeTypeAttribute:typeAttribute])
     {
         if (typeAttribute.length < 3)
@@ -580,13 +661,16 @@
             return;
         }
         
-        typeAttribute = [typeAttribute substringWithRange:NSMakeRange(3, typeAttribute.length-4)];
+        NSString *classAttribute = [typeAttribute substringWithRange:NSMakeRange(3, typeAttribute.length-4)];
         
         NSString *protocolNames = nil;
         
-        NSScanner *scanner = [NSScanner scannerWithString:typeAttribute];
-        [scanner scanUpToString:@"<" intoString:className];
-        [scanner scanUpToString:@">" intoString:&protocolNames];
+        if (classAttribute)
+        {
+            NSScanner *scanner = [NSScanner scannerWithString:classAttribute];
+            [scanner scanUpToString:@"<" intoString:className];
+            [scanner scanUpToString:@">" intoString:&protocolNames];
+        }
         
         if (*className == nil)
             *className = @"";
@@ -597,6 +681,15 @@
             protocolNames = [protocolNames stringByReplacingOccurrencesOfString:@" " withString:@""];
             *protocols = [protocolNames componentsSeparatedByString:@","];
         }
+        else
+            *protocols = @[];
+        
+        NSArray *array = @[*className, *protocols];
+        dictionary[typeAttribute] = array;
+    }
+    else
+    {
+        dictionary[typeAttribute] = @[];
     }
 }
 
@@ -637,11 +730,11 @@
         }
         else
         {
-            Class typeClass = NSClassFromString(className);
+            Class typeClass = classFromString(className);
             
             if (typeClass)
             {
-                MJLog(@"%@ --> %@", key, NSStringFromClass(typeClass));
+                MJLog(@"%@ --> %@", key, stringFromClass(typeClass));
                 return [self mts_validateAutomaticallyValue:ioValue toClass:typeClass forKey:key];
             }
         }
@@ -670,13 +763,7 @@
             {
                 if ([*ioValue isKindOfClass:NSString.class])
                 {
-                    NSNumber *number = [[self.class mts_decimalFormatterAllowFloats] numberFromString:*ioValue];
-                    
-                    if (number)
-                        *ioValue = @(number.boolValue);
-                    else
-                        *ioValue = @([*ioValue boolValue]);
-                    
+                    *ioValue = @([*ioValue doubleValue] != 0.0);
                     return *ioValue != nil;
                 }
             }
@@ -688,64 +775,6 @@
                     return *ioValue != nil;
                 }
             }
-            
-            // Other conversions from NSString to basic types are already handled by the system.
-            
-            //            else if (strcmp(rawPropertyType, @encode(char)) == 0)
-            //            {
-            //                if ([*ioValue isKindOfClass:NSString.class])
-            //                {
-            //                    NSNumber *number = [[self.class mts_decimalFormatter] numberFromString:*ioValue];
-            //                    *ioValue = @(number.charValue);
-            //                    return *ioValue != nil;
-            //                }
-            //            }
-            //            else if (strcmp(rawPropertyType, @encode(unsigned char)) == 0)
-            //            {
-            //                if ([*ioValue isKindOfClass:NSString.class])
-            //                {
-            //                    NSNumber *number = [[self.class mts_decimalFormatter] numberFromString:*ioValue];
-            //                    *ioValue = @(number.unsignedCharValue);
-            //                    return *ioValue != nil;
-            //                }
-            //            }
-            //            else if (strcmp(rawPropertyType, @encode(short)) == 0)
-            //            {
-            //                if ([*ioValue isKindOfClass:NSString.class])
-            //                {
-            //                    NSNumber *number = [[self.class mts_decimalFormatter] numberFromString:*ioValue];
-            //                    *ioValue = @(number.shortValue);
-            //                    return *ioValue != nil;
-            //                }
-            //            }
-            //            else if (strcmp(rawPropertyType, @encode(unsigned short)) == 0)
-            //            {
-            //                if ([*ioValue isKindOfClass:NSString.class])
-            //                {
-            //                    NSNumber *number = [[self.class mts_decimalFormatter] numberFromString:*ioValue];
-            //                    *ioValue = @(number.unsignedShortValue);
-            //                    return *ioValue != nil;
-            //                }
-            //            }
-            //            else if (strcmp(rawPropertyType, @encode(long)) == 0)
-            //            {
-            //                if ([*ioValue isKindOfClass:NSString.class])
-            //                {
-            //                    NSNumber *number = [[self.class mts_decimalFormatter] numberFromString:*ioValue];
-            //                    *ioValue = @(number.longValue);
-            //                    return *ioValue != nil;
-            //                }
-            //            }
-            //            else if (strcmp(rawPropertyType, @encode(unsigned long)) == 0)
-            //            {
-            //                if ([*ioValue isKindOfClass:NSString.class])
-            //                {
-            //                    NSNumber *number = [[self.class mts_decimalFormatter] numberFromString:*ioValue];
-            //                    *ioValue = @(number.unsignedLongValue);
-            //                    return *ioValue != nil;
-            //                }
-            //            }
-            
             return YES;
         }
         else // If not a number and not a string, types cannot match.
@@ -778,9 +807,12 @@
         }
         else if ([typeClass isSubclassOfClass:NSNumber.class])
         {
-            NSNumberFormatter *formatter = [NSObject mts_decimalFormatterAllowFloats];
-            *ioValue = [formatter numberFromString:*ioValue];
+            *ioValue = @([*ioValue doubleValue]);
             return *ioValue != nil;
+            
+            // Using NSNumberFormatter is slower!
+//            NSNumberFormatter *formatter = [NSObject mts_decimalFormatterAllowFloats];
+//            *ioValue = [formatter numberFromString:*ioValue];
         }
         if ([typeClass isSubclassOfClass:NSDate.class])
         {
@@ -792,14 +824,38 @@
             }
             else
             {
-                NSNumberFormatter *formatter = [self.class mts_decimalFormatterAllowFloats];
-                NSNumber *number = [formatter numberFromString:*ioValue];
-                if (number)
+                static NSCharacterSet *characterSet = nil;
+                static dispatch_once_t onceToken;
+                dispatch_once(&onceToken, ^{
+                    characterSet = [NSCharacterSet characterSetWithCharactersInString:@"1234567890.,"];
+                });
+                
+                NSString *trimmedString = [*ioValue stringByTrimmingCharactersInSet:characterSet];
+                if (trimmedString.length == 0)
                 {
-                    const NSTimeInterval timestamp = [number doubleValue];
-                    *ioValue = [NSDate dateWithTimeIntervalSince1970:timestamp];
+                    NSTimeInterval timeInterval = [*ioValue doubleValue];
+                    *ioValue = [NSDate dateWithTimeIntervalSince1970:timeInterval];
                     return *ioValue != nil;
                 }
+ 
+                // Another approach using REGEX to validate the number (slower):
+                
+//                static NSRegularExpression *regex = nil;
+//                static dispatch_once_t onceToken;
+//                dispatch_once(&onceToken, ^{
+//                    regex = [[NSRegularExpression alloc] initWithPattern:@"\\d*[.]?\\d+"
+//                                                                 options:NSRegularExpressionCaseInsensitive
+//                                                                   error:nil];
+//                });
+//                
+//                NSTextCheckingResult *match = [regex firstMatchInString:*ioValue options:0 range:NSMakeRange(0, [*ioValue length])];
+//                if (match && match.range.location == 0 && match.range.length == [*ioValue length])
+//                {
+//                    NSTimeInterval timeInterval = [*ioValue doubleValue];
+//                    *ioValue = [NSDate dateWithTimeIntervalSince1970:timeInterval];
+//                    return *ioValue != nil;
+//                }
+ 
             }
         }
     }
@@ -902,3 +958,4 @@
 }
 
 @end
+

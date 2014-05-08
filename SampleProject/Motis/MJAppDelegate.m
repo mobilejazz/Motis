@@ -16,16 +16,24 @@
 
 #import "MJAppDelegate.h"
 
+#import "Motis.h"
+
+#if PERFORMANCE_TEST
+#import "MJPerformanceTest.h"
+#else
 #import "MJVideo.h"
 #import "MJUser.h"
-
-#import "Motis.h"
+#endif
 
 @implementation MJAppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    //[self performTest]; // <--- UNCOMMENT FOR TESTING
+#if PERFORMANCE_TEST
+    [self testMotisPerformance];
+#else
+    [self testMotis]; // <--- UNCOMMENT FOR TESTING
+#endif
     
     UIWindow *window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     window.rootViewController = [[UIViewController alloc] init];
@@ -39,7 +47,17 @@
 
 #pragma mark Private Methods
 
-- (void)performTest
+#if PERFORMANCE_TEST
+
+- (void)testMotisPerformance
+{
+    MJPerformanceTest *test = [[MJPerformanceTest alloc] init];
+    [test start];
+}
+
+#else
+
+- (void)testMotis
 {
     // Defining a JSONDictionary
     NSDictionary *JSONDict = @{@"video_id": @"42",
@@ -98,5 +116,6 @@
     NSLog(@"AFTER parsing: %@", video.mts_extendedObjectDescription);
     NSLog(@"video.privateVideoKey: %@",[video.privateVideoKey description]);
 }
+#endif
 
 @end

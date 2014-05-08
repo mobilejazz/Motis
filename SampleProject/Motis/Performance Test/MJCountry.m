@@ -27,7 +27,7 @@
 
 - (NSString*)description
 {
-    return [NSString stringWithFormat:@"[%@ - identifier:%d - name:%@ - companies:%@]", [super description], _identifier, _name, _companies.description];
+    return [NSString stringWithFormat:@"[%@ - identifier:%ld - name:%@ - companies:%@]", [super description], (long)_identifier, _name, _companies.description];
 }
 
 @end
