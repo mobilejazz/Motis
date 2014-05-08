@@ -12,7 +12,7 @@ Check our blog post entry [Using KVC to parse JSON](http://blog.mobilejazz.cat/i
 
 ## Get Motis
 
-If you use Cocoa Pods, you can get Motis by adding to your podfile `pod 'Motis', '~>0.4.0'`. Otherwise, you will need to download the files `NSObject+Motis.h`, `NSObject+Motis.m` and `Motis.h`.
+If you use Cocoa Pods, you can get Motis by adding to your podfile `pod 'Motis', '~>0.4.2'`. Otherwise, you will need to download the files `NSObject+Motis.h`, `NSObject+Motis.m` and `Motis.h`.
 
 ##Using Motis
 
@@ -172,7 +172,7 @@ Therefore, our `User` class has an `NSArray` property called `followers` that co
             };
 }
 
-+ (NSDictionary)mts_arrayClassMapping
++ (NSDictionary*)mts_arrayClassMapping
 {
     return @{mts_key(followers): User.class}; 
 }
@@ -181,7 +181,7 @@ Therefore, our `User` class has an `NSArray` property called `followers` that co
 ```
 #####2.1.3 Automatic Object Creation
 
-When validating autmatically, Motis might attempt to create new instances of your custom objects. For example, if a JSON value is a dictionary and the key-associated property type is a custom object, Motis will try to create recursively a new object of the corresponding type and set it via `+mts_setValuesForKeysWithDictionary:`.
+When validating autmatically, Motis might attempt to create new instances of your custom objects. For example, if a JSON value is a dictionary and the key-associated property type is a custom object, Motis will try to create recursively a new object of the corresponding type and set it via `-mts_setValuesForKeysWithDictionary:`.
 
 This automatic "object creation", that is also done for contents of an array, can be customized and tracked by using the following two methods: one "will"-styled method to notify the user that an object will be created and one "did"-styled method to notify the user that an object has been created.
 
