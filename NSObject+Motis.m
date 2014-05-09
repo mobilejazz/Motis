@@ -813,7 +813,13 @@ static void mts_motisInitialization()
         }
         else if ([typeClass isSubclassOfClass:NSNumber.class])
         {
-            *ioValue = @([*ioValue doubleValue]);
+            if ([*ioValue compare:@"true" options:NSCaseInsensitiveSearch] == NSOrderedSame)
+                *ioValue = @YES;
+            else if ([*ioValue compare:@"false" options:NSCaseInsensitiveSearch] == NSOrderedSame)
+                *ioValue = @NO;
+            else
+                *ioValue = @([*ioValue doubleValue]);
+            
             return *ioValue != nil;
             
             // Using NSNumberFormatter is slower!
