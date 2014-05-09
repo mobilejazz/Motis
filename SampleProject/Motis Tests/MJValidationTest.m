@@ -121,6 +121,22 @@
 
 #pragma mark to basic types
 
+- (void)testYESBoolToBool
+{
+    NSNumber *number = @YES;
+    _object.boolField = NO;
+    [_object mts_setValue:number forKey:@"bool"];
+    XCTAssertEqual(_object.boolField, number.boolValue, @"Failed to map number value");
+}
+
+- (void)testNOBoolToBool
+{
+    NSNumber *number = @NO;
+    _object.boolField = YES;
+    [_object mts_setValue:number forKey:@"bool"];
+    XCTAssertEqual(_object.boolField, number.boolValue, @"Failed to map number value");
+}
+
 - (void)testNumberToBool
 {    
     for (NSNumber *number in [self mts_arrayWithNumbers])
@@ -257,6 +273,28 @@
         [_object mts_setValue:string forKey:@"bool"];
         XCTAssertEqual(_object.boolField, originalNumber.boolValue, @"Failed to map string number value %@", originalNumber.stringValue);
     }
+}
+
+- (void)testFalseStringToBool
+{
+    _object.boolField = YES;
+    [_object mts_setValue:@"false" forKey:@"bool"];
+    XCTAssertEqual(_object.boolField, NO, @"Failed to map number value");
+    
+    _object.boolField = YES;
+    [_object mts_setValue:@"FALSE" forKey:@"bool"];
+    XCTAssertEqual(_object.boolField, NO, @"Failed to map number value");
+}
+
+- (void)testTrueStringToBool
+{
+    _object.boolField = NO;
+    [_object mts_setValue:@"true" forKey:@"bool"];
+    XCTAssertEqual(_object.boolField, YES, @"Failed to map number value");
+    
+    _object.boolField = NO;
+    [_object mts_setValue:@"TRUE" forKey:@"bool"];
+    XCTAssertEqual(_object.boolField, YES, @"Failed to map number value");
 }
 
 - (void)testStringNumbersToInteger

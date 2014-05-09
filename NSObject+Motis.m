@@ -763,7 +763,13 @@ static void mts_motisInitialization()
             {
                 if ([*ioValue isKindOfClass:NSString.class])
                 {
-                    *ioValue = @([*ioValue doubleValue] != 0.0);
+                    if ([*ioValue compare:@"true" options:NSCaseInsensitiveSearch] == NSOrderedSame)
+                        *ioValue = @YES;
+                    else if ([*ioValue compare:@"false" options:NSCaseInsensitiveSearch] == NSOrderedSame)
+                        *ioValue = @NO;
+                    else
+                        *ioValue = @([*ioValue doubleValue] != 0.0);
+                    
                     return *ioValue != nil;
                 }
             }
