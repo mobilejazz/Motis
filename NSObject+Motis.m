@@ -264,7 +264,7 @@ static Class classFromString(NSString *string)
     id originalValue = value;
     
     NSError *error = nil;
-    BOOL validated = [self validateValue:&value forKey:mappedKey error:&error];
+    BOOL validated = [self mts_validateValue:&value forKey:mappedKey error:&error];
     
     // Automatic validation only if the value has not been manually validated
     if (originalValue == value && validated)
@@ -423,6 +423,12 @@ static Class classFromString(NSString *string)
 {
     // Subclasses may override and return a custom formatter.
     return nil;
+}
+
+- (BOOL)mts_validateValue:(inout __autoreleasing id *)ioValue forKey:(NSString *)inKey error:(out NSError *__autoreleasing *)outError
+{
+    // Subclasses might override.
+    return [self validateValue:ioValue forKey:inKey error:outError];
 }
 
 - (BOOL)mts_validateArrayObject:(inout __autoreleasing id *)ioValue forArrayKey:(NSString *)arrayKey error:(out NSError *__autoreleasing *)outError

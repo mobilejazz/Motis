@@ -230,7 +230,16 @@
  ** ---------------------------------------------- **/
 
 /**
- * Subclasses may override to parse the objects of array values. The default implementation accepts (return YES) the default value.
+ * Subclasses may override to validate values. The default implementation calls KVC validateValue.
+ * @param ioValue The value to be validated. You can replace the value by assigning a new object to the pointer.
+ * @param inKey The key of the value.
+ * @param error The validation error.
+ * @return YES if value is accepted, otherwise NO.
+ **/
+- (BOOL)mts_validateValue:(inout __autoreleasing id *)ioValue forKey:(NSString *)inKey error:(out NSError *__autoreleasing *)outError;
+
+/**
+ * Subclasses may override to validate array values. The default implementation accepts (return YES) the default value.
  * @param ioValue The value to be validated. You can replace the value by assigning a new object to the pointer.
  * @param arrayKey The name of the key in which the containing array will be assigned.
  * @return YES if value is accepted, NO to avoid adding this value inside the array.
