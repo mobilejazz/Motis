@@ -270,7 +270,9 @@ static Class classFromString(NSString *string)
     if (originalValue == value && validated)
         validated = [self mts_validateAutomaticallyValue:&value forKey:mappedKey];
     
-    if (validated)
+    // The mts_validateAutomaticallyValue returns YES for nil, but while at some places it might be valid, here it's causing a crash
+    // You can't set a value to nil is KVC!
+    if (validated && value != nil)
     {
         [self setValue:value forKey:mappedKey];
     }
