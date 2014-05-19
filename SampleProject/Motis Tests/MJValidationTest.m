@@ -339,6 +339,28 @@
     }
 }
 
+- (void)testFalseStringToBoolNumber
+{
+    _object.boolField = YES;
+    [_object mts_setValue:@"false" forKey:@"number"];
+    XCTAssertEqualObjects(_object.numberField, @NO, @"Failed to map number value");
+    
+    _object.boolField = YES;
+    [_object mts_setValue:@"FALSE" forKey:@"number"];
+    XCTAssertEqualObjects(_object.numberField, @NO, @"Failed to map number value");
+}
+
+- (void)testTrueStringToBoolNumber
+{
+    _object.boolField = NO;
+    [_object mts_setValue:@"true" forKey:@"number"];
+    XCTAssertEqualObjects(_object.numberField, @YES, @"Failed to map number value");
+    
+    _object.boolField = NO;
+    [_object mts_setValue:@"TRUE" forKey:@"number"];
+    XCTAssertEqualObjects(_object.numberField, @YES, @"Failed to map number value");
+}
+
 #pragma mark to url
 
 - (void)testStringToUrl

@@ -102,10 +102,10 @@
  | array      | NSArray             | No validation is requried                                                          |
  | dictionary | NSDictionary        | No validation is requried                                                          |
  | -          | -                   | -                                                                                  |
- | string     | bool                | string parsed with NSNumberFormatter (allowFloats enabled)                         |
+ | string     | bool                | string parsed with method -boolValue and by comparing with "true" and "false"      |
  | string     | unsigned long long  | string parsed with NSNumberFormatter (allowFloats disabled)                        |
  | string     | basic types (2)     | value generated automatically by KVC (NSString's '-intValue', '-longValue', etc)   |
- | string     | NSNumber            | string parsed with NSNumberFormatter (allowFloats enabled)                         |
+ | string     | NSNumber            | string parsed with method -doubleValue                                             |
  | string     | NSURL               | created using [NSURL URLWithString:]                                               |
  | string     | NSData              | attempt to decode base64 encoded string                                            |
  | string     | NSDate              | default date format "2011-08-23 10:52:00". Check '+mts_validationDateFormatter.'   |
@@ -123,12 +123,12 @@
  | dictionary | custom NSObject     | Motis recursive call. Check '-mts_willCreateObject..' and '-mtd_didCreateObject:'  |
  | -          | -                   | -                                                                                  |
  | null       | nil                 | if property is type object                                                         |
- | null       | undefined           | if property is basic type (3). Check KVC method '-setNilValueForKey:'              |
+ | null       | <UNDEFINED>         | if property is basic type (3). Check KVC method '-setNilValueForKey:'              |
  +------------+---------------------+------------------------------------------------------------------------------------+
  *
- * basic type (*1) : int, unsigned int, long, unsigned long, long long, unsigned long long, float, double)
- * basic type (*2) : int, unsigned int, long, unsigned long, float, double)
- * basic type (*3) : any basic type.
+ * basic type (1) : int, unsigned int, long, unsigned long, long long, unsigned long long, float, double)
+ * basic type (2) : int, unsigned int, long, unsigned long, float, double)
+ * basic type (3) : any basic type (non-object type).
  *
  */
 
@@ -230,11 +230,12 @@
  ** ---------------------------------------------- **/
 
 /**
- * Subclasses may override to validate values. The default implementation calls KVC validateValue.
+ * Method called by `-mts_setValue:forKey:` to validate manually each value. The default implementation fires KVC validation.
  * @param ioValue The value to be validated. You can replace the value by assigning a new object to the pointer.
  * @param inKey The key of the value.
  * @param error The validation error.
  * @return YES if value is accepted, otherwise NO.
+ * @discussion Subclasses may override in order to not perform KVC validation. For example, when using CoreData you must override this method and not do KVC validation (as KVC validation is implemented by NSManagedObject and used by NSManagedObjectContext).
  **/
 - (BOOL)mts_validateValue:(inout __autoreleasing id *)ioValue forKey:(NSString *)inKey error:(out NSError *__autoreleasing *)outError;
 
