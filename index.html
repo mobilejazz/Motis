@@ -29,7 +29,7 @@
       <div class="inner clearfix">
         <section id="main-content">
           <h1>
-<a name="motis-object-mapping" class="anchor" href="#motis-object-mapping"><span class="octicon octicon-link"></span></a>Motis Object Mapping*</h1>
+<a name="motis-object-mapping" class="anchor" href="#motis-object-mapping"><span class="octicon octicon-link"></span></a>Motis Object Mapping</h1>
 
 <p><img src="https://raw.githubusercontent.com/mobilejazz/Motis/master/Images/Motis.png" alt="Motis"></p>
 
@@ -45,7 +45,7 @@
 <h2>
 <a name="get-motis" class="anchor" href="#get-motis"><span class="octicon octicon-link"></span></a>Get Motis</h2>
 
-<p>If you use Cocoa Pods, you can get Motis by adding to your podfile <code>pod 'Motis', '~&gt;0.4.2'</code>. Otherwise, you will need to download the files <code>NSObject+Motis.h</code>, <code>NSObject+Motis.m</code> and <code>Motis.h</code>.</p>
+<p>If you use Cocoa Pods, you can get Motis by adding to your podfile <code>pod 'Motis', '~&gt;0.4.4'</code>. Otherwise, you will need to download the files <code>NSObject+Motis.h</code>, <code>NSObject+Motis.m</code> and <code>Motis.h</code>.</p>
 
 <h2>
 <a name="using-motis" class="anchor" href="#using-motis"><span class="octicon octicon-link"></span></a>Using Motis</h2>
@@ -209,7 +209,7 @@
             <span class="p">};</span>
 <span class="p">}</span>
 
-<span class="k">+</span> <span class="p">(</span><span class="n">NSDictionary</span><span class="p">)</span><span class="nf">mts_arrayClassMapping</span>
+<span class="k">+</span> <span class="p">(</span><span class="n">NSDictionary</span><span class="o">*</span><span class="p">)</span><span class="nf">mts_arrayClassMapping</span>
 <span class="p">{</span>
     <span class="k">return</span> <span class="p">@{</span><span class="n">mts_key</span><span class="p">(</span><span class="n">followers</span><span class="p">)</span><span class="o">:</span> <span class="n">User</span><span class="p">.</span><span class="n">class</span><span class="p">};</span> 
 <span class="p">}</span>
@@ -220,7 +220,7 @@
 <h5>
 <a name="213-automatic-object-creation" class="anchor" href="#213-automatic-object-creation"><span class="octicon octicon-link"></span></a>2.1.3 Automatic Object Creation</h5>
 
-<p>When validating autmatically, Motis might attempt to create new instances of your custom objects. For example, if a JSON value is a dictionary and the key-associated property type is a custom object, Motis will try to create recursively a new object of the corresponding type and set it via <code>+mts_setValuesForKeysWithDictionary:</code>.</p>
+<p>When validating autmatically, Motis might attempt to create new instances of your custom objects. For example, if a JSON value is a dictionary and the key-associated property type is a custom object, Motis will try to create recursively a new object of the corresponding type and set it via <code>-mts_setValuesForKeysWithDictionary:</code>.</p>
 
 <p>This automatic "object creation", that is also done for contents of an array, can be customized and tracked by using the following two methods: one "will"-styled method to notify the user that an object will be created and one "did"-styled method to notify the user that an object has been created.</p>
 
@@ -247,9 +247,14 @@
 <h4>
 <a name="22-manual-validation" class="anchor" href="#22-manual-validation"><span class="octicon octicon-link"></span></a>2.2 Manual Validation</h4>
 
-<p>If you prefer to do manual validation, you can override the KVC validation method for each key. Remember that by doing manual validation, automatic validation won't be performed and you will be fully responsible of the validation for those values you are valiating manually.</p>
+<p>Manual validation is performed before automatic validation and gives the user the oportunity of manually validate a value before any automatic validation is done. Of course, if the user validates manually a value for a given Key, any automatic validation will be performed. </p>
 
-<p>For example:</p>
+<p>Motis calls the following method to fire manual validation:</p>
+
+<div class="highlight highlight-objective-c"><pre><span class="k">-</span> <span class="p">(</span><span class="kt">BOOL</span><span class="p">)</span><span class="nf">mts_validateValue:</span><span class="p">(</span><span class="n">inout</span> <span class="n">__autoreleasing</span> <span class="kt">id</span> <span class="o">*</span><span class="p">)</span><span class="nv">ioValue</span> <span class="nf">forKey:</span><span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">inKey</span> <span class="nf">error:</span><span class="p">(</span><span class="n">out</span> <span class="n">NSError</span> <span class="o">*</span><span class="n">__autoreleasing</span> <span class="o">*</span><span class="p">)</span><span class="nv">outError</span><span class="p">;</span>
+</pre></div>
+
+<p>The default implementation of this method fires the <a href="https://developer.apple.com/library/mac/documentation/cocoa/conceptual/KeyValueCoding/Articles/Validation.html">KVC validation pattern</a>. To manually validate a value you can implement the KVC validation method for the corresponding key:</p>
 
 <div class="highlight highlight-objective-c"><pre><span class="k">-</span> <span class="p">(</span><span class="kt">BOOL</span><span class="p">)</span><span class="nf">validate</span><span class="o">&lt;</span><span class="n">Key</span><span class="o">&gt;:</span><span class="p">(</span><span class="kt">id</span> <span class="o">*</span><span class="p">)</span><span class="n">ioValue</span> <span class="n">error</span><span class="o">:</span><span class="p">(</span><span class="n">NSError</span> <span class="o">*</span> <span class="n">__autoreleasing</span> <span class="o">*</span><span class="p">)</span><span class="n">outError</span>
 <span class="p">{</span>
@@ -258,6 +263,8 @@
     <span class="k">return</span> <span class="nb">YES</span><span class="p">;</span> 
 <span class="p">}</span>
 </pre></div>
+
+<p>However, you can also override the Motis manual validation method listed above and perform your custom manual validation (without using the KVC validation pattern).</p>
 
 <h5>
 <a name="221-manual-array-validation" class="anchor" href="#221-manual-array-validation"><span class="octicon octicon-link"></span></a>2.2.1 Manual Array Validation</h5>
@@ -279,49 +286,93 @@
 <a name="appendix" class="anchor" href="#appendix"><span class="octicon octicon-link"></span></a>Appendix</h2>
 
 <h3>
+<a name="motis--core-data" class="anchor" href="#motis--core-data"><span class="octicon octicon-link"></span></a>Motis &amp; Core Data</h3>
+
+<p>If your project is using <strong>CoreData</strong> and you are dealing with <code>NSManagedObject</code> instances, you can still using Motis to map JSON values into your class instances. However, you will have to take care of a few things:</p>
+
+<h4>
+<a name="1-dont-use-kvc-validation" class="anchor" href="#1-dont-use-kvc-validation"><span class="octicon octicon-link"></span></a>1. Don't use KVC validation</h4>
+
+<p>CoreData uses KVC validation to validate <code>NSManagedObject</code> properties when performing a <code>-saveContext:</code> action. Therefore, you must not use KVC validation to check the integrity and consistency of your JSON values. Consequently, you must override the Motis manual validation method in order to not perform KVC validation.</p>
+
+<div class="highlight highlight-objective-c"><pre><span class="k">-</span> <span class="p">(</span><span class="kt">BOOL</span><span class="p">)</span><span class="nf">mts_validateValue:</span><span class="p">(</span><span class="n">inout</span> <span class="n">__autoreleasing</span> <span class="kt">id</span> <span class="o">*</span><span class="p">)</span><span class="nv">ioValue</span> <span class="nf">forKey:</span><span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">inKey</span> <span class="nf">error:</span><span class="p">(</span><span class="n">out</span> <span class="n">NSError</span> <span class="o">*</span><span class="n">__autoreleasing</span> <span class="o">*</span><span class="p">)</span><span class="nv">outError</span>
+<span class="p">{</span>
+    <span class="c1">// Do manual validation for the given "inKey"</span>
+    <span class="k">return</span> <span class="nb">YES</span><span class="p">;</span>
+<span class="p">}</span> 
+</pre></div>
+
+<h4>
+<a name="2-help-motis-create-new-instances" class="anchor" href="#2-help-motis-create-new-instances"><span class="octicon octicon-link"></span></a>2. Help Motis create new instances</h4>
+
+<p>When parsing the JSON content into an object, Motis might find <code>NSDictionay</code> instances that might be converted into new model object instances. By default Motis, doing introspection, creates a new instnace of the corresponding class type and maps the values contained in the found dictionary recursively. However, when using CoreData you must allocate and initialize <code>NSManagedObject</code> instances providing a <code>NSManagedObjectContext</code>.</p>
+
+<p>Therefore, you must override the method <code>- (id)mts_willCreateObjectOfClass:(Class)typeClass withDictionary:(NSDictionary*)dictionary forKey:(NSString*)key abort:(BOOL*)abort</code> and return an instnace of <code>typeClass</code> having performed Motis with the <code>dictionary</code>.</p>
+
+<p>For example, we could create a new managed object for the corresponding class, perform Motis and return:</p>
+
+<div class="highlight highlight-objective-c"><pre><span class="k">-</span> <span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="nf">mts_willCreateObjectOfClass:</span><span class="p">(</span><span class="kt">Class</span><span class="p">)</span><span class="nv">typeClass</span> <span class="nf">withDictionary:</span><span class="p">(</span><span class="n">NSDictionary</span><span class="o">*</span><span class="p">)</span><span class="nv">dictionary</span> <span class="nf">forKey:</span><span class="p">(</span><span class="n">NSString</span><span class="o">*</span><span class="p">)</span><span class="nv">key</span> <span class="nf">abort:</span><span class="p">(</span><span class="kt">BOOL</span><span class="o">*</span><span class="p">)</span><span class="nv">abort</span>
+<span class="p">{</span>
+    <span class="k">if</span> <span class="p">([</span><span class="n">typeClass</span> <span class="n">isSubclassOfClass</span><span class="o">:</span><span class="n">NSManagedObject</span><span class="p">.</span><span class="n">class</span><span class="p">])</span>
+    <span class="p">{</span>
+        <span class="c1">// Get the entityName</span>
+        <span class="n">NSString</span> <span class="o">*</span><span class="n">entityName</span> <span class="o">=</span> <span class="p">[</span><span class="n">typeClass</span> <span class="n">entityName</span><span class="p">];</span> <span class="c1">// &lt;-- This is a custom method that returns the entity name</span>
+
+        <span class="c1">// Create a new managed object for the given class (for example).</span>
+        <span class="n">NSEntityDescription</span> <span class="o">*</span><span class="n">entityDescription</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSEntityDescription</span> <span class="n">entityForName</span><span class="o">:</span><span class="n">entityName</span> <span class="n">inManagedObjectContext</span><span class="o">:</span><span class="n">self</span><span class="p">.</span><span class="n">context</span><span class="p">];</span>
+        <span class="n">NSManagedObject</span> <span class="o">*</span><span class="n">object</span> <span class="o">=</span> <span class="p">[[</span><span class="n">typeClass</span> <span class="n">alloc</span><span class="p">]</span> <span class="n">initWithEntity</span><span class="o">:</span><span class="n">entityDescription</span> <span class="n">insertIntoManagedObjectContext</span><span class="o">:</span><span class="n">self</span><span class="p">.</span><span class="n">context</span><span class="p">];</span>
+
+        <span class="c1">// Perform Motis on the object instance</span>
+        <span class="p">[</span><span class="n">object</span> <span class="n">mts_setValuesForKeysWithDictionary</span><span class="o">:</span><span class="n">dictionary</span><span class="p">];</span>
+
+        <span class="k">return</span> <span class="n">object</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="nb">nil</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+
+<h3>
 <a name="automatic-validation" class="anchor" href="#automatic-validation"><span class="octicon octicon-link"></span></a>Automatic Validation</h3>
 
 <p>The following table indicates the supported validations in the current Motis version:</p>
 
-<pre><code>+------------+---------------------+------------------------------------------------------------------------------------+
-| JSON Type  | Property Type       | Comments                                                                           |
-+------------+---------------------+------------------------------------------------------------------------------------+
-| string     | NSString            | No validation is requried                                                          |
-| number     | NSNumber            | No validation is requried                                                          |
-| number     | basic type (1)      | No validation is requried                                                          |
-| array      | NSArray             | No validation is requried                                                          |
-| dictionary | NSDictionary        | No validation is requried                                                          |
-| -          | -                   | -                                                                                  |
-| string     | bool                | string parsed with NSNumberFormatter (allowFloats enabled)                         |
-| string     | unsigned long long  | string parsed with NSNumberFormatter (allowFloats disabled)                        |
-| string     | basic types (2)     | value generated automatically by KVC (NSString's '-intValue', '-longValue', etc)   |
-| string     | NSNumber            | string parsed with NSNumberFormatter (allowFloats enabled)                         |
-| string     | NSURL               | created using [NSURL URLWithString:]                                               |
-| string     | NSData              | attempt to decode base64 encoded string                                            |
-| string     | NSDate              | default date format "2011-08-23 10:52:00". Check '+mts_validationDateFormatter.'   |
-| -          | -                   | -                                                                                  |
-| number     | NSDate              | timestamp since 1970                                                               |
-| number     | NSString            | string by calling NSNumber's '-stringValue'                                        |
-| -          | -                   | -                                                                                  |
-| array      | NSMutableArray      | creating new instance from original array                                          |
-| array      | NSSet               | creating new instance from original array                                          |
-| array      | NSMutableSet        | creating new instance from original array                                          |
-| array      | NSOrderedSet        | creating new instance from original array                                          |
-| array      | NSMutableOrderedSet | creating new instance from original array                                          |
-| -          | -                   | -                                                                                  |
-| dictionary | NSMutableDictionary | creating new instance from original dictionary                                     |
-| dictionary | custom NSObject     | Motis recursive call. Check '-mts_willCreateObject..' and '-mtd_didCreateObject:'  |
-| -          | -                   | -                                                                                  |
-| null       | nil                 | if property is type object                                                         |
-| null       | undefined           | if property is basic type (3). Check KVC method '-setNilValueForKey:'              |
-+------------+---------------------+------------------------------------------------------------------------------------+
+<pre><code> +------------+---------------------+------------------------------------------------------------------------------------+
+ | JSON Type  | Property Type       | Comments                                                                           |
+ +------------+---------------------+------------------------------------------------------------------------------------+
+ | string     | NSString            | No validation is requried                                                          |
+ | number     | NSNumber            | No validation is requried                                                          |
+ | number     | basic type (1)      | No validation is requried                                                          |
+ | array      | NSArray             | No validation is requried                                                          |
+ | dictionary | NSDictionary        | No validation is requried                                                          |
+ | -          | -                   | -                                                                                  |
+ | string     | bool                | string parsed with method -boolValue and by comparing with "true" and "false"      |
+ | string     | unsigned long long  | string parsed with NSNumberFormatter (allowFloats disabled)                        |
+ | string     | basic types (2)     | value generated automatically by KVC (NSString's '-intValue', '-longValue', etc)   |
+ | string     | NSNumber            | string parsed with method -doubleValue                                             |
+ | string     | NSURL               | created using [NSURL URLWithString:]                                               |
+ | string     | NSData              | attempt to decode base64 encoded string                                            |
+ | string     | NSDate              | default date format "2011-08-23 10:52:00". Check '+mts_validationDateFormatter.'   |
+ | -          | -                   | -                                                                                  |
+ | number     | NSDate              | timestamp since 1970                                                               |
+ | number     | NSString            | string by calling NSNumber's '-stringValue'                                        |
+ | -          | -                   | -                                                                                  |
+ | array      | NSMutableArray      | creating new instance from original array                                          |
+ | array      | NSSet               | creating new instance from original array                                          |
+ | array      | NSMutableSet        | creating new instance from original array                                          |
+ | array      | NSOrderedSet        | creating new instance from original array                                          |
+ | array      | NSMutableOrderedSet | creating new instance from original array                                          |
+ | -          | -                   | -                                                                                  |
+ | dictionary | NSMutableDictionary | creating new instance from original dictionary                                     |
+ | dictionary | custom NSObject     | Motis recursive call. Check '-mts_willCreateObject..' and '-mtd_didCreateObject:'  |
+ | -          | -                   | -                                                                                  |
+ | null       | nil                 | if property is type object                                                         |
+ | null       | &lt;UNDEFINED&gt;         | if property is basic type (3). Check KVC method '-setNilValueForKey:'              |
+ +------------+---------------------+------------------------------------------------------------------------------------+
 
-basic type (1) : int, unsigned int, long, unsigned long, long long, unsigned long long, float, double
-basic type (2) : int, unsigned int, long, unsigned long, float, double
-basic type (3) : any basic type
+* basic type (1) : int, unsigned int, long, unsigned long, long long, unsigned long long, float, double)
+* basic type (2) : int, unsigned int, long, unsigned long, float, double)
+* basic type (3) : any basic type (non-object type).
 </code></pre>
-
-<hr><p>*Motis was called before KVCParsing.</p>
         </section>
 
         <aside id="sidebar">
