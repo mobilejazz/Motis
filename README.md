@@ -207,9 +207,15 @@ This automatic "object creation", that is also done for contents of an array, ca
 ```
 ####2.2 Manual Validation
 
-If you prefer to do manual validation, you can override the KVC validation method for each key. Remember that by doing manual validation, automatic validation won't be performed and you will be fully responsible of the validation for those values you are valiating manually.
+Manual validation is performed before automatic validation and gives the user the oportunity of manually validate a value before any automatic validation is done. Of course, if the user validates manually a value for a given Key, any automatic validation will be performed. 
 
-For example:
+Motis calls the following method to fire manual validation:
+
+```objective-c
+- (BOOL)mts_validateValue:(inout __autoreleasing id *)ioValue forKey:(NSString *)inKey error:(out NSError *__autoreleasing *)outError;
+```
+
+The default implementation of this method fires the [KVC validation pattern](https://developer.apple.com/library/mac/documentation/cocoa/conceptual/KeyValueCoding/Articles/Validation.html). To manually validate a value you can implement the KVC validation method for the corresponding key:
 
 ```objective-c
 - (BOOL)validate<Key>:(id *)ioValue error:(NSError * __autoreleasing *)outError
@@ -219,6 +225,8 @@ For example:
 	return YES; 
 }
 ```
+
+However, you can also override the Motis manual validation method listed above and perform your custom manual validation (without using the KVC validation pattern).
 
 #####2.2.1 Manual Array Validation
 
@@ -240,47 +248,91 @@ To manually validate array content you must override the following method:
 
 ---
 ## Appendix
- 
+
+### Motis & Core Data
+
+If your project is using **CoreData** and you are dealing with `NSManagedObject` instances, you can still using Motis to map JSON values into your class instances. However, you will have to take care of a few things:
+
+####1. Don't use KVC validation
+
+CoreData uses KVC validation to validate `NSManagedObject` properties when performing a `-saveContext:` action. Therefore, you must not use KVC validation to check the integrity and consistency of your JSON values. Consequently, you must override the Motis manual validation method in order to not perform KVC validation.
+
+```objective-c
+- (BOOL)mts_validateValue:(inout __autoreleasing id *)ioValue forKey:(NSString *)inKey error:(out NSError *__autoreleasing *)outError
+{
+    // Do manual validation for the given "inKey"
+    return YES;
+} 
+```
+
+####2. Help Motis create new instances
+
+When parsing the JSON content into an object, Motis might find `NSDictionay` instances that might be converted into new model object instances. By default Motis, doing introspection, creates a new instnace of the corresponding class type and maps the values contained in the found dictionary recursively. However, when using CoreData you must allocate and initialize `NSManagedObject` instances providing a `NSManagedObjectContext`.
+
+Therefore, you must override the method `- (id)mts_willCreateObjectOfClass:(Class)typeClass withDictionary:(NSDictionary*)dictionary forKey:(NSString*)key abort:(BOOL*)abort` and return an instnace of `typeClass` having performed Motis with the `dictionary`.
+
+For example, we could create a new managed object for the corresponding class, perform Motis and return:
+
+```objective-c
+- (id)mts_willCreateObjectOfClass:(Class)typeClass withDictionary:(NSDictionary*)dictionary forKey:(NSString*)key abort:(BOOL*)abort
+{
+    if ([typeClass isSubclassOfClass:NSManagedObject.class])
+    {
+        // Get the entityName
+        NSString *entityName = [typeClass entityName]; // <-- This is a custom method that returns the entity name
+        
+        // Create a new managed object for the given class (for example).
+        NSEntityDescription *entityDescription = [NSEntityDescription entityForName:entityName inManagedObjectContext:self.context];
+        NSManagedObject *object = [[typeClass alloc] initWithEntity:entityDescription insertIntoManagedObjectContext:self.context];
+        
+        // Perform Motis on the object instance
+        [object mts_setValuesForKeysWithDictionary:dictionary];
+        
+        return object;
+    }
+    return nil;
+}
+```
 ### Automatic Validation 
 The following table indicates the supported validations in the current Motis version:
 
 ```
-+------------+---------------------+------------------------------------------------------------------------------------+
-| JSON Type  | Property Type       | Comments                                                                           |
-+------------+---------------------+------------------------------------------------------------------------------------+
-| string     | NSString            | No validation is requried                                                          |
-| number     | NSNumber            | No validation is requried                                                          |
-| number     | basic type (1)      | No validation is requried                                                          |
-| array      | NSArray             | No validation is requried                                                          |
-| dictionary | NSDictionary        | No validation is requried                                                          |
-| -          | -                   | -                                                                                  |
-| string     | bool                | string parsed with NSNumberFormatter (allowFloats enabled)                         |
-| string     | unsigned long long  | string parsed with NSNumberFormatter (allowFloats disabled)                        |
-| string     | basic types (2)     | value generated automatically by KVC (NSString's '-intValue', '-longValue', etc)   |
-| string     | NSNumber            | string parsed with NSNumberFormatter (allowFloats enabled)                         |
-| string     | NSURL               | created using [NSURL URLWithString:]                                               |
-| string     | NSData              | attempt to decode base64 encoded string                                            |
-| string     | NSDate              | default date format "2011-08-23 10:52:00". Check '+mts_validationDateFormatter.'   |
-| -          | -                   | -                                                                                  |
-| number     | NSDate              | timestamp since 1970                                                               |
-| number     | NSString            | string by calling NSNumber's '-stringValue'                                        |
-| -          | -                   | -                                                                                  |
-| array      | NSMutableArray      | creating new instance from original array                                          |
-| array      | NSSet               | creating new instance from original array                                          |
-| array      | NSMutableSet        | creating new instance from original array                                          |
-| array      | NSOrderedSet        | creating new instance from original array                                          |
-| array      | NSMutableOrderedSet | creating new instance from original array                                          |
-| -          | -                   | -                                                                                  |
-| dictionary | NSMutableDictionary | creating new instance from original dictionary                                     |
-| dictionary | custom NSObject     | Motis recursive call. Check '-mts_willCreateObject..' and '-mtd_didCreateObject:'  |
-| -          | -                   | -                                                                                  |
-| null       | nil                 | if property is type object                                                         |
-| null       | undefined           | if property is basic type (3). Check KVC method '-setNilValueForKey:'              |
-+------------+---------------------+------------------------------------------------------------------------------------+
-
-basic type (1) : int, unsigned int, long, unsigned long, long long, unsigned long long, float, double
-basic type (2) : int, unsigned int, long, unsigned long, float, double
-basic type (3) : any basic type
+ +------------+---------------------+------------------------------------------------------------------------------------+
+ | JSON Type  | Property Type       | Comments                                                                           |
+ +------------+---------------------+------------------------------------------------------------------------------------+
+ | string     | NSString            | No validation is requried                                                          |
+ | number     | NSNumber            | No validation is requried                                                          |
+ | number     | basic type (1)      | No validation is requried                                                          |
+ | array      | NSArray             | No validation is requried                                                          |
+ | dictionary | NSDictionary        | No validation is requried                                                          |
+ | -          | -                   | -                                                                                  |
+ | string     | bool                | string parsed with method -boolValue and by comparing with "true" and "false"      |
+ | string     | unsigned long long  | string parsed with NSNumberFormatter (allowFloats disabled)                        |
+ | string     | basic types (2)     | value generated automatically by KVC (NSString's '-intValue', '-longValue', etc)   |
+ | string     | NSNumber            | string parsed with method -doubleValue                                             |
+ | string     | NSURL               | created using [NSURL URLWithString:]                                               |
+ | string     | NSData              | attempt to decode base64 encoded string                                            |
+ | string     | NSDate              | default date format "2011-08-23 10:52:00". Check '+mts_validationDateFormatter.'   |
+ | -          | -                   | -                                                                                  |
+ | number     | NSDate              | timestamp since 1970                                                               |
+ | number     | NSString            | string by calling NSNumber's '-stringValue'                                        |
+ | -          | -                   | -                                                                                  |
+ | array      | NSMutableArray      | creating new instance from original array                                          |
+ | array      | NSSet               | creating new instance from original array                                          |
+ | array      | NSMutableSet        | creating new instance from original array                                          |
+ | array      | NSOrderedSet        | creating new instance from original array                                          |
+ | array      | NSMutableOrderedSet | creating new instance from original array                                          |
+ | -          | -                   | -                                                                                  |
+ | dictionary | NSMutableDictionary | creating new instance from original dictionary                                     |
+ | dictionary | custom NSObject     | Motis recursive call. Check '-mts_willCreateObject..' and '-mtd_didCreateObject:'  |
+ | -          | -                   | -                                                                                  |
+ | null       | nil                 | if property is type object                                                         |
+ | null       | <UNDEFINED>         | if property is basic type (3). Check KVC method '-setNilValueForKey:'              |
+ +------------+---------------------+------------------------------------------------------------------------------------+
+ 
+* basic type (1) : int, unsigned int, long, unsigned long, long long, unsigned long long, float, double)
+* basic type (2) : int, unsigned int, long, unsigned long, float, double)
+* basic type (3) : any basic type (non-object type).
 ```
 
 --- 
