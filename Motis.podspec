@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
 
   s.name         = "Motis"
-  s.version      = "0.4.4"
+  s.version      = "0.4.5"
   s.summary      = "Easy JSON to NSObject mapping using Cocoa's Key Value Coding (KVC)"
 
   s.description  = <<-DESC
@@ -17,7 +17,7 @@ Pod::Spec.new do |s|
   s.license      = { :type => 'Apache License, Version 2.0', :file => 'LICENSE' }
   s.author             = { "Mobile Jazz" => "info@mobilejazz.cat" }
   s.social_media_url = "http://twitter.com/mobilejazzcat"
-  s.source       = { :git => "https://github.com/mobilejazz/Motis.git", :tag => "0.4.4" }
+  s.source       = { :git => "https://github.com/mobilejazz/Motis.git", :tag => "0.4.5" }
   s.source_files = 'Motis.h', 'NSObject+Motis.{h,m}'
   s.framework  = 'Foundation'
   s.requires_arc = true
