@@ -1,4 +1,4 @@
-Motis Object Mapping*
+Motis Object Mapping
 ==========
 ![Motis](https://raw.githubusercontent.com/mobilejazz/Motis/master/Images/Motis.png)
 
@@ -334,6 +334,3 @@ The following table indicates the supported validations in the current Motis ver
 * basic type (2) : int, unsigned int, long, unsigned long, float, double)
 * basic type (3) : any basic type (non-object type).
 ```
-
---- 
-*Motis was called before KVCParsing.
