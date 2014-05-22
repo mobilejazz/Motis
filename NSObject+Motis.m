@@ -286,6 +286,8 @@ static Class classFromString(NSString *string)
         
         NSArray *allKeyPath = [self.class mts_keyPaths][key];
         
+        BOOL attemptedToSetOriginalKey = NO; // <-- YES when value for "key" has been set
+        
         for (MTSKeyPath *keyPath in allKeyPath)
         {
             // For each key related keyPath
@@ -314,12 +316,18 @@ static Class classFromString(NSString *string)
             }
             
             if (value && validKeyPath)
+            {
+                if (!attemptedToSetOriginalKey && [keyPath.key isEqualToString:key])
+                    attemptedToSetOriginalKey = YES;
+                
                 [self mts_setValue:value forKey:keyPath.key];
-            
-//            id value = [keyedValues valueForKeyPath:keyPath.key];
-//            if (value)
-//                [self mts_setValue:value forKey:keyPath.key];
+            }
         }
+        
+        // If "key" has not been listed in Motis available keyPaths list,
+        // lets perform the setter of the value for the given key.
+        if (!attemptedToSetOriginalKey)
+            [self mts_setValue:keyedValues[key] forKey:key];
     }
 }
 

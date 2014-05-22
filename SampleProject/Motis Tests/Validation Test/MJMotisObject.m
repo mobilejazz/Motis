@@ -6,11 +6,11 @@
 //  Copyright (c) 2014 Mobile Jazz. All rights reserved.
 //
 
-#import "MJTestObject.h"
+#import "MJMotisObject.h"
 
 #import "NSObject+Motis.h"
 
-@implementation MJTestObject
+@implementation MJMotisObject
 
 + (NSDictionary*)mts_mapping
 {
@@ -36,20 +36,19 @@
     
 }
 
-+ (BOOL)mts_shouldSetUndefinedKeys
-{
-    return NO;
-}
-
-- (void)mts_invalidValue:(id)value forKey:(NSString *)key error:(NSError *)error
-{
-    NSLog(@"INVALID VALUE %@ FOR KEY %@", [value description], key);
-}
+#pragma mark Property Nillification
 
 - (void)setNilValueForKey:(NSString *)key
 {
     if ([key isEqualToString:mts_key(boolField)])
-        _boolField = NO;
+        self.boolField = NO;
+}
+
+#pragma mark Loggers
+
+- (void)mts_invalidValue:(id)value forKey:(NSString *)key error:(NSError *)error
+{
+    NSLog(@"INVALID VALUE %@ FOR KEY %@", [value description], key);
 }
 
 @end

@@ -9,27 +9,12 @@
 #import <XCTest/XCTest.h>
 
 #import "NSObject+Motis.h"
-#import "MJTestObject.h"
-#import "MJTestObject2.h"
+#import "MJMotisObject.h"
+#import "MJMotisObjectRestricted.h"
+#import "MJMotisObjectWithFormatter.h"
 
-@interface MJTestObjectWithFormatter : MJTestObject
-
-@end
-
-@implementation MJTestObjectWithFormatter
-
-+ (NSDateFormatter*)mts_validationDateFormatter
-{
-    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-    formatter.dateFormat = @"yyyy-MM-dd HH:mm:ss";
-    return formatter;
-}
-
-@end
 
 @interface MJValidationTest : XCTestCase
-
-@property (nonatomic, strong) MJTestObject *object;
 
 @end
 
@@ -38,14 +23,10 @@
 - (void)setUp
 {
     [super setUp];
-    
-    _object = [[MJTestObject alloc] init];
 }
 
 - (void)tearDown
 {
-    _object = nil;
-    
     [super tearDown];
 }
 
@@ -61,38 +42,41 @@
 {
     // check `-setNilValueForKey` method.
     
-    _object.boolField = YES;
-    [_object mts_setValue:[NSNull null] forKey:@"bool"];
+    MJMotisObject *object = [MJMotisObject new];
+    object.boolField = YES;
+    [object mts_setValue:[NSNull null] forKey:@"bool"];
 
-    XCTAssert(_object.boolField == NO, @"Basic type value must change to the new reseted value.");
+    XCTAssert(object.boolField == NO, @"Basic type value must change to the new reseted value.");
 }
 
 - (void)testNullToBasicTypeWithoutNullDefinition
 {
     // check `-setNilValueForKey` method.
+    MJMotisObject *object = [MJMotisObject new];
+    object.integerField = 42;
+    [object mts_setValue:[NSNull null] forKey:@"integer"];
     
-    _object.integerField = 42;
-    [_object mts_setValue:[NSNull null] forKey:@"integer"];
-    
-    XCTAssert(_object.integerField == 42, @"Basic type value must not change");
+    XCTAssert(object.integerField == 42, @"Basic type value must not change");
 }
 
 #pragma mark to object
 
 - (void)testNullToObject
 {
-    _object.numberField = @(42);
-    [_object mts_setValue:[NSNull null] forKey:@"number"];
+    MJMotisObject *object = [MJMotisObject new];
+    object.numberField = @(42);
+    [object mts_setValue:[NSNull null] forKey:@"number"];
     
-    XCTAssertNil(_object.numberField, @"Failed to nullify object");
+    XCTAssertNil(object.numberField, @"Failed to nullify object");
 }
 
 - (void)testNilToObject
 {
-    _object.numberField = @(42);
-    [_object mts_setValue:nil forKey:@"number"];
+    MJMotisObject *object = [MJMotisObject new];
+    object.numberField = @(42);
+    [object mts_setValue:nil forKey:@"number"];
     
-    XCTAssertNil(_object.numberField, @"Failed to nillify object");
+    XCTAssertNil(object.numberField, @"Failed to nillify object");
 }
 
 #pragma mark - FROM NUMBER
@@ -123,67 +107,76 @@
 
 - (void)testYESBoolToBool
 {
+    MJMotisObject *object = [MJMotisObject new];
+    
     NSNumber *number = @YES;
-    _object.boolField = NO;
-    [_object mts_setValue:number forKey:@"bool"];
-    XCTAssertEqual(_object.boolField, number.boolValue, @"Failed to map number value");
+    object.boolField = NO;
+    [object mts_setValue:number forKey:@"bool"];
+    XCTAssertEqual(object.boolField, number.boolValue, @"Failed to map number value");
 }
 
 - (void)testNOBoolToBool
 {
+    MJMotisObject *object = [MJMotisObject new];
     NSNumber *number = @NO;
-    _object.boolField = YES;
-    [_object mts_setValue:number forKey:@"bool"];
-    XCTAssertEqual(_object.boolField, number.boolValue, @"Failed to map number value");
+    object.boolField = YES;
+    [object mts_setValue:number forKey:@"bool"];
+    XCTAssertEqual(object.boolField, number.boolValue, @"Failed to map number value");
 }
 
 - (void)testNumberToBool
-{    
+{
+    MJMotisObject *object = [MJMotisObject new];
+    
     for (NSNumber *number in [self mts_arrayWithNumbers])
     {
-        _object.boolField = NO;
-        [_object mts_setValue:number forKey:@"bool"];
-        XCTAssertEqual(_object.boolField, number.boolValue, @"Failed to map number value");
+        object.boolField = NO;
+        [object mts_setValue:number forKey:@"bool"];
+        XCTAssertEqual(object.boolField, number.boolValue, @"Failed to map number value");
     }
 }
 
 - (void)testNumberToInteger
 {
+    MJMotisObject *object = [MJMotisObject new];
     for (NSNumber *number in [self mts_arrayWithNumbers])
     {
-        _object.integerField = 0;
-        [_object mts_setValue:number forKey:@"integer"];
-        XCTAssertEqual(_object.integerField, number.integerValue, @"Failed to map number value");
+        object.integerField = 0;
+        [object mts_setValue:number forKey:@"integer"];
+        XCTAssertEqual(object.integerField, number.integerValue, @"Failed to map number value");
     }
 }
 
 - (void)testNumberToUnsignedInteger
 {
+    MJMotisObject *object = [MJMotisObject new];
     for (NSNumber *number in [self mts_arrayWithNumbers])
     {
-        _object.unsignedIntegerField = 0;
-        [_object mts_setValue:number forKey:@"unsigned_integer"];
-        XCTAssertEqual(_object.unsignedIntegerField, number.unsignedIntegerValue, @"Failed to map number value");
+        object.unsignedIntegerField = 0;
+        [object mts_setValue:number forKey:@"unsigned_integer"];
+        XCTAssertEqual(object.unsignedIntegerField, number.unsignedIntegerValue, @"Failed to map number value");
     }
 }
 
 - (void)testNumberToFloat
 {
+    MJMotisObject *object = [MJMotisObject new];
     for (NSNumber *number in [self mts_arrayWithNumbers])
     {
-        _object.floatField = 0.0f;
-        [_object mts_setValue:number forKey:@"float"];
-        XCTAssertEqual(_object.floatField, number.floatValue, @"Failed to map number value");
+        object.floatField = 0.0f;
+        [object mts_setValue:number forKey:@"float"];
+        XCTAssertEqual(object.floatField, number.floatValue, @"Failed to map number value");
     }
 }
 
 - (void)testNumberToDouble
 {
+    MJMotisObject *object = [MJMotisObject new];
     for (NSNumber *number in [self mts_arrayWithNumbers])
     {
-        _object.doubleField = 0.0;
-        [_object mts_setValue:number forKey:@"double"];
-        XCTAssertEqual(_object.doubleField, number.doubleValue, @"Failed to map number value");
+        object.doubleField = 0.0;
+        [object mts_setValue:number forKey:@"double"];
+        XCTAssertEqual(object.doubleField, number.doubleValue, @"Failed to map number value");
     }
 }
 
@@ -191,11 +184,12 @@
 
 - (void)testNumberToString
 {
+    MJMotisObject *object = [MJMotisObject new];
     for (NSNumber *number in [self mts_arrayWithNumbers])
     {
-        _object.stringField = nil;
-        [_object mts_setValue:number forKey:@"string"];
-        XCTAssertEqualObjects(_object.stringField, number.stringValue, @"Failed to map number value");
+        object.stringField = nil;
+        [object mts_setValue:number forKey:@"string"];
+        XCTAssertEqualObjects(object.stringField, number.stringValue, @"Failed to map number value");
     }
 }
 
@@ -203,11 +197,13 @@
 
 - (void)testNumberToDate
 {
+    MJMotisObject *object = [MJMotisObject new];
+    
     NSTimeInterval timeInterval = 1398333352.0;
     
-    [_object mts_setValue:@(timeInterval) forKey:@"date"];
+    [object mts_setValue:@(timeInterval) forKey:@"date"];
     
-    NSTimeInterval finalTimeInterval = [_object.dateField timeIntervalSince1970];
+    NSTimeInterval finalTimeInterval = [object.dateField timeIntervalSince1970];
     
     XCTAssertEqual(timeInterval, finalTimeInterval, @"Failed to map number value to date");
 }
@@ -216,21 +212,23 @@
 
 - (void)testNumberToId
 {
+    MJMotisObject *object = [MJMotisObject new];
     for (NSNumber *number in [self mts_arrayWithNumbers])
     {
-        _object.idField = nil;
-        [_object mts_setValue:number forKey:@"id"];
-        XCTAssertEqualObjects(_object.idField, number, @"Failed to map number value to id");
+        object.idField = nil;
+        [object mts_setValue:number forKey:@"id"];
+        XCTAssertEqualObjects(object.idField, number, @"Failed to map number value to id");
     }
 }
 
 - (void)testNumberToIdProtocol
 {
+    MJMotisObject *object = [MJMotisObject new];
     for (NSNumber *number in [self mts_arrayWithNumbers])
     {
-        _object.idField = nil;
-        [_object mts_setValue:number forKey:@"id_protocol"];
-        XCTAssertEqualObjects(_object.idProtocolField, number, @"Failed to map number value to id <Protocol>");
+        object.idField = nil;
+        [object mts_setValue:number forKey:@"id_protocol"];
+        XCTAssertEqualObjects(object.idProtocolField, number, @"Failed to map number value to id <Protocol>");
     }
 }
 
@@ -262,6 +260,7 @@
 
 - (void)testStringNumbersToBool
 {
+    MJMotisObject *object = [MJMotisObject new];
     for (NSNumber *originalNumber in [self mts_arrayWithNumbers])
     {
         if (originalNumber.integerValue == NSIntegerMin) // <-- Bug on NSIntegerMin with boolValue: [@(NSIntegerMin) boolValue] is 0, when is supposed to be 1.
@@ -269,59 +268,65 @@
         
         NSString *string = originalNumber.stringValue;
         
-        _object.boolField = NO;
-        [_object mts_setValue:string forKey:@"bool"];
-        XCTAssertEqual(_object.boolField, originalNumber.boolValue, @"Failed to map string number value %@", originalNumber.stringValue);
+        object.boolField = NO;
+        [object mts_setValue:string forKey:@"bool"];
+        XCTAssertEqual(object.boolField, originalNumber.boolValue, @"Failed to map string number value %@", originalNumber.stringValue);
     }
 }
 
 - (void)testFalseStringToBool
 {
-    _object.boolField = YES;
-    [_object mts_setValue:@"false" forKey:@"bool"];
-    XCTAssertEqual(_object.boolField, NO, @"Failed to map number value");
+    MJMotisObject *object = [MJMotisObject new];
+    object.boolField = YES;
+    [object mts_setValue:@"false" forKey:@"bool"];
+    XCTAssertEqual(object.boolField, NO, @"Failed to map number value");
     
-    _object.boolField = YES;
-    [_object mts_setValue:@"FALSE" forKey:@"bool"];
-    XCTAssertEqual(_object.boolField, NO, @"Failed to map number value");
+    object.boolField = YES;
+    [object mts_setValue:@"FALSE" forKey:@"bool"];
+    XCTAssertEqual(object.boolField, NO, @"Failed to map number value");
 }
 
 - (void)testTrueStringToBool
 {
-    _object.boolField = NO;
-    [_object mts_setValue:@"true" forKey:@"bool"];
-    XCTAssertEqual(_object.boolField, YES, @"Failed to map number value");
+    MJMotisObject *object = [MJMotisObject new];
+    object.boolField = NO;
+    [object mts_setValue:@"true" forKey:@"bool"];
+    XCTAssertEqual(object.boolField, YES, @"Failed to map number value");
     
-    _object.boolField = NO;
-    [_object mts_setValue:@"TRUE" forKey:@"bool"];
-    XCTAssertEqual(_object.boolField, YES, @"Failed to map number value");
+    object.boolField = NO;
+    [object mts_setValue:@"TRUE" forKey:@"bool"];
+    XCTAssertEqual(object.boolField, YES, @"Failed to map number value");
 }
 
 - (void)testStringNumbersToInteger
 {
+    MJMotisObject *object = [MJMotisObject new];
+    
     NSArray *numbers = @[@(NSIntegerMax), @(NSIntegerMin)];
     
     for (NSNumber *number in numbers)
     {
         NSString *string = number.stringValue;
         
-        _object.integerField = 0;
-        [_object mts_setValue:string forKey:@"integer"];
-        XCTAssertEqual(_object.integerField, number.integerValue, @"Failed to map string number value");
+        object.integerField = 0;
+        [object mts_setValue:string forKey:@"integer"];
+        XCTAssertEqual(object.integerField, number.integerValue, @"Failed to map string number value");
     }
 }
 
 - (void)testStringNumbersToUnsignedInteger
 {
+    MJMotisObject *object = [MJMotisObject new];
+    
     NSArray *numbers = @[@(LONG_MAX), @(0)]; // <-- BUG: NSNumberFormatter fails to format numbers bigger than LONG_MAX.
     
     for (NSNumber *number in numbers)
     {
         NSString *string = number.stringValue;
         
-        _object.unsignedIntegerField = 0;
-        [_object mts_setValue:string forKey:@"unsigned_integer"];
-        XCTAssertEqual(_object.unsignedIntegerField, number.unsignedIntegerValue, @"Failed to map string number value");
+        object.unsignedIntegerField = 0;
+        [object mts_setValue:string forKey:@"unsigned_integer"];
+        XCTAssertEqual(object.unsignedIntegerField, number.unsignedIntegerValue, @"Failed to map string number value");
     }
 }
 
@@ -329,101 +334,118 @@
 
 - (void)testStringNumbersToNumber
 {
+    MJMotisObject *object = [MJMotisObject new];
+    
     for (NSNumber *originalNumber in [self mts_arrayWithNumbers])
     {
         NSString *string = originalNumber.stringValue;
         
-        _object.numberField = nil;
-        [_object mts_setValue:string forKey:@"number"];
-        XCTAssertEqualObjects(_object.numberField, originalNumber, @"Failed to map string number value.");
+        object.numberField = nil;
+        [object mts_setValue:string forKey:@"number"];
+        XCTAssertEqualObjects(object.numberField, originalNumber, @"Failed to map string number value.");
     }
 }
 
 - (void)testFalseStringToBoolNumber
 {
-    _object.boolField = YES;
-    [_object mts_setValue:@"false" forKey:@"number"];
-    XCTAssertEqualObjects(_object.numberField, @NO, @"Failed to map number value");
+    MJMotisObject *object = [MJMotisObject new];
     
-    _object.boolField = YES;
-    [_object mts_setValue:@"FALSE" forKey:@"number"];
-    XCTAssertEqualObjects(_object.numberField, @NO, @"Failed to map number value");
+    object.boolField = YES;
+    [object mts_setValue:@"false" forKey:@"number"];
+    XCTAssertEqualObjects(object.numberField, @NO, @"Failed to map number value");
+    
+    object.boolField = YES;
+    [object mts_setValue:@"FALSE" forKey:@"number"];
+    XCTAssertEqualObjects(object.numberField, @NO, @"Failed to map number value");
 }
 
 - (void)testTrueStringToBoolNumber
 {
-    _object.boolField = NO;
-    [_object mts_setValue:@"true" forKey:@"number"];
-    XCTAssertEqualObjects(_object.numberField, @YES, @"Failed to map number value");
+    MJMotisObject *object = [MJMotisObject new];
     
-    _object.boolField = NO;
-    [_object mts_setValue:@"TRUE" forKey:@"number"];
-    XCTAssertEqualObjects(_object.numberField, @YES, @"Failed to map number value");
+    object.boolField = NO;
+    [object mts_setValue:@"true" forKey:@"number"];
+    XCTAssertEqualObjects(object.numberField, @YES, @"Failed to map number value");
+    
+    object.boolField = NO;
+    [object mts_setValue:@"TRUE" forKey:@"number"];
+    XCTAssertEqualObjects(object.numberField, @YES, @"Failed to map number value");
 }
 
 #pragma mark to url
 
 - (void)testStringToUrl
 {
+    MJMotisObject *object = [MJMotisObject new];
+    
     NSString *string = @"http://www.google.com";
-    [_object mts_setValue:string forKey:@"url"];
-    XCTAssertEqualObjects(_object.urlField.absoluteString, string, @"Failed to map string value to URL");
+    [object mts_setValue:string forKey:@"url"];
+    XCTAssertEqualObjects(object.urlField.absoluteString, string, @"Failed to map string value to URL");
 }
 
 #pragma mark to date
 
 - (void)testStringFormatToDate_Default
 {
+    MJMotisObject *object = [MJMotisObject new];
+    
     NSString *string = @"2014-04-23 12:00:00";
-    [_object mts_setValue:string forKey:@"date"];
-    XCTAssertNil(_object.dateField, @"Failed to invalidate string value %@", string);
+    [object mts_setValue:string forKey:@"date"];
+    XCTAssertNil(object.dateField, @"Failed to invalidate string value %@", string);
 }
 
 - (void)testStringTimeIntervalToDate_Default
 {
-    const NSTimeInterval timeInterval = 1398333352.0;
+    MJMotisObject *object = [MJMotisObject new];
+    
+    NSTimeInterval timeInterval = 1398333352.0;
     NSString *string = [NSString stringWithFormat:@"%f", timeInterval];
-    [_object mts_setValue:string forKey:@"date"];
-    XCTAssertEqual([_object.dateField timeIntervalSince1970], timeInterval, @"Failed to map string value %@", string);
+    [object mts_setValue:string forKey:@"date"];
+    XCTAssertEqual([object.dateField timeIntervalSince1970], timeInterval, @"Failed to map string value %@", string);
 }
 
 - (void)testStringFormatToDate_CustomDateFormatter
 {
-    _object = [MJTestObjectWithFormatter new];
+    MJMotisObjectWithFormatter *object = [MJMotisObjectWithFormatter new];
+    
     NSString *string = @"2014-04-23 12:00:00";
-    [_object mts_setValue:string forKey:@"date"];
+    [object mts_setValue:string forKey:@"date"];
 
-    NSDateFormatter *formatter = [_object.class mts_validationDateFormatter];
+    NSDateFormatter *formatter = [object.class mts_validationDateFormatter];
     NSDate *date = [formatter dateFromString:string];
-    XCTAssertEqualObjects(_object.dateField, date, @"Failed to map string value %@", string);
+    XCTAssertEqualObjects(object.dateField, date, @"Failed to map string value %@", string);
 }
 
 - (void)testStringTimeIntervalToDate_CustomDateFormatter
 {
-    _object = [MJTestObjectWithFormatter new];
+    MJMotisObjectWithFormatter *object = [MJMotisObjectWithFormatter new];
     
     const NSTimeInterval timeInterval = 1398333352.0;
     
     NSString *string = [NSString stringWithFormat:@"%f", timeInterval];
-    [_object mts_setValue:string forKey:@"date"];
+    [object mts_setValue:string forKey:@"date"];
     
-    XCTAssertNil(_object.dateField, @"Failed to invalidate string value %@", string);
+    XCTAssertNil(object.dateField, @"Failed to invalidate string value %@", string);
 }
 
 #pragma mark to id
 
 - (void)testStringToId
 {
+    MJMotisObject *object = [MJMotisObject new];
+    
     NSString *string = @"Hello World";
-    [_object mts_setValue:string forKey:@"id"];
-    XCTAssertEqualObjects(_object.idField, string, @"Failed to map string value");
+    [object mts_setValue:string forKey:@"id"];
+    XCTAssertEqualObjects(object.idField, string, @"Failed to map string value");
 }
 
 - (void)testStringToIdProtocol
 {
+    MJMotisObject *object = [MJMotisObject new];
+    
     NSString *string = @"Hello World";
-    [_object mts_setValue:string forKey:@"id_protocol"];
-    XCTAssertEqualObjects(_object.idProtocolField, string, @"Failed to map string value");
+    [object mts_setValue:string forKey:@"id_protocol"];
+    XCTAssertEqualObjects(object.idProtocolField, string, @"Failed to map string value");
 }
 
 #pragma mark - FROM DICTIONARY
@@ -451,8 +473,18 @@
 
 #pragma mark - UNDEFINED MAPPINGS
 
-// MJTestObject overrides the method "-mts_motisShouldSetUndefinedKeys" and returns NO.
-// MJTestObject2 overrides the method "-mts_motisShouldSetUndefinedKeys" and returns YES.
+// ------------------------------------------------------------------------------------------------------------------------ //
+// WITHOUT A MOTIS-PREPARED OBJECT
+// ------------------------------------------------------------------------------------------------------------------------ //
+
+- (void)testUndefinedMapping
+{
+    MJTestObject *object = [MJTestObject new];
+    
+    NSString *string = @"Hello World";
+    [object mts_setValue:string forKey:@"stringField"];
+    XCTAssertEqualObjects(object.stringField, string, @"By default, object must assign values if JSON keys and property match.");
+}
 
 // ------------------------------------------------------------------------------------------------------------------------ //
 // WITH UNDEFINED PROPERTIES
@@ -460,7 +492,9 @@
 
 - (void)testUndefinedMappingWithUndefinedProperty
 {
-    MJTestObject2 *object = [MJTestObject2 new];
+    MJMotisObject *object = [MJMotisObject new];
+    
+    BOOL thrownException = NO;
     
     @try
     {
@@ -468,15 +502,19 @@
     }
     @catch (NSException *exception)
     {
-        XCTAssertNotNil(exception, @"Object must throw exception if key is unknown");
+        thrownException = exception != nil;
     }
+    
+    XCTAssertEqual(thrownException, YES, @"Object must throw exception if key is unknown");
 }
 
 - (void)testUndefinedMappingWithUndefinedPropertyRestricted
 {
+    MJMotisObjectRestricted *object = [MJMotisObjectRestricted new];
+    
     @try
     {
-        [_object mts_setValue:@"hello world" forKey:@"lorem_ipsum_sir_dolor_amet"];
+        [object mts_setValue:@"hello world" forKey:@"lorem_ipsum_sir_dolor_amet"];
     }
     @catch (NSException *exception)
     {
@@ -490,7 +528,7 @@
 
 - (void)testUndefinedMappingWithDefinedProperty
 {
-    MJTestObject2 *object = [MJTestObject2 new];
+    MJMotisObject *object = [MJMotisObject new];
     
     object.privateIntegerField = 42;
     [object mts_setValue:@0 forKey:@"privateIntegerField"];
@@ -499,16 +537,72 @@
 
 - (void)testUndefinedMappingWithDefinedPropertyRestricted
 {
-    _object.privateIntegerField = 42;
-    [_object mts_setValue:@0 forKey:@"privateIntegerField"];
-    XCTAssertEqual(_object.privateIntegerField, 42, @"Object must not assign values for undefined mappings");
+    MJMotisObjectRestricted *object = [MJMotisObjectRestricted new];
+    
+    object.privateIntegerField = 42;
+    [object mts_setValue:@0 forKey:@"privateIntegerField"];
+    XCTAssertEqual(object.privateIntegerField, 42, @"Object must not assign values for undefined mappings");
 }
 
-#pragma mark - KEYPATH
+#pragma mark - DICTIONARY SET
+
+// ------------------------------------------------------------------------------------------------------------------------ //
+// DICTIONARY SET TEST
+// ------------------------------------------------------------------------------------------------------------------------ //
+
+#pragma mark Mappings
+
+- (void)testDictionarySetForUndefinedMapping
+{
+    MJTestObject *object = [MJTestObject new];
+    NSString *string = @"Hello World";
+    
+    [object mts_setValuesForKeysWithDictionary:@{@"stringField": string}];
+    
+    XCTAssertEqualObjects(object.stringField, string, @"ERROR!");
+}
+
+- (void)testDictionarySetForDefinedMapping
+{
+    MJMotisObject *object = [MJMotisObject new];
+    NSString *string = @"Hello World";
+    
+    [object mts_setValuesForKeysWithDictionary:@{@"string": string}];
+    
+    XCTAssertEqualObjects(object.stringField, string, @"ERROR!");
+}
+
+#pragma mark KeyPath
 
 // ------------------------------------------------------------------------------------------------------------------------ //
 // KEY PATH TEST
 // ------------------------------------------------------------------------------------------------------------------------ //
+
+- (void)testKeyPathInNonRestrictedMotisObject
+{
+    MJMotisObject *object = [MJMotisObject new];
+    
+    object.stringField = nil;
+    
+    NSDictionary *dictionary = nil;
+    NSString *string = @"Hello";
+    
+    dictionary = @{@"string1": @{@"string2": @{@"string3": string}}};
+    
+    BOOL thrownException = NO;
+    
+    @try
+    {
+        [object mts_setValuesForKeysWithDictionary:dictionary];
+    }
+    @catch (NSException *exception)
+    {
+        thrownException = exception != nil;
+        XCTAssertEqualObjects(object.stringField, string, @"KeyPath acces failed");
+    }
+    
+    XCTAssertEqual(thrownException, YES, @"Object must throw exception if key is unknown");
+}
 
 /*
  * The defined mapping is "string1.string2.string3" and points to a NSString property.
@@ -516,14 +610,16 @@
  */
 - (void)testKeyPath
 {
-    _object.stringField = nil;
+    MJMotisObjectRestricted *object = [MJMotisObjectRestricted new];
+    
+    object.stringField = nil;
     
     NSDictionary *dictionary = nil;
     NSString *string = @"Hello";
     
     dictionary = @{@"string1": @{@"string2": @{@"string3": string}}};
-    [_object mts_setValuesForKeysWithDictionary:dictionary];
-    XCTAssertEqualObjects(_object.stringField, string, @"KeyPath acces failed");
+    [object mts_setValuesForKeysWithDictionary:dictionary];
+    XCTAssertEqualObjects(object.stringField, string, @"KeyPath acces failed");
 }
 
 /*
@@ -532,15 +628,17 @@
  */
 - (void)testKeyPathValidation
 {
-    _object.urlField = nil;
+    MJMotisObjectRestricted *object = [MJMotisObjectRestricted new];
+    
+    object.urlField = nil;
     
     NSDictionary *dictionary = nil;
     NSString *string = @"http://www.mobilejazz.cat";
     
     dictionary = @{@"url1": @{@"url2": @{@"url3": string}}};
-    [_object mts_setValuesForKeysWithDictionary:dictionary];
+    [object mts_setValuesForKeysWithDictionary:dictionary];
     
-    XCTAssertEqualObjects(_object.urlField.class, NSURL.class, @"KeyPath validation failed");
+    XCTAssertEqualObjects(object.urlField.class, NSURL.class, @"KeyPath validation failed");
 }
 
 /*
@@ -550,14 +648,16 @@
  */
 - (void)testKeyPathIncorrectAccess
 {
-    _object.stringField = nil;
+    MJMotisObjectRestricted *object = [MJMotisObjectRestricted new];
+    
+    object.stringField = nil;
     
     NSDictionary *dictionary = nil;
     NSString *string = @"Hello";
     
     dictionary = @{@"string1": @{@"string2": string}};
-    [_object mts_setValuesForKeysWithDictionary:dictionary];
-    XCTAssertNil(_object.stringField, @"KeyPath acces failed");
+    [object mts_setValuesForKeysWithDictionary:dictionary];
+    XCTAssertNil(object.stringField, @"KeyPath acces failed");
 }
 
 @end

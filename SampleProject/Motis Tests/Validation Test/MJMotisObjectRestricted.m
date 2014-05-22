@@ -6,13 +6,13 @@
 //  Copyright (c) 2014 Mobile Jazz. All rights reserved.
 //
 
-#import "MJTestObject2.h"
+#import "MJMotisObjectRestricted.h"
 
-@implementation MJTestObject2
+@implementation MJMotisObjectRestricted
 
 + (BOOL)mts_shouldSetUndefinedKeys
 {
-    return YES;
+    return NO;
 }
 
 @end
