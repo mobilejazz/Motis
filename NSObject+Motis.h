@@ -52,7 +52,7 @@
 /**
  * Parse and set the key-values of the dictionary. This method will fire validation for each value.
  * @param dictionary The dictionary to parse and set.
- * @discussion This method will call for each dictionary pair key-value the method `parseValue:forKey:`.
+ * @discussion This method will call for each dictionary pair key-value the method `mts_setValue:forKey:`.
  **/
 - (void)mts_setValuesForKeysWithDictionary:(NSDictionary *)dictionary;
 
