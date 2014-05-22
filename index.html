@@ -136,12 +136,12 @@
 
 <p>By default, Motis attempt to set via KVC any property name. Therefore, even if you don't define a mapping in the method <code>+mts_mapping:</code> but your JSON dictionary contains keys that match the name of your object properties, motis will assign and validate those values.</p>
 
-<p>This might be problematic if you have no control over your JSON dictionaries. Therefore, Motis can restrict the accepted mapping keys to the ones defined in the motis mapping. You can active this behaviour by overriding the method <code>+mts_shouldSetUndefinedKeys</code> and return NO (default is YES).</p>
+<p>This might be problematic if you have no control over your JSON dictionaries. Therefore, Motis will restrict the accepted mapping keys to the ones defined in the Motis mapping. You can change this behaviour by overriding the method <code>+mts_shouldSetUndefinedKeys</code>.</p>
 
 <div class="highlight highlight-objective-c"><pre><span class="k">+</span> <span class="p">(</span><span class="kt">BOOL</span><span class="p">)</span><span class="nf">mts_shouldSetUndefinedKeys</span>
 <span class="p">{</span>
-    <span class="c1">// By default this method return YES.</span>
-    <span class="c1">// You can override it and return NO to only accept the keys defined in mts_mapping.</span>
+    <span class="c1">// By default this method return NO unless you haven't defined a mapping.</span>
+    <span class="c1">// You can override it and return YES to only accept any key.</span>
     <span class="k">return</span> <span class="nb">NO</span><span class="p">;</span> 
 <span class="p">}</span>
 </pre></div>
