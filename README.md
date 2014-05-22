@@ -2,6 +2,7 @@ Motis Object Mapping
 ==========
 [![Version](https://cocoapod-badges.herokuapp.com/v/Motis/badge.png)](http://cocoadocs.org/docsets/Motis) 
 [![Platform](https://cocoapod-badges.herokuapp.com/p/Motis/badge.png)](http://cocoadocs.org/docsets/Motis) 
+[![Build Status](https://travis-ci.org/mobilejazz/Motis.png)](https://travis-ci.org/mobilejazz/Motis)
 
 ![Motis](https://raw.githubusercontent.com/mobilejazz/Motis/master/Images/Motis.png)
 
