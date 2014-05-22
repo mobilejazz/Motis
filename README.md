@@ -100,13 +100,13 @@ Also, as you might see, we are specifying custom types as `NSDate` or `NSURL`. M
 
 By default, Motis attempt to set via KVC any property name. Therefore, even if you don't define a mapping in the method `+mts_mapping:` but your JSON dictionary contains keys that match the name of your object properties, motis will assign and validate those values.
 
-This might be problematic if you have no control over your JSON dictionaries. Therefore, Motis can restrict the accepted mapping keys to the ones defined in the motis mapping. You can active this behaviour by overriding the method `+mts_shouldSetUndefinedKeys` and return NO (default is YES).
+This might be problematic if you have no control over your JSON dictionaries. Therefore, Motis will restrict the accepted mapping keys to the ones defined in the Motis mapping. You can change this behaviour by overriding the method `+mts_shouldSetUndefinedKeys`.
 
 ```objective-c
 + (BOOL)mts_shouldSetUndefinedKeys
 {
-    // By default this method return YES.
-    // You can override it and return NO to only accept the keys defined in mts_mapping.
+    // By default this method return NO unless you haven't defined a mapping.
+    // You can override it and return YES to only accept any key.
     return NO; 
 }
 ```
