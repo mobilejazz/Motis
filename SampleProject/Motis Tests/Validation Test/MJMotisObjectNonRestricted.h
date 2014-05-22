@@ -8,6 +8,6 @@
 
 #import "MJMotisObject.h"
 
-@interface MJMotisObjectRestricted : MJMotisObject
+@interface MJMotisObjectNonRestricted : MJMotisObject
 
 @end

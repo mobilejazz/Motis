@@ -6,13 +6,13 @@
 //  Copyright (c) 2014 Mobile Jazz. All rights reserved.
 //
 
-#import "MJMotisObjectRestricted.h"
+#import "MJMotisObjectNonRestricted.h"
 
-@implementation MJMotisObjectRestricted
+@implementation MJMotisObjectNonRestricted
 
 + (BOOL)mts_shouldSetUndefinedKeys
 {
-    return NO;
+    return YES;
 }
 
 @end

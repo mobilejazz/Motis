@@ -10,7 +10,7 @@
 
 #import "NSObject+Motis.h"
 #import "MJMotisObject.h"
-#import "MJMotisObjectRestricted.h"
+#import "MJMotisObjectNonRestricted.h"
 #import "MJMotisObjectWithFormatter.h"
 
 
@@ -492,7 +492,7 @@
 
 - (void)testUndefinedMappingWithUndefinedProperty
 {
-    MJMotisObject *object = [MJMotisObject new];
+    MJTestObject *object = [MJTestObject new];
     
     BOOL thrownException = NO;
     
@@ -510,7 +510,7 @@
 
 - (void)testUndefinedMappingWithUndefinedPropertyRestricted
 {
-    MJMotisObjectRestricted *object = [MJMotisObjectRestricted new];
+    MJMotisObject *object = [MJMotisObject new];
     
     @try
     {
@@ -528,7 +528,7 @@
 
 - (void)testUndefinedMappingWithDefinedProperty
 {
-    MJMotisObject *object = [MJMotisObject new];
+    MJMotisObjectNonRestricted *object = [MJMotisObjectNonRestricted new];
     
     object.privateIntegerField = 42;
     [object mts_setValue:@0 forKey:@"privateIntegerField"];
@@ -537,7 +537,7 @@
 
 - (void)testUndefinedMappingWithDefinedPropertyRestricted
 {
-    MJMotisObjectRestricted *object = [MJMotisObjectRestricted new];
+    MJMotisObject *object = [MJMotisObject new];
     
     object.privateIntegerField = 42;
     [object mts_setValue:@0 forKey:@"privateIntegerField"];
@@ -580,7 +580,7 @@
 
 - (void)testKeyPathInNonRestrictedMotisObject
 {
-    MJMotisObject *object = [MJMotisObject new];
+    MJMotisObjectNonRestricted *object = [MJMotisObjectNonRestricted new];
     
     object.stringField = nil;
     
@@ -610,7 +610,7 @@
  */
 - (void)testKeyPath
 {
-    MJMotisObjectRestricted *object = [MJMotisObjectRestricted new];
+    MJMotisObject *object = [MJMotisObject new];
     
     object.stringField = nil;
     
@@ -628,7 +628,7 @@
  */
 - (void)testKeyPathValidation
 {
-    MJMotisObjectRestricted *object = [MJMotisObjectRestricted new];
+    MJMotisObject *object = [MJMotisObject new];
     
     object.urlField = nil;
     
@@ -648,7 +648,7 @@
  */
 - (void)testKeyPathIncorrectAccess
 {
-    MJMotisObjectRestricted *object = [MJMotisObjectRestricted new];
+    MJMotisObject *object = [MJMotisObject new];
     
     object.stringField = nil;
     

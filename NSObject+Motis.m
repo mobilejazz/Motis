@@ -375,7 +375,13 @@ static Class classFromString(NSString *string)
 
 - (NSString*)mts_mapKey:(NSString*)key
 {
-    NSString *mappedKey = [self.class mts_cachedMapping][key];
+    NSDictionary *mapping = [self.class mts_cachedMapping];
+    
+    // if no mapping is defined (or empty), return the key.
+    if (mapping.count == 0)
+        return key;
+    
+    NSString *mappedKey = mapping[key];
     
     if (mappedKey)
         return mappedKey;
@@ -387,7 +393,6 @@ static Class classFromString(NSString *string)
 }
 
 @end
-
 
 // ------------------------------------------------------------------------------------------------------------------------------------------------------------------ //
 // ------------------------------------------------------------------------------------------------------------------------------------------------------------------ //
@@ -407,7 +412,7 @@ static Class classFromString(NSString *string)
 + (BOOL)mts_shouldSetUndefinedKeys
 {
     // Subclasses might override.
-    return YES;
+    return NO;
 }
 
 + (NSDictionary*)mts_arrayClassMapping

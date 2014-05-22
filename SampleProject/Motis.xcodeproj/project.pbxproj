@@ -26,7 +26,7 @@
 		D2C3463918959EF2005B6B5C /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D2C3463818959EF2005B6B5C /* CoreGraphics.framework */; };
 		D2C3463B18959EF2005B6B5C /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D2C3463A18959EF2005B6B5C /* UIKit.framework */; };
 		D2DD9FD3192DF28400163C50 /* MJMotisObject.m in Sources */ = {isa = PBXBuildFile; fileRef = D2DD9FCC192DF28400163C50 /* MJMotisObject.m */; };
-		D2DD9FD4192DF28400163C50 /* MJMotisObjectRestricted.m in Sources */ = {isa = PBXBuildFile; fileRef = D2DD9FCE192DF28400163C50 /* MJMotisObjectRestricted.m */; };
+		D2DD9FD4192DF28400163C50 /* MJMotisObjectNonRestricted.m in Sources */ = {isa = PBXBuildFile; fileRef = D2DD9FCE192DF28400163C50 /* MJMotisObjectNonRestricted.m */; };
 		D2DD9FD5192DF28400163C50 /* MJMotisObjectWithFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = D2DD9FD0192DF28400163C50 /* MJMotisObjectWithFormatter.m */; };
 		D2DD9FD6192DF28400163C50 /* MJTestObject.m in Sources */ = {isa = PBXBuildFile; fileRef = D2DD9FD2192DF28400163C50 /* MJTestObject.m */; };
 		D2DF757D18D746A800163BA8 /* MJAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = D2DF757818D746A800163BA8 /* MJAppDelegate.m */; };
@@ -82,8 +82,8 @@
 		D2C3464F18959EF2005B6B5C /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		D2DD9FCB192DF28400163C50 /* MJMotisObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MJMotisObject.h; sourceTree = "<group>"; };
 		D2DD9FCC192DF28400163C50 /* MJMotisObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MJMotisObject.m; sourceTree = "<group>"; };
-		D2DD9FCD192DF28400163C50 /* MJMotisObjectRestricted.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MJMotisObjectRestricted.h; sourceTree = "<group>"; };
-		D2DD9FCE192DF28400163C50 /* MJMotisObjectRestricted.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MJMotisObjectRestricted.m; sourceTree = "<group>"; };
+		D2DD9FCD192DF28400163C50 /* MJMotisObjectNonRestricted.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MJMotisObjectNonRestricted.h; sourceTree = "<group>"; };
+		D2DD9FCE192DF28400163C50 /* MJMotisObjectNonRestricted.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MJMotisObjectNonRestricted.m; sourceTree = "<group>"; };
 		D2DD9FCF192DF28400163C50 /* MJMotisObjectWithFormatter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MJMotisObjectWithFormatter.h; sourceTree = "<group>"; };
 		D2DD9FD0192DF28400163C50 /* MJMotisObjectWithFormatter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MJMotisObjectWithFormatter.m; sourceTree = "<group>"; };
 		D2DD9FD1192DF28400163C50 /* MJTestObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MJTestObject.h; sourceTree = "<group>"; };
@@ -268,8 +268,8 @@
 				D2DD9FD2192DF28400163C50 /* MJTestObject.m */,
 				D2DD9FCB192DF28400163C50 /* MJMotisObject.h */,
 				D2DD9FCC192DF28400163C50 /* MJMotisObject.m */,
-				D2DD9FCD192DF28400163C50 /* MJMotisObjectRestricted.h */,
-				D2DD9FCE192DF28400163C50 /* MJMotisObjectRestricted.m */,
+				D2DD9FCD192DF28400163C50 /* MJMotisObjectNonRestricted.h */,
+				D2DD9FCE192DF28400163C50 /* MJMotisObjectNonRestricted.m */,
 				D2DD9FCF192DF28400163C50 /* MJMotisObjectWithFormatter.h */,
 				D2DD9FD0192DF28400163C50 /* MJMotisObjectWithFormatter.m */,
 			);
@@ -393,7 +393,7 @@
 				D2E3E038190E8DBF002BD141 /* MJChildA.m in Sources */,
 				D2DD9FD3192DF28400163C50 /* MJMotisObject.m in Sources */,
 				D2E3E034190E8D9E002BD141 /* MJParentObject.m in Sources */,
-				D2DD9FD4192DF28400163C50 /* MJMotisObjectRestricted.m in Sources */,
+				D2DD9FD4192DF28400163C50 /* MJMotisObjectNonRestricted.m in Sources */,
 				D2E3E030190E8D82002BD141 /* MJHierarchyTest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

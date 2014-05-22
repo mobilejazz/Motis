@@ -162,7 +162,7 @@
  *
  * OTHER METHODS TO SUBCLASS
  *
- *  - `-setValue:forUndefinedKey:`: KVC Method to handle undefined keys. By default this method throws an exception. This method is called when a unknown json field is received.
+ *  - `-setValue:forUndefinedKey:`: KVC Method to handle undefined keys. By default this method throws an exception. This method is called when a setting a value for an unknown key.
  *  - `-setNilValueForKey:`: KVC Method to nullify a basic type property. By default this method throws an exception. This method is called when a json field with value "null" is received.
  *  - `-mts_ignoredSetValue:forUndefinedMappingKey`: If undefined keys are disabled (`mts_motisShouldSetUndefinedKeys`), this method will be called when a undefined mapping key is found.
  *  - `-mts_invalidValue:forKey:error:`: If value is does not pass valiation, this method is called after aborting the value setting.
@@ -183,9 +183,9 @@
 
 /**
  
- * Returns whether Mopis should set keys not found in the mapping. Default value is `YES`.
- * @return `YES` if Motis should set undefined keys, `NO` if only the keys defined `mts_motisMapping` can be set.
- * @discussion Subclasses may override to return `NO`.
+ * Returns whether Motis should set keys not found in the mapping. Default value is `NO`. However, if no mapping is defined this method is ignored and Motis will attempt to set values for any key.
+ * @return `YES` if Motis should set undefined mapping keys, `NO` if only the keys defined `+mts_mapping` can be set.
+ * @discussion Subclasses may override to return `YES`. Remember that when setting values for undefined keys KVC will rise an exception which you can remove by overriding the KVC method `-setValue:forUndefinedKey:.
  **/
 + (BOOL)mts_shouldSetUndefinedKeys;
 
