@@ -1,0 +1,6 @@
+language: objective-c
+before_script:
+  - brew update
+  - brew upgrade xctool
+script: 
+  - xctool -project SampleProject/Motis.xcodeproj -scheme 'Motis' -configuration Release -sdk iphonesimulator test
