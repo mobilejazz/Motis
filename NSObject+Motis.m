@@ -407,7 +407,7 @@ static Class classFromString(NSString *string)
 + (BOOL)mts_shouldSetUndefinedKeys
 {
     // Subclasses might override.
-    NSDictionary *mapping = [self.class mts_cachedMapping];
+    NSDictionary *mapping = [self mts_cachedMapping];
     return mapping.count == 0;
 }
 
