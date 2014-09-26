@@ -16,7 +16,7 @@ Check our blog post entry [Using KVC to parse JSON](http://blog.mobilejazz.cat/i
 
 ## Get Motis
 
-If you use Cocoa Pods, you can get Motis by adding to your podfile `pod 'Motis', '~>0.4.4'`. Otherwise, you will need to download the files `NSObject+Motis.h`, `NSObject+Motis.m` and `Motis.h`.
+If you use Cocoa Pods, you can get Motis by adding to your podfile `pod 'Motis', '~>1.0.0'`. Otherwise, you will need to download the files `NSObject+Motis.h`, `NSObject+Motis.m` and `Motis.h`.
 
 ##Using Motis
 
