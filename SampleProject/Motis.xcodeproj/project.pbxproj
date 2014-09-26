@@ -533,6 +533,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CLANG_ENABLE_MODULES = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Motis/Motis-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -540,7 +541,10 @@
 					"PERFORMANCE_TEST=1",
 				);
 				INFOPLIST_FILE = "Motis/Motis-Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = Motis;
+				SWIFT_OBJC_BRIDGING_HEADER = "Motis/Motis-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				WRAPPER_EXTENSION = app;
 			};
 			name = "Performance Test";
@@ -644,10 +648,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CLANG_ENABLE_MODULES = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Motis/Motis-Prefix.pch";
 				INFOPLIST_FILE = "Motis/Motis-Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = Motis;
+				SWIFT_OBJC_BRIDGING_HEADER = "Motis/Motis-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -657,10 +665,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CLANG_ENABLE_MODULES = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Motis/Motis-Prefix.pch";
 				INFOPLIST_FILE = "Motis/Motis-Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = Motis;
+				SWIFT_OBJC_BRIDGING_HEADER = "Motis/Motis-Bridging-Header.h";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

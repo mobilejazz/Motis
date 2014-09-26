@@ -76,7 +76,7 @@ NSString* uniqueString()
     NSTimeInterval parserTime = [self mjz_mesureBlock:^{
         [self mjz_testParserWithDictionary:jsonDictionary];
     }];
-    MJZLog(@"* Parser time:\t%f seconds", parserTime);
+    MJZLog(@"* Mapper time:\t%f seconds", parserTime);
     
     MJZLog(@"** END");
 }

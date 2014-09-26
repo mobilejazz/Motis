@@ -146,7 +146,7 @@
  * In order to use Motis you must define mappings between JSON keys and object properties by overriding the following methods:
  *
  *  - `+mts_mapping`: Subclasses must override this method and return the mapping between the JSON keys and the object properties. The mapping may contain KeyPath to JSON values.
- *  - `+mts_shouldSetUndefinedKeys`: Optionally, subclasses can override this method to forbid Motis from automatically setting keys not found in the mapping. The default is `YES`.
+ *  - `+mts_shouldSetUndefinedKeys`: Optionally, subclasses can override this method to forbid Motis from automatically setting keys not found in the mapping. The default is `NO`, except if you have not defined any mots mapping on the method `+mts_mapping`, in which case will return `YES`.
  *
  * VALIDATION METHODS
  *
