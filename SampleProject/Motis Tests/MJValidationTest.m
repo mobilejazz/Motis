@@ -458,17 +458,18 @@
 
 - (void)testDictionaryToObject
 {
-    // TODO
-}
+    MJMotisObject *object = [MJMotisObject new];
+    
+    NSDictionary *dict = @{@"string": @"hello world",
+                           @"integer": @123,
+                           @"bool": @YES,
+                           };
 
-- (void)testDictionaryToObjectWithRecursiveObject
-{
-    // TODO
-}
-
-- (void)testDictionaryToObjectWithRecursiveArray
-{
-    // TODO
+    [object mts_setValue:dict forKey:@"motis_object"];
+    
+    XCTAssertEqualObjects(object.motisObject.stringField, dict[@"string"], @"Failed to map motis object string value.");
+    XCTAssertEqual(object.motisObject.integerField, [dict[@"integer"] integerValue], @"Failed to map motis object integer value.");
+    XCTAssertEqual(object.motisObject.boolField, [dict[@"bool"] boolValue], @"Failed to map motis object bool value.");
 }
 
 #pragma mark - UNDEFINED MAPPINGS

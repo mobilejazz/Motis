@@ -32,6 +32,9 @@
              
              @"string1.string2.string3" : mts_key(stringField),
              @"url1.url2.url3" : mts_key(urlField),
+             
+             @"test_object": mts_key(testObject),
+             @"motis_object": mts_key(motisObject),
              };
     
 }
