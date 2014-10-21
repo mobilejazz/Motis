@@ -865,7 +865,6 @@ static void mts_motisInitialization()
         [self mts_validateArrayContent:ioValue forArrayKey:key];
         
         // Second, validation array type
-        
         if ([typeClass isSubclassOfClass:NSMutableArray.class])
         {
             *ioValue = [NSMutableArray arrayWithArray:*ioValue];
