@@ -32,8 +32,27 @@
              
              @"string1.string2.string3" : mts_key(stringField),
              @"url1.url2.url3" : mts_key(urlField),
+             
+             @"test_object": mts_key(testObject),
+             @"motis_object": mts_key(motisObject),
+             
+             @"array": mts_key(array),
+             @"object_array": mts_key(objectArray),
+             @"string_array": mts_key(stringsArray),
+             @"number_array": mts_key(numbersArray),
+             @"url_array": mts_key(urlsArray),
+             @"date_array": mts_key(datesArray),
              };
-    
+}
+
++ (NSDictionary*)mts_arrayClassMapping
+{
+    return @{mts_key(objectArray): MJMotisObject.class,
+             mts_key(stringsArray): NSString.class,
+             mts_key(numbersArray): NSNumber.class,
+             mts_key(urlsArray): NSURL.class,
+             mts_key(datesArray): NSDate.class,
+             };
 }
 
 #pragma mark Property Nillification

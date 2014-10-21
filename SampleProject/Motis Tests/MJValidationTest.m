@@ -471,6 +471,133 @@
     // TODO
 }
 
+#pragma mark - FROM ARRAY
+
+// ------------------------------------------------------------------------------------------------------------------------ //
+// FROM ARRRAY
+// ------------------------------------------------------------------------------------------------------------------------ //
+
+- (void)testArrayToArray
+{
+    MJMotisObject *object = [MJMotisObject new];
+    
+    NSArray *array = @[@1, @"string"];
+    [object mts_setValue:array forKey:@"array"];
+    XCTAssertEqualObjects(array, object.array, @"Failed to map array %@", array.description);
+}
+
+- (void)testEmptyArrayToArray
+{
+    MJMotisObject *object = [MJMotisObject new];
+    
+    NSArray *array = @[];
+    [object mts_setValue:array forKey:@"array"];
+    XCTAssertEqualObjects(array, object.array, @"Failed to map array %@", array.description);
+}
+
+- (void)testNullArrayToArray
+{
+    MJMotisObject *object = [MJMotisObject new];
+    
+    NSArray *array = @[[NSNull null], [NSNull null], [NSNull null]];
+    [object mts_setValue:array forKey:@"array"];
+    XCTAssertEqual(object.array.count, 0, @"Failed to map array %@", array.description);
+}
+
+- (void)testAllValuesArrayToArray
+{
+    MJMotisObject *object = [MJMotisObject new];
+    
+    NSArray *array = @[@1, @"string", [NSNull null], @YES];
+    [object mts_setValue:array forKey:@"array"];
+    XCTAssertEqualObjects(object.array[0], array[0], @"Failed to map array %@", array.description);
+    XCTAssertEqualObjects(object.array[1], array[1], @"Failed to map array %@", array.description);
+    XCTAssertEqualObjects(object.array[2], array[3], @"Failed to map array %@", array.description);
+    XCTAssertEqual(object.array.count, 3, @"Failed to map array %@", array.description);
+}
+
+- (void)testObjectArrayToArray
+{
+    MJMotisObject *object = [MJMotisObject new];
+    
+    NSDictionary *dict = @{@"string": @"Hello World",
+                           @"integer": @42,
+                           @"unsigned_integer": @(NSUIntegerMax),
+                           @"bool": @YES,
+                           };
+    
+    NSArray *array = @[dict, dict];
+    
+    [object mts_setValue:array forKey:@"object_array"];
+    
+    for (NSInteger i=0; i<array.count; ++i)
+    {
+        XCTAssertEqualObjects(dict[@"string"], [object.objectArray[i] stringField], @"Failed to map object array");
+        XCTAssertEqual([dict[@"integer"] integerValue], [object.objectArray[i] integerField], @"Failed to map object array");
+        XCTAssertEqual([dict[@"unsigned_integer"] unsignedIntegerValue], [object.objectArray[i] unsignedIntegerField], @"Failed to map object array");
+        XCTAssertEqual([dict[@"bool"] unsignedIntegerValue], [object.objectArray[i] boolField], @"Failed to map object array");
+    }
+}
+
+- (void)testArrayToStringsArray
+{
+    MJMotisObject *object = [MJMotisObject new];
+    
+    NSArray *array = @[@"string", @123, @YES, @NO];
+    [object mts_setValue:array forKey:@"string_array"];
+    
+    [object.stringsArray enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        XCTAssert([obj isKindOfClass:NSString.class], @"String conversion in array failed with value %@", [array[idx] description]);
+    }];
+    
+    XCTAssertEqual(array.count, object.stringsArray.count, @"String array conversion failed");
+}
+
+- (void)testArrayToNumberArray
+{
+    MJMotisObject *object = [MJMotisObject new];
+    
+    NSArray *array = @[@"42.5", @"asdf", @123, @YES, @NO];
+    [object mts_setValue:array forKey:@"number_array"];
+    
+    [object.numbersArray enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        XCTAssert([obj isKindOfClass:NSNumber.class], @"Number conversion in array failed with value %@", [array[idx] description]);
+    }];
+    
+    XCTAssertEqual(array.count, object.numbersArray.count, @"Number array conversion failed");
+}
+
+- (void)testArrayToURLArray
+{
+    MJMotisObject *object = [MJMotisObject new];
+    
+    NSArray *array = @[@"www.google.com", @"http://www.facebook.com"];
+    [object mts_setValue:array forKey:@"url_array"];
+    
+    [object.urlsArray enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        XCTAssert([obj isKindOfClass:NSURL.class], @"URL conversion in array failed with value %@", [array[idx] description]);
+    }];
+    
+    XCTAssertEqual(array.count, object.urlsArray.count, @"URL array conversion failed");
+}
+
+- (void)testArrayToDateArray
+{
+    MJMotisObject *object = [MJMotisObjectWithFormatter new];
+    
+    NSTimeInterval timeInterval = 1398333352.0;
+    NSString *string = @"2014-04-23 12:00:00";
+    
+    NSArray *array = @[@(timeInterval), string];
+    [object mts_setValue:array forKey:@"date_array"];
+    
+    [object.datesArray enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        XCTAssert([obj isKindOfClass:NSDate.class], @"Date conversion in array failed with value %@", [array[idx] description]);
+    }];
+    
+    XCTAssertEqual(array.count, object.datesArray.count, @"Date array conversion failed");
+}
+
 #pragma mark - UNDEFINED MAPPINGS
 
 // ------------------------------------------------------------------------------------------------------------------------ //

@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
+@class MJMotisObject;
+
 @interface MJTestObject : NSObject
 
 @property (nonatomic, assign) NSInteger integerField;
@@ -27,5 +29,15 @@
 
 @property (nonatomic, strong) NSString *privateStringField;
 @property (nonatomic, assign) NSInteger privateIntegerField;
+
+@property (nonatomic, strong) MJTestObject *testObject;
+@property (nonatomic, strong) MJMotisObject *motisObject;
+
+@property (nonatomic, strong) NSArray *array;
+@property (nonatomic, strong) NSArray *objectArray;
+@property (nonatomic, strong) NSArray *stringsArray;
+@property (nonatomic, strong) NSArray *numbersArray;
+@property (nonatomic, strong) NSArray *urlsArray;
+@property (nonatomic, strong) NSArray *datesArray;
 
 @end

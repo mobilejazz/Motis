@@ -217,50 +217,6 @@ static Class classFromString(NSString *string)
     if (value == [NSNull null])
         value = nil;
     
-    if ([value isKindOfClass:NSArray.class])
-    {
-        __block NSMutableArray *modifiedArray = nil;
-        
-        [value enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(id object, NSUInteger idx, BOOL *stop) {
-            
-            id validatedObject = object;
-            
-            NSError *error = nil;
-            BOOL validated = [self mts_validateArrayObject:&validatedObject forArrayKey:mappedKey error:&error];
-            
-            // Automatic validation only if the value has not been manually validated
-            if (object == validatedObject && validated)
-            {
-                Class typeClass = [self.class mts_cachedArrayClassMapping][mappedKey];
-                if (typeClass)
-                    validated = [self mts_validateAutomaticallyValue:&validatedObject toClass:typeClass forKey:mappedKey];
-            }
-            
-            if (validated)
-            {
-                if (validatedObject != object)
-                {
-                    if (!modifiedArray)
-                        modifiedArray = [value mutableCopy];
-                    
-                    modifiedArray[idx] = validatedObject;
-                }
-            }
-            else
-            {
-                if (!modifiedArray)
-                    modifiedArray = [value mutableCopy];
-                
-                [modifiedArray removeObjectAtIndex:idx];
-                
-                [self mts_invalidValue:validatedObject forArrayKey:mappedKey error:error];
-            }
-        }];
-        
-        if (modifiedArray)
-            value = modifiedArray;
-    }
-    
     id originalValue = value;
     
     NSError *error = nil;
@@ -808,7 +764,12 @@ static void mts_motisInitialization()
 {
     // If types match, just return
     if ([*ioValue isKindOfClass:typeClass])
+    {
+        if ([*ioValue isKindOfClass:NSArray.class])
+            [self mts_validateArrayContent:ioValue forArrayKey:key];
+        
         return YES;
+    }
     
     // Otherwise, lets try to fit the desired class type
     // Because *ioValue comes frome a JSON deserialization, it can only be a string, number, array or dictionary.
@@ -900,6 +861,11 @@ static void mts_motisInitialization()
     }
     else if ([*ioValue isKindOfClass:NSArray.class]) // <-- ARRAYS
     {
+        // First, validating array content
+        [self mts_validateArrayContent:ioValue forArrayKey:key];
+        
+        // Second, validation array type
+        
         if ([typeClass isSubclassOfClass:NSMutableArray.class])
         {
             *ioValue = [NSMutableArray arrayWithArray:*ioValue];
@@ -955,6 +921,55 @@ static void mts_motisInitialization()
     }
     
     return NO;
+}
+
+- (void)mts_validateArrayContent:(inout __autoreleasing NSArray **)ioValue forArrayKey:(NSString*)key
+{
+    __block NSMutableArray *modifiedArray = nil;
+    [*ioValue enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(id object, NSUInteger idx, BOOL *stop) {
+        
+        id validatedObject = object;
+        
+        if (validatedObject == [NSNull null])
+            validatedObject = nil;
+        
+        NSError *error = nil;
+        BOOL validated = [self mts_validateArrayObject:&validatedObject forArrayKey:key error:&error];
+        
+        // Automatic validation only if the value has not been manually validated
+        if (object == validatedObject && validated)
+        {
+            Class typeClass = [self.class mts_cachedArrayClassMapping][key];
+            if (typeClass)
+                validated = [self mts_validateAutomaticallyValue:&validatedObject toClass:typeClass forKey:key];
+        }
+        
+        if (validated)
+        {
+            if (validatedObject != object)
+            {
+                if (!modifiedArray)
+                    modifiedArray = [*ioValue mutableCopy];
+                
+                if (validatedObject == nil)
+                    [modifiedArray removeObjectAtIndex:idx];
+                else
+                    modifiedArray[idx] = validatedObject;
+            }
+        }
+        else
+        {
+            if (!modifiedArray)
+                modifiedArray = [*ioValue mutableCopy];
+            
+            [modifiedArray removeObjectAtIndex:idx];
+            
+            [self mts_invalidValue:validatedObject forArrayKey:key error:error];
+        }
+    }];
+    
+    if (modifiedArray)
+        *ioValue = [modifiedArray copy];
 }
 
 #pragma mark Private Helpers
