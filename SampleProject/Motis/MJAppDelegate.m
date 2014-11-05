@@ -18,22 +18,14 @@
 
 #import "Motis.h"
 
-#if PERFORMANCE_TEST
-#import "MJPerformanceTest.h"
-#else
 #import "MJVideo.h"
 #import "MJUser.h"
-#endif
 
 @implementation MJAppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-#if PERFORMANCE_TEST
-    [self testMotisPerformance];
-#else
-    [self testMotis]; // <--- UNCOMMENT FOR TESTING
-#endif
+    //[self testMotis]; // <--- UNCOMMENT FOR TESTING
     
     UIWindow *window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     window.rootViewController = [[UIViewController alloc] init];
@@ -46,16 +38,6 @@
 }
 
 #pragma mark Private Methods
-
-#if PERFORMANCE_TEST
-
-- (void)testMotisPerformance
-{
-    MJPerformanceTest *test = [[MJPerformanceTest alloc] init];
-    [test start];
-}
-
-#else
 
 - (void)testMotis
 {
@@ -116,6 +98,5 @@
     NSLog(@"AFTER parsing: %@", video.mts_extendedObjectDescription);
     NSLog(@"video.privateVideoKey: %@",[video.privateVideoKey description]);
 }
-#endif
 
 @end

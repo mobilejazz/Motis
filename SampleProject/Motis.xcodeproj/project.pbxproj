@@ -15,16 +15,16 @@
 		D2A0544618D8A5B80050DE68 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D2C3463A18959EF2005B6B5C /* UIKit.framework */; };
 		D2A0544C18D8A5B80050DE68 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = D2A0544A18D8A5B80050DE68 /* InfoPlist.strings */; };
 		D2A0544E18D8A5B80050DE68 /* MJValidationTest.m in Sources */ = {isa = PBXBuildFile; fileRef = D2A0544D18D8A5B80050DE68 /* MJValidationTest.m */; };
-		D2B776D2191B959500CC9B4F /* MJCompany.m in Sources */ = {isa = PBXBuildFile; fileRef = D2B776C8191B959500CC9B4F /* MJCompany.m */; };
-		D2B776D3191B959500CC9B4F /* MJCountry.m in Sources */ = {isa = PBXBuildFile; fileRef = D2B776CA191B959500CC9B4F /* MJCountry.m */; };
-		D2B776D4191B959500CC9B4F /* MJParser.m in Sources */ = {isa = PBXBuildFile; fileRef = D2B776CC191B959500CC9B4F /* MJParser.m */; };
-		D2B776D5191B959500CC9B4F /* MJPerson.m in Sources */ = {isa = PBXBuildFile; fileRef = D2B776CE191B959500CC9B4F /* MJPerson.m */; };
-		D2B776D6191B959500CC9B4F /* MJProject.m in Sources */ = {isa = PBXBuildFile; fileRef = D2B776D0191B959500CC9B4F /* MJProject.m */; };
-		D2B776D7191B959500CC9B4F /* data_25MB.json in Resources */ = {isa = PBXBuildFile; fileRef = D2B776D1191B959500CC9B4F /* data_25MB.json */; };
-		D2B776DA191B95EA00CC9B4F /* MJPerformanceTest.m in Sources */ = {isa = PBXBuildFile; fileRef = D2B776D9191B95EA00CC9B4F /* MJPerformanceTest.m */; };
 		D2C3463718959EF2005B6B5C /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D2C3463618959EF2005B6B5C /* Foundation.framework */; };
 		D2C3463918959EF2005B6B5C /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D2C3463818959EF2005B6B5C /* CoreGraphics.framework */; };
 		D2C3463B18959EF2005B6B5C /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D2C3463A18959EF2005B6B5C /* UIKit.framework */; };
+		D2C890151A0ABBD700E81A9D /* MJPerformanceTest.m in Sources */ = {isa = PBXBuildFile; fileRef = D2C890141A0ABBD700E81A9D /* MJPerformanceTest.m */; };
+		D2C890221A0ABC2900E81A9D /* data_25MB.json in Resources */ = {isa = PBXBuildFile; fileRef = D2C890171A0ABC2900E81A9D /* data_25MB.json */; };
+		D2C890231A0ABC2900E81A9D /* MJCompany.m in Sources */ = {isa = PBXBuildFile; fileRef = D2C890191A0ABC2900E81A9D /* MJCompany.m */; };
+		D2C890241A0ABC2900E81A9D /* MJCountry.m in Sources */ = {isa = PBXBuildFile; fileRef = D2C8901B1A0ABC2900E81A9D /* MJCountry.m */; };
+		D2C890251A0ABC2900E81A9D /* MJParser.m in Sources */ = {isa = PBXBuildFile; fileRef = D2C8901D1A0ABC2900E81A9D /* MJParser.m */; };
+		D2C890261A0ABC2900E81A9D /* MJPerson.m in Sources */ = {isa = PBXBuildFile; fileRef = D2C8901F1A0ABC2900E81A9D /* MJPerson.m */; };
+		D2C890271A0ABC2900E81A9D /* MJProject.m in Sources */ = {isa = PBXBuildFile; fileRef = D2C890211A0ABC2900E81A9D /* MJProject.m */; };
 		D2DD9FD3192DF28400163C50 /* MJMotisObject.m in Sources */ = {isa = PBXBuildFile; fileRef = D2DD9FCC192DF28400163C50 /* MJMotisObject.m */; };
 		D2DD9FD4192DF28400163C50 /* MJMotisObjectNonRestricted.m in Sources */ = {isa = PBXBuildFile; fileRef = D2DD9FCE192DF28400163C50 /* MJMotisObjectNonRestricted.m */; };
 		D2DD9FD5192DF28400163C50 /* MJMotisObjectWithFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = D2DD9FD0192DF28400163C50 /* MJMotisObjectWithFormatter.m */; };
@@ -62,24 +62,23 @@
 		D2A0544D18D8A5B80050DE68 /* MJValidationTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MJValidationTest.m; sourceTree = "<group>"; };
 		D2A0544F18D8A5B80050DE68 /* Motis Tests-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Motis Tests-Prefix.pch"; sourceTree = "<group>"; };
 		D2B776BF191B945400CC9B4F /* Motis copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "Motis copy-Info.plist"; path = "/Users/martinhj/Documents/MobileJazz/repos/Motis/SampleProject/Motis copy-Info.plist"; sourceTree = "<absolute>"; };
-		D2B776C7191B959500CC9B4F /* MJCompany.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MJCompany.h; sourceTree = "<group>"; };
-		D2B776C8191B959500CC9B4F /* MJCompany.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MJCompany.m; sourceTree = "<group>"; };
-		D2B776C9191B959500CC9B4F /* MJCountry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MJCountry.h; sourceTree = "<group>"; };
-		D2B776CA191B959500CC9B4F /* MJCountry.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MJCountry.m; sourceTree = "<group>"; };
-		D2B776CB191B959500CC9B4F /* MJParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MJParser.h; sourceTree = "<group>"; };
-		D2B776CC191B959500CC9B4F /* MJParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MJParser.m; sourceTree = "<group>"; };
-		D2B776CD191B959500CC9B4F /* MJPerson.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MJPerson.h; sourceTree = "<group>"; };
-		D2B776CE191B959500CC9B4F /* MJPerson.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MJPerson.m; sourceTree = "<group>"; };
-		D2B776CF191B959500CC9B4F /* MJProject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MJProject.h; sourceTree = "<group>"; };
-		D2B776D0191B959500CC9B4F /* MJProject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MJProject.m; sourceTree = "<group>"; };
-		D2B776D1191B959500CC9B4F /* data_25MB.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = data_25MB.json; sourceTree = "<group>"; };
-		D2B776D8191B95EA00CC9B4F /* MJPerformanceTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MJPerformanceTest.h; sourceTree = "<group>"; };
-		D2B776D9191B95EA00CC9B4F /* MJPerformanceTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MJPerformanceTest.m; sourceTree = "<group>"; };
 		D2C3463318959EF2005B6B5C /* Motis.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Motis.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D2C3463618959EF2005B6B5C /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		D2C3463818959EF2005B6B5C /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		D2C3463A18959EF2005B6B5C /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		D2C3464F18959EF2005B6B5C /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
+		D2C890141A0ABBD700E81A9D /* MJPerformanceTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MJPerformanceTest.m; sourceTree = "<group>"; };
+		D2C890171A0ABC2900E81A9D /* data_25MB.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = data_25MB.json; sourceTree = "<group>"; };
+		D2C890181A0ABC2900E81A9D /* MJCompany.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MJCompany.h; sourceTree = "<group>"; };
+		D2C890191A0ABC2900E81A9D /* MJCompany.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MJCompany.m; sourceTree = "<group>"; };
+		D2C8901A1A0ABC2900E81A9D /* MJCountry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MJCountry.h; sourceTree = "<group>"; };
+		D2C8901B1A0ABC2900E81A9D /* MJCountry.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MJCountry.m; sourceTree = "<group>"; };
+		D2C8901C1A0ABC2900E81A9D /* MJParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MJParser.h; sourceTree = "<group>"; };
+		D2C8901D1A0ABC2900E81A9D /* MJParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MJParser.m; sourceTree = "<group>"; };
+		D2C8901E1A0ABC2900E81A9D /* MJPerson.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MJPerson.h; sourceTree = "<group>"; };
+		D2C8901F1A0ABC2900E81A9D /* MJPerson.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MJPerson.m; sourceTree = "<group>"; };
+		D2C890201A0ABC2900E81A9D /* MJProject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MJProject.h; sourceTree = "<group>"; };
+		D2C890211A0ABC2900E81A9D /* MJProject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MJProject.m; sourceTree = "<group>"; };
 		D2DD9FCB192DF28400163C50 /* MJMotisObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MJMotisObject.h; sourceTree = "<group>"; };
 		D2DD9FCC192DF28400163C50 /* MJMotisObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MJMotisObject.m; sourceTree = "<group>"; };
 		D2DD9FCD192DF28400163C50 /* MJMotisObjectNonRestricted.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MJMotisObjectNonRestricted.h; sourceTree = "<group>"; };
@@ -146,6 +145,8 @@
 			children = (
 				D2A0544D18D8A5B80050DE68 /* MJValidationTest.m */,
 				D2DD9FCA192DF28400163C50 /* Validation Test */,
+				D2C890141A0ABBD700E81A9D /* MJPerformanceTest.m */,
+				D2C890161A0ABC2900E81A9D /* Performance Test */,
 				D2E3E02F190E8D82002BD141 /* MJHierarchyTest.m */,
 				D2E3E031190E8D88002BD141 /* Hierarchy Test */,
 				D2A0544818D8A5B80050DE68 /* Supporting Files */,
@@ -182,26 +183,6 @@
 				D2DF757C18D746A800163BA8 /* MJVideo.m */,
 			);
 			name = Example;
-			sourceTree = "<group>";
-		};
-		D2B776C6191B959500CC9B4F /* Performance Test */ = {
-			isa = PBXGroup;
-			children = (
-				D2B776D8191B95EA00CC9B4F /* MJPerformanceTest.h */,
-				D2B776D9191B95EA00CC9B4F /* MJPerformanceTest.m */,
-				D2B776C7191B959500CC9B4F /* MJCompany.h */,
-				D2B776C8191B959500CC9B4F /* MJCompany.m */,
-				D2B776C9191B959500CC9B4F /* MJCountry.h */,
-				D2B776CA191B959500CC9B4F /* MJCountry.m */,
-				D2B776CB191B959500CC9B4F /* MJParser.h */,
-				D2B776CC191B959500CC9B4F /* MJParser.m */,
-				D2B776CD191B959500CC9B4F /* MJPerson.h */,
-				D2B776CE191B959500CC9B4F /* MJPerson.m */,
-				D2B776CF191B959500CC9B4F /* MJProject.h */,
-				D2B776D0191B959500CC9B4F /* MJProject.m */,
-				D2B776D1191B959500CC9B4F /* data_25MB.json */,
-			);
-			path = "Performance Test";
 			sourceTree = "<group>";
 		};
 		D2C3462A18959EF2005B6B5C = {
@@ -244,7 +225,6 @@
 				D2DF757818D746A800163BA8 /* MJAppDelegate.m */,
 				D2B776C4191B957000CC9B4F /* Motis */,
 				D2B776C5191B957700CC9B4F /* Example */,
-				D2B776C6191B959500CC9B4F /* Performance Test */,
 				D2C3463D18959EF2005B6B5C /* Supporting Files */,
 			);
 			path = Motis;
@@ -259,6 +239,24 @@
 				D21D6FAF18D7470D000E620B /* en.lproj */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		D2C890161A0ABC2900E81A9D /* Performance Test */ = {
+			isa = PBXGroup;
+			children = (
+				D2C890171A0ABC2900E81A9D /* data_25MB.json */,
+				D2C890181A0ABC2900E81A9D /* MJCompany.h */,
+				D2C890191A0ABC2900E81A9D /* MJCompany.m */,
+				D2C8901A1A0ABC2900E81A9D /* MJCountry.h */,
+				D2C8901B1A0ABC2900E81A9D /* MJCountry.m */,
+				D2C8901C1A0ABC2900E81A9D /* MJParser.h */,
+				D2C8901D1A0ABC2900E81A9D /* MJParser.m */,
+				D2C8901E1A0ABC2900E81A9D /* MJPerson.h */,
+				D2C8901F1A0ABC2900E81A9D /* MJPerson.m */,
+				D2C890201A0ABC2900E81A9D /* MJProject.h */,
+				D2C890211A0ABC2900E81A9D /* MJProject.m */,
+			);
+			path = "Performance Test";
 			sourceTree = "<group>";
 		};
 		D2DD9FCA192DF28400163C50 /* Validation Test */ = {
@@ -366,6 +364,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D2A0544C18D8A5B80050DE68 /* InfoPlist.strings in Resources */,
+				D2C890221A0ABC2900E81A9D /* data_25MB.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -373,7 +372,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D2B776D7191B959500CC9B4F /* data_25MB.json in Resources */,
 				D2DF758118D746AF00163BA8 /* Images.xcassets in Resources */,
 				D21D6FB218D7470D000E620B /* InfoPlist.strings in Resources */,
 			);
@@ -387,14 +385,20 @@
 			buildActionMask = 2147483647;
 			files = (
 				D2DD9FD5192DF28400163C50 /* MJMotisObjectWithFormatter.m in Sources */,
+				D2C890251A0ABC2900E81A9D /* MJParser.m in Sources */,
 				D2A0544E18D8A5B80050DE68 /* MJValidationTest.m in Sources */,
+				D2C890271A0ABC2900E81A9D /* MJProject.m in Sources */,
 				D2E3E03B190E8DCA002BD141 /* MJChildB.m in Sources */,
+				D2C890231A0ABC2900E81A9D /* MJCompany.m in Sources */,
 				D2DD9FD6192DF28400163C50 /* MJTestObject.m in Sources */,
+				D2C890241A0ABC2900E81A9D /* MJCountry.m in Sources */,
+				D2C890261A0ABC2900E81A9D /* MJPerson.m in Sources */,
 				D2E3E038190E8DBF002BD141 /* MJChildA.m in Sources */,
 				D2DD9FD3192DF28400163C50 /* MJMotisObject.m in Sources */,
 				D2E3E034190E8D9E002BD141 /* MJParentObject.m in Sources */,
 				D2DD9FD4192DF28400163C50 /* MJMotisObjectNonRestricted.m in Sources */,
 				D2E3E030190E8D82002BD141 /* MJHierarchyTest.m in Sources */,
+				D2C890151A0ABBD700E81A9D /* MJPerformanceTest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -402,16 +406,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D2B776D5191B959500CC9B4F /* MJPerson.m in Sources */,
 				D2DF757E18D746A800163BA8 /* MJUser.m in Sources */,
-				D2B776D4191B959500CC9B4F /* MJParser.m in Sources */,
 				D2DF757F18D746A800163BA8 /* MJVideo.m in Sources */,
-				D2B776D2191B959500CC9B4F /* MJCompany.m in Sources */,
-				D2B776D3191B959500CC9B4F /* MJCountry.m in Sources */,
 				D2DF758518D746C200163BA8 /* main.m in Sources */,
 				D2DF757D18D746A800163BA8 /* MJAppDelegate.m in Sources */,
-				D2B776D6191B959500CC9B4F /* MJProject.m in Sources */,
-				D2B776DA191B95EA00CC9B4F /* MJPerformanceTest.m in Sources */,
 				D21D6FB518D74717000E620B /* NSObject+Motis.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

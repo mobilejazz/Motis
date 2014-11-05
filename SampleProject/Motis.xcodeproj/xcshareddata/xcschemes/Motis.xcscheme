@@ -37,6 +37,11 @@
                BlueprintName = "Motis Tests"
                ReferencedContainer = "container:Motis.xcodeproj">
             </BuildableReference>
+            <SkippedTests>
+               <Test
+                  Identifier = "MJPerformanceTest">
+               </Test>
+            </SkippedTests>
          </TestableReference>
       </Testables>
       <MacroExpansion>
