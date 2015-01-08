@@ -257,7 +257,7 @@ To manually validate array content you must override the following method:
 
 Starting at version 1.0.2, Motis can be used simultaneously in multiple threads (is thread safe).
 
-To understand why Motis had this problem, we need to know that Motis cache Objective-C runtime information to increase efficiency. This caching is done using NSMapTable and NSMutableDictionary instances and these objects are not thread safe while reading and editing its content, causeing Motis to fail in thread safety. 
+To understand why Motis had this problem, we need to know that Motis cache Objective-C runtime information to increase efficiency. This caching is done using NSMapTable and NSMutableDictionary instances and these objects are not thread safe while reading and editing its content, causing Motis to fail in thread safety. 
 
 However, it is important to understand that at the very end, Motis is using KVC to access and manipulate objects. Therefore, it is the developer reponsibility to make object getters and setters thread safe, otherwise Motis won't be able to make it for you.
 
