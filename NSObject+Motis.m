@@ -38,14 +38,16 @@ static NSString* stringFromClass(Class theClass)
         map = [NSMapTable mapTableWithKeyOptions:NSPointerFunctionsWeakMemory valueOptions:NSPointerFunctionsStrongMemory];
     });
     
-    NSString *string = [map objectForKey:theClass];
-    
-    if (!string)
+    NSString *string = nil;
+    @synchronized(map)
     {
-        string = NSStringFromClass(theClass);
-        [map setObject:string forKey:theClass];
+        string = [map objectForKey:theClass];
+        if (!string)
+        {
+            string = NSStringFromClass(theClass);
+            [map setObject:string forKey:theClass];
+        }
     }
-    
     return string;
 }
 
@@ -57,14 +59,16 @@ static Class classFromString(NSString *string)
         map = [NSMapTable mapTableWithKeyOptions:NSPointerFunctionsStrongMemory valueOptions:NSPointerFunctionsWeakMemory];
     });
     
-    Class theClass = [map objectForKey:string];
-    
-    if (!theClass)
+    Class theClass = nil;
+    @synchronized(map)
     {
-        theClass = NSClassFromString(string);
-        [map setObject:theClass forKey:string];
+        theClass = [map objectForKey:string];
+        if (!theClass)
+        {
+            theClass = NSClassFromString(string);
+            [map setObject:theClass forKey:string];
+        }
     }
-    
     return theClass;
 }
 
@@ -444,111 +448,119 @@ static void mts_motisInitialization()
 + (NSDictionary*)mts_cachedMapping
 {
     static NSMutableDictionary *mappings = nil;
-    
     static dispatch_once_t onceToken1;
     dispatch_once(&onceToken1, ^{
         mappings = [NSMutableDictionary dictionary];
     });
     
-    NSString *className = stringFromClass(self);
-    NSDictionary *mapping = mappings[className];
-    
-    if (!mapping)
+    // TODO: This synchronization must be optimized
+    @synchronized(mappings)
     {
-        Class superClass = [self superclass];
+        NSString *className = stringFromClass(self);
+        NSDictionary *mapping = mappings[className];
         
-        NSMutableDictionary *dictionary = nil;
+        if (!mapping)
+        {
+            Class superClass = [self superclass];
+            
+            NSMutableDictionary *dictionary = nil;
+            
+            if ([superClass isSubclassOfClass:NSObject.class])
+                dictionary = [[superClass mts_cachedMapping] mutableCopy];
+            else
+                dictionary = [NSMutableDictionary dictionary];
+            
+            [dictionary addEntriesFromDictionary:[self mts_mapping]];
+            
+            mapping = [dictionary copy];
+            mappings[className] = mapping;
+        }
         
-        if ([superClass isSubclassOfClass:NSObject.class])
-            dictionary = [[superClass mts_cachedMapping] mutableCopy];
-        else
-            dictionary = [NSMutableDictionary dictionary];
-        
-        [dictionary addEntriesFromDictionary:[self mts_mapping]];
-        
-        mapping = [dictionary copy];
-        mappings[className] = mapping;
+        return mapping;
     }
-
-    return mapping;
 }
 
 + (NSDictionary*)mts_cachedArrayClassMapping
 {
     static NSMutableDictionary *arrayClassMappings = nil;
-    
     static dispatch_once_t onceToken1;
     dispatch_once(&onceToken1, ^{
         arrayClassMappings = [NSMutableDictionary dictionary];
     });
     
-    NSString *className = stringFromClass(self);
-    NSDictionary *arrayClassMapping = arrayClassMappings[className];
-    
-    if (!arrayClassMapping)
+    // TODO: This synchronization must be optimized
+    @synchronized(arrayClassMappings)
     {
-        Class superClass = [self superclass];
+        NSString *className = stringFromClass(self);
+        NSDictionary *arrayClassMapping = arrayClassMappings[className];
         
-        NSMutableDictionary *mapping = nil;
+        if (!arrayClassMapping)
+        {
+            Class superClass = [self superclass];
+            
+            NSMutableDictionary *mapping = nil;
+            
+            if ([superClass isSubclassOfClass:NSObject.class])
+                mapping = [[superClass mts_cachedArrayClassMapping] mutableCopy];
+            else
+                mapping = [NSMutableDictionary dictionary];
+            
+            [mapping addEntriesFromDictionary:[self mts_arrayClassMapping]];
+            
+            arrayClassMapping = [mapping copy];
+            arrayClassMappings[className] = arrayClassMapping;
+        }
         
-        if ([superClass isSubclassOfClass:NSObject.class])
-            mapping = [[superClass mts_cachedArrayClassMapping] mutableCopy];
-        else
-            mapping = [NSMutableDictionary dictionary];
-        
-        [mapping addEntriesFromDictionary:[self mts_arrayClassMapping]];
-        
-        arrayClassMapping = [mapping copy];
-        arrayClassMappings[className] = arrayClassMapping;
+        return arrayClassMapping;
     }
-    
-    return arrayClassMapping;
 }
 
 + (NSDictionary*)mts_keyPaths
 {
     static NSMutableDictionary *classKeyPaths = nil;
-    
     static dispatch_once_t onceToken1;
     dispatch_once(&onceToken1, ^{
         classKeyPaths = [NSMutableDictionary dictionary];
     });
     
-    NSString *className = stringFromClass(self);
-    NSDictionary *keyPaths = classKeyPaths[className];
-    
-    if (!keyPaths)
+    // TODO: This synchronization must be optimized
+    @synchronized(classKeyPaths)
     {
-        Class superClass = [self superclass];
+        NSString *className = stringFromClass(self);
+        NSDictionary *keyPaths = classKeyPaths[className];
         
-        NSMutableDictionary *dict = nil;
-        
-        if ([superClass isSubclassOfClass:NSObject.class])
-            dict = [[superClass mts_keyPaths] mutableCopy];
-        else
-            dict = [NSMutableDictionary dictionary];
-        
-        NSDictionary *mapping = [self mts_mapping];
-        for (NSString *key in mapping)
+        if (!keyPaths)
         {
-            MTSKeyPath *keyPath = [[MTSKeyPath alloc] initWithKeyPath:key];
-            NSString *firstPath = keyPath.components[0];
+            Class superClass = [self superclass];
             
-            NSMutableArray *listOfKeyPaths = dict[firstPath];
-            if (!listOfKeyPaths)
+            NSMutableDictionary *dict = nil;
+            
+            if ([superClass isSubclassOfClass:NSObject.class])
+                dict = [[superClass mts_keyPaths] mutableCopy];
+            else
+                dict = [NSMutableDictionary dictionary];
+            
+            NSDictionary *mapping = [self mts_mapping];
+            for (NSString *key in mapping)
             {
-                listOfKeyPaths = [NSMutableArray array];
-                dict[firstPath] = listOfKeyPaths;
+                MTSKeyPath *keyPath = [[MTSKeyPath alloc] initWithKeyPath:key];
+                NSString *firstPath = keyPath.components[0];
+                
+                NSMutableArray *listOfKeyPaths = dict[firstPath];
+                if (!listOfKeyPaths)
+                {
+                    listOfKeyPaths = [NSMutableArray array];
+                    dict[firstPath] = listOfKeyPaths;
+                }
+                
+                [listOfKeyPaths addObject:keyPath];
             }
             
-            [listOfKeyPaths addObject:keyPath];
+            keyPaths = [dict copy];
+            classKeyPaths[className] = keyPaths;
         }
-        
-        keyPaths = [dict copy];
-        classKeyPaths[className] = keyPaths;
+        return keyPaths;
     }
-    
-    return keyPaths;
 }
 
 - (NSString*)mts_typeAttributeForKey:(NSString*)key
@@ -559,31 +571,35 @@ static void mts_motisInitialization()
         typeAttributes = [NSMutableDictionary dictionary];
     });
     
-    NSMutableDictionary *classTypeAttributes = typeAttributes[stringFromClass(self.class)];
-    if (!classTypeAttributes)
+    // TODO: This synchronization must be optimized
+    @synchronized(typeAttributes)
     {
-        classTypeAttributes = [NSMutableDictionary dictionary];
-        typeAttributes[stringFromClass(self.class)] = classTypeAttributes;
-    }
-    
-    NSString *typeAttribute = classTypeAttributes[key];
-    if (typeAttribute)
+        NSMutableDictionary *classTypeAttributes = typeAttributes[stringFromClass(self.class)];
+        if (!classTypeAttributes)
+        {
+            classTypeAttributes = [NSMutableDictionary dictionary];
+            typeAttributes[stringFromClass(self.class)] = classTypeAttributes;
+        }
+        
+        NSString *typeAttribute = classTypeAttributes[key];
+        if (typeAttribute)
+            return typeAttribute;
+        
+        objc_property_t property = class_getProperty(self.class, key.UTF8String);
+        
+        if (!property)
+            return nil;
+        
+        const char * type = property_getAttributes(property);
+        
+        NSString * typeString = @(type);
+        NSArray * attributes = [typeString componentsSeparatedByString:@","];
+        typeAttribute = attributes[0];
+        
+        classTypeAttributes[key] = typeAttribute;
+        
         return typeAttribute;
-    
-    objc_property_t property = class_getProperty(self.class, key.UTF8String);
-    
-    if (!property)
-        return nil;
-    
-    const char * type = property_getAttributes(property);
-    
-    NSString * typeString = @(type);
-    NSArray * attributes = [typeString componentsSeparatedByString:@","];
-    typeAttribute = attributes[0];
-    
-    classTypeAttributes[key] = typeAttribute;
-    
-    return typeAttribute;
+    }
 }
 
 - (BOOL)mts_isClassTypeTypeAttribute:(NSString*)typeAttribute
@@ -594,11 +610,15 @@ static void mts_motisInitialization()
         dictionary = [NSMutableDictionary dictionary];
     });
     
-    NSNumber *isClassType = dictionary[typeAttribute];
-    if (!isClassType)
+    NSNumber *isClassType = nil;
+    @synchronized(dictionary)
     {
-        isClassType = @([typeAttribute hasPrefix:@"T@"] && ([typeAttribute length] > 1));
-        dictionary[typeAttribute] = isClassType;
+        isClassType = dictionary[typeAttribute];
+        if (!isClassType)
+        {
+            isClassType = @([typeAttribute hasPrefix:@"T@"] && ([typeAttribute length] > 1));
+            dictionary[typeAttribute] = isClassType;
+        }
     }
     
     return isClassType.boolValue;
@@ -612,54 +632,57 @@ static void mts_motisInitialization()
         dictionary = [NSMutableDictionary dictionary];
     });
     
-    NSArray *array = dictionary[typeAttribute];
-    if (array)
+    // TODO: This synchronization must be optimized
+    @synchronized(dictionary)
     {
-        if (array.count > 0)
+        NSArray *array = dictionary[typeAttribute];
+        if (array)
         {
-            *className = array[0];
-            *protocols = array[1];
-        }
-        return;
-    }
-    
-    if ([self mts_isClassTypeTypeAttribute:typeAttribute])
-    {
-        if (typeAttribute.length < 3)
-        {
-            *className = @"";
+            if (array.count > 0)
+            {
+                *className = array[0];
+                *protocols = array[1];
+            }
             return;
         }
         
-        NSString *classAttribute = [typeAttribute substringWithRange:NSMakeRange(3, typeAttribute.length-4)];
-        
-        NSString *protocolNames = nil;
-        
-        if (classAttribute)
+        if ([self mts_isClassTypeTypeAttribute:typeAttribute])
         {
-            NSScanner *scanner = [NSScanner scannerWithString:classAttribute];
-            [scanner scanUpToString:@"<" intoString:className];
-            [scanner scanUpToString:@">" intoString:&protocolNames];
-        }
-        
-        if (*className == nil)
-            *className = @"";
-        
-        if (protocolNames.length > 0)
-        {
-            protocolNames = [protocolNames substringFromIndex:1];
-            protocolNames = [protocolNames stringByReplacingOccurrencesOfString:@" " withString:@""];
-            *protocols = [protocolNames componentsSeparatedByString:@","];
+            if (typeAttribute.length < 3)
+            {
+                *className = @"";
+                return;
+            }
+            NSString *classAttribute = [typeAttribute substringWithRange:NSMakeRange(3, typeAttribute.length-4)];
+            
+            NSString *protocolNames = nil;
+            
+            if (classAttribute)
+            {
+                NSScanner *scanner = [NSScanner scannerWithString:classAttribute];
+                [scanner scanUpToString:@"<" intoString:className];
+                [scanner scanUpToString:@">" intoString:&protocolNames];
+            }
+            
+            if (*className == nil)
+                *className = @"";
+            
+            if (protocolNames.length > 0)
+            {
+                protocolNames = [protocolNames substringFromIndex:1];
+                protocolNames = [protocolNames stringByReplacingOccurrencesOfString:@" " withString:@""];
+                *protocols = [protocolNames componentsSeparatedByString:@","];
+            }
+            else
+                *protocols = @[];
+            
+            NSArray *array = @[*className, *protocols];
+            dictionary[typeAttribute] = array;
         }
         else
-            *protocols = @[];
-        
-        NSArray *array = @[*className, *protocols];
-        dictionary[typeAttribute] = array;
-    }
-    else
-    {
-        dictionary[typeAttribute] = @[];
+        {
+            dictionary[typeAttribute] = @[];
+        }
     }
 }
 
