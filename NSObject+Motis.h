@@ -56,6 +56,15 @@
  **/
 - (void)mts_setValuesForKeysWithDictionary:(NSDictionary *)dictionary;
 
+/**
+ * Whether or not Motis should, before assigning a value to a key,
+ * first get that value and compare it with the value-to-set using
+ * [NSObject isEqual:]. By default, this is `NO`.
+ * @param key The key of the attribute.
+ * @discussion This can be useful when using Motis with Core Data, because Core Data will flag `NSManagedObject` instances as updated, triggering database work, even if no properties have meaningfully changed.
+ **/
+- (BOOL)mts_checkKeyForEqualityBeforeAssignment:(NSString *)key;
+
 /** ---------------------------------------------- **
  * @name Key-Mapping Getters
  ** ---------------------------------------------- **/
