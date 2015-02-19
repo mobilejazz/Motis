@@ -232,7 +232,7 @@ static Class classFromString(NSString *string)
     
     if (validated)
     {
-        if (![self mts_checkKeyForEqualityBeforeAssignment:mappedKey]
+        if (![self mts_checkValueOfKeyForEqualityBeforeAssignment:mappedKey]
             || ![[self mts_valueForKey:key] isEqual:value])
         {
             [self setValue:value forKey:mappedKey];
@@ -427,7 +427,7 @@ static Class classFromString(NSString *string)
     MJLog(@"Item for ArrayKey <%@> is not valid in class %@. Error: %@", key, [self.class description], error);
 }
 
-- (BOOL)mts_checkKeyForEqualityBeforeAssignment:(NSString *)key
+- (BOOL)mts_checkValueOfKeyForEqualityBeforeAssignment:(NSString *)key
 {
     // Subclasses might override.
     return NO;
