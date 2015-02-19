@@ -167,6 +167,7 @@
  *  - `-mts_ignoredSetValue:forUndefinedMappingKey`: If undefined keys are disabled (`mts_motisShouldSetUndefinedKeys`), this method will be called when a undefined mapping key is found.
  *  - `-mts_invalidValue:forKey:error:`: If value is does not pass valiation, this method is called after aborting the value setting.
  *  - `-mts_invalidValue:forArrayKey:error:`: if an array item does not pass validation, this method is called after aborting the item setting.
+ *  - `-mts_checkValueOfKeyForEqualityBeforeAssignment:`: if Motis should avoid calling `-setValue:forKey:` when `-isEqual:` is true.
  **/
 @interface NSObject (Motis_Subclassing)
 
@@ -182,7 +183,7 @@
 + (NSDictionary*)mts_mapping;
 
 /**
- 
+
  * Returns whether Motis should set keys not found in the mapping. Default value is `NO`. However, if no mapping is defined this method is ignored and Motis will attempt to set values for any key.
  * @return `YES` if Motis should set undefined mapping keys, `NO` if only the keys defined `+mts_mapping` can be set.
  * @discussion Subclasses may override to return `YES`. Remember that when setting values for undefined keys KVC will rise an exception which you can remove by overriding the KVC method `-setValue:forUndefinedKey:.
