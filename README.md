@@ -114,7 +114,7 @@ This might be problematic if you have no control over your JSON dictionaries. Th
     return NO; 
 }
 ```
-###1.2 Value mapping 
+####1.2 Value mapping 
 
 With the method `+mts_valueMappingForKey:` objects can define value mappings. This is very useful when a string value has to be mapped into a enum for example. Check the following example on how to implement this method:
 
