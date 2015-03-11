@@ -354,6 +354,19 @@ For example, we could create a new managed object for the corresponding class, p
     return nil;
 }
 ```
+####3. Enable equality check
+
+In order to avoid unnecessary "hasChanges" flags in our managed objects, override the method `-mts_checkValueEqualityBeforeAssignmentForKey:` and return `YES` in order to make Motis check equality before assigning a value via KVC. This way, if a new value is equal (via the `isEqual:` method) to the current already set value, Motis will not make the assigniment.
+
+```objective-c
+- (BOOL)mts_checkValueEqualityBeforeAssignmentForKey:(NSString*)key
+{
+   // Return YES to make Motis check for equality before making an assignment via KVC.
+   // Return NO to make Motis always assign a value via KVC without checking for equality before.
+   
+   return YES;
+}
+```
 ### Automatic Validation 
 The following table indicates the supported validations in the current Motis version:
 
