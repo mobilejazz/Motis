@@ -18,10 +18,28 @@
 
 #import "Motis.h"
 
+typedef NS_ENUM(NSUInteger, MJUserGender)
+{
+    MJUserGenderUndefined = 0,
+    MJUserGenderMale,
+    MJUserGenderFemale,
+};
+
+typedef NS_ENUM(NSUInteger, MJAwesomenessLevel)
+{
+    MJAwesomenessLevelZero = 0,
+    MJAwesomenessLevelOne,
+    MJAwesomenessLevelTwo,
+    MJAwesomenessLevelThree,
+};
+
 @interface MJUser : NSObject
 
 @property (nonatomic, assign) NSNumber *userId;
 @property (nonatomic, strong) NSString *username;
 @property (nonatomic, assign) NSInteger followers;
+
+@property (nonatomic, assign) MJUserGender gender;
+@property (nonatomic, assign) MJAwesomenessLevel awesomenessLevel;
 
 @end

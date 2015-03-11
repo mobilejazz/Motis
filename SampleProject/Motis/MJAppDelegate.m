@@ -25,18 +25,7 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        [self testMotis];
-    });
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-       [self testMotis];
-    });
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-       [self testMotis];
-    });
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-       [self testMotis];
-    });
+    [self testMotis];
     
     UIWindow *window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     window.rootViewController = [[UIViewController alloc] init];
@@ -67,19 +56,27 @@
                                @"likes_count": [NSNull null],
                                @"uploader":@{@"user_name":@"Joan",
                                              @"user_id": @7,
-                                             @"followers": @209
+                                             @"followers": @209,
+                                             @"user_gender": @"male",
+                                             @"awesomeness_level": @3,
                                              },
                                @"users_cast":@[@{@"user_name":@"Stefan",
                                                  @"user_id": @19,
-                                                 @"followers": @1209
+                                                 @"followers": @1209,
+                                                 @"user_gender": @"male",
+                                                 @"awesomeness_level": @1,
                                                  },
                                                @{@"user_name":@"Hermes",
                                                  @"user_id": @23,
-                                                 @"followers": @1455
+                                                 @"followers": @1455,
+                                                 @"user_gender": @"male",
+                                                 @"awesomeness_level": @2,
                                                  },
-                                               @{@"user_name":@"Jordi",
+                                               @{@"user_name":@"Martha",
                                                  @"user_id": @14,
-                                                 @"followers": @452
+                                                 @"followers": @452,
+                                                 @"user_gender": @"female",
+                                                 @"awesomeness_level": @3,
                                                  },
                                                ],
                                @"privateVideoKey": @(1234), // <-- simulating an unexpected attribute in the JSON
@@ -108,6 +105,8 @@
     
     NSLog(@"AFTER parsing: %@", video.mts_extendedObjectDescription);
     NSLog(@"video.privateVideoKey: %@",[video.privateVideoKey description]);
+    
+    NSLog(@"Video.uploader: %@", video.uploader.mts_extendedObjectDescription);
 }
 
 @end

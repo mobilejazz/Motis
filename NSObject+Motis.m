@@ -133,6 +133,12 @@ static Class classFromString(NSString *string)
 + (NSDictionary*)mts_cachedMapping;
 
 /**
+ * Collects all the value mappings from each subclass layer.
+ * @return The value mapping for the given key.
+ **/
++ (NSDictionary *)mts_cachedValueMappingForKey:(NSString*)key;
+
+/**
  * Collects all the array class mappings from each subclass layer.
  * @return The Motis Array Class Mapping.
  **/
@@ -228,18 +234,72 @@ static Class classFromString(NSString *string)
     
     // Automatic validation only if the value has not been manually validated
     if (originalValue == value && validated)
-        validated = [self mts_validateAutomaticallyValue:&value forKey:mappedKey];
+    {
+        id mappedValue = [self mts_mapValue:value forKey:mappedKey];
+     
+        if (mappedValue != value)
+            value = mappedValue;
+        else
+            validated = [self mts_validateAutomaticallyValue:&value forKey:mappedKey];
+    }
     
     if (validated)
     {
-        if (![self mts_checkValueOfKeyForEqualityBeforeAssignment:mappedKey]
-            || ![[self mts_valueForKey:key] isEqual:value])
+        if ([self mts_checkValueEqualityBeforeAssignmentForKey:mappedKey])
+        {
+            if (![[self mts_valueForKey:key] isEqual:value])
+            {
+                [self setValue:value forKey:mappedKey];
+            }
+        }
+        else
         {
             [self setValue:value forKey:mappedKey];
         }
     }
     else
         [self mts_invalidValue:value forKey:mappedKey error:error];
+}
+
+- (id)mts_mapValue:(id)value forKey:(NSString*)key
+{    
+    NSDictionary *valueMapping = [self.class mts_cachedValueMappingForKey:key];
+    
+    if (valueMapping.count > 0)
+    {
+        id mappedValue = valueMapping[value];
+        
+        // Direct mapping
+        if (mappedValue)
+            return mappedValue;
+        
+        // Conversion to string
+        if ([value isKindOfClass:NSNumber.class])
+        {
+            mappedValue = valueMapping[[value stringValue]];
+            if (mappedValue)
+                return mappedValue;
+        }
+        
+        // Conversion to number
+        if ([value isKindOfClass:NSString.class])
+        {
+            mappedValue = valueMapping[@([value floatValue])];
+            if (mappedValue)
+                return mappedValue;
+            
+            mappedValue = valueMapping[@([value integerValue])];
+            if (mappedValue)
+                return mappedValue;
+        }
+        
+        // NotFound value
+        mappedValue = valueMapping[MTSDefaultValue];
+        if (mappedValue)
+            return mappedValue;
+    }
+    
+    return value;
 }
 
 - (void)mts_setValuesForKeysWithDictionary:(NSDictionary *)keyedValues
@@ -374,6 +434,12 @@ static Class classFromString(NSString *string)
     return mapping.count == 0;
 }
 
++ (NSDictionary *)mts_valueMappingForKey:(NSString *)key
+{
+    // Subclasses might override.
+    return nil;
+}
+
 + (NSDictionary*)mts_arrayClassMapping
 {
     // Subclasses might override.
@@ -427,7 +493,7 @@ static Class classFromString(NSString *string)
     MJLog(@"Item for ArrayKey <%@> is not valid in class %@. Error: %@", key, [self.class description], error);
 }
 
-- (BOOL)mts_checkValueOfKeyForEqualityBeforeAssignment:(NSString *)key
+- (BOOL)mts_checkValueEqualityBeforeAssignmentForKey:(NSString *)key
 {
     // Subclasses might override.
     return NO;
@@ -487,6 +553,48 @@ static void mts_motisInitialization()
         }
         
         return mapping;
+    }
+}
+
++ (NSDictionary*)mts_cachedValueMappingForKey:(NSString*)key
+{
+    static NSMutableDictionary *valueMappings = nil;
+    static dispatch_once_t onceToken1;
+    dispatch_once(&onceToken1, ^{
+        valueMappings = [NSMutableDictionary dictionary];
+    });
+    
+    @synchronized(valueMappings)
+    {
+        NSString *className = stringFromClass(self);
+        NSMutableDictionary *classValueMappings = valueMappings[className];
+        
+        if (!classValueMappings)
+        {
+            classValueMappings = [NSMutableDictionary dictionary];
+            valueMappings[className] = classValueMappings;
+        }
+        
+        NSMutableDictionary *valueMapping = classValueMappings[key];
+        
+        if (!valueMapping)
+        {
+            Class superClass = [self superclass];
+            
+            NSMutableDictionary *dictionary = nil;
+            
+            if ([superClass isSubclassOfClass:NSObject.class])
+                dictionary = [[superClass mts_cachedValueMappingForKey:key] mutableCopy];
+            else
+                dictionary = [NSMutableDictionary dictionary];
+            
+            [dictionary addEntriesFromDictionary:[self mts_valueMappingForKey:key]];
+            
+            valueMapping = [dictionary copy];
+            classValueMappings[key] = valueMapping;
+        }
+        
+        return valueMapping;
     }
 }
 

@@ -10,6 +10,22 @@
 
 @class MJMotisObject;
 
+typedef NS_ENUM(NSUInteger, MJUnsignedEnum)
+{
+    MJUnsignedEnumZero,
+    MJUnsignedEnumOne,
+    MJUnsignedEnumTwo,
+    MJUnsignedEnumThree
+};
+
+typedef NS_ENUM(NSInteger, MJSignedEnum)
+{
+    MJSignedEnumZero,
+    MJSignedEnumOne,
+    MJSignedEnumTwo,
+    MJSignedEnumThree
+};
+
 @interface MJTestObject : NSObject
 
 @property (nonatomic, assign) NSInteger integerField;
@@ -39,5 +55,8 @@
 @property (nonatomic, strong) NSArray *numbersArray;
 @property (nonatomic, strong) NSArray *urlsArray;
 @property (nonatomic, strong) NSArray *datesArray;
+
+@property (nonatomic, assign) MJUnsignedEnum unsignedEnum;
+@property (nonatomic, assign) MJSignedEnum signedEnum;
 
 @end

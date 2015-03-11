@@ -448,6 +448,36 @@
     XCTAssertEqualObjects(object.idProtocolField, string, @"Failed to map string value");
 }
 
+#pragma mark - ENUMS
+
+#pragma mark Unsigned Enum
+
+- (void)testUnsignedEnum
+{
+    NSArray *array = @[@"zero",@"one",@"two",@"three",[NSNull null],@"four"];
+    NSArray *results = @[@(MJUnsignedEnumZero),@(MJUnsignedEnumOne),@(MJUnsignedEnumTwo),@(MJUnsignedEnumThree),@(MJUnsignedEnumOne),@(MJUnsignedEnumOne)];
+
+    [array enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        MJMotisObject *object = [MJMotisObject new];
+        [object mts_setValue:obj forKey:@"unsigned_enum"];
+        
+        XCTAssertEqual(object.unsignedEnum, [results[idx] integerValue], @"Failed to map unsigned enum value");
+    }];
+}
+
+- (void)testSignedEnum
+{
+    NSArray *array = @[@"zero",@"one",@"two",@"three",[NSNull null],@"four"];
+    NSArray *results = @[@(MJSignedEnumZero),@(MJSignedEnumOne),@(MJSignedEnumTwo),@(MJSignedEnumThree),@(MJSignedEnumTwo),@(MJSignedEnumTwo)];
+    
+    [array enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        MJMotisObject *object = [MJMotisObject new];
+        [object mts_setValue:obj forKey:@"signed_enum"];
+        
+        XCTAssertEqual(object.signedEnum, [results[idx] integerValue], @"Failed to map unsigned enum value");
+    }];
+}
+
 #pragma mark - FROM DICTIONARY
 
 // ------------------------------------------------------------------------------------------------------------------------ //

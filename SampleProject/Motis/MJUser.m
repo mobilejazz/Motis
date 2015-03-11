@@ -25,12 +25,36 @@
     return  @{@"user_name": mts_key(username),
               @"user_id": mts_key(userId),
               @"followers": mts_key(followers),
+              @"user_gender": mts_key(gender),
+              @"awesomeness_level": mts_key(awesomenessLevel),
               };
 }
 
 + (BOOL)mts_shouldSetUndefinedKeys
 {
     return NO;
+}
+
++ (NSDictionary*)mts_valueMappingForKey:(NSString*)key
+{
+    if ([key isEqualToString:mts_key(gender)])
+    {
+        return @{@"male": @(MJUserGenderMale),
+                 @"female": @(MJUserGenderFemale),
+                 MTSDefaultValue: @(MJUserGenderUndefined),
+                 };
+    }
+    else if ([key isEqualToString:mts_key(awesomenessLevel)])
+    {
+        return @{@1: @(MJAwesomenessLevelZero),
+                 @2: @(MJAwesomenessLevelOne),
+                 @3: @(MJAwesomenessLevelTwo),
+                 @4: @(MJAwesomenessLevelThree),
+                 MTSDefaultValue: @(MJAwesomenessLevelOne),
+                 };
+    }
+    
+    return nil;
 }
 
 @end

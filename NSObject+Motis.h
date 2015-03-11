@@ -25,6 +25,11 @@
  **/
 #define mts_key(name) NSStringFromSelector(@selector(name))
 
+/**
+ * Use this value to define a default value in the value mapping.
+ **/
+#define MTSDefaultValue [NSNull null]
+
 /* *************************************************************************************************************************************** *
  * Motis Methods
  * *************************************************************************************************************************************** */
@@ -195,6 +200,14 @@
  ** ---------------------------------------------- **/
 
 /**
+ * Return a mapping for enum types.
+ * @param key The key of the property.
+ * @return The dictionary with the enumeration mapping for the given key.
+ * @discussion Using this method it is possible to convert the value received via the mapping.
+ **/
++ (NSDictionary*)mts_valueMappingForKey:(NSString*)key;
+
+/**
  * Return a mapping between the array property name to the contained object class type.
  * For example: @{@"myArrayPropertyName": User.class, ... };
  * @return A dictionary with the array content mapping. When needed, motis will collect all mapping dictionaries from each subclass level in the class hierarchy and create the overall mapping.
@@ -283,6 +296,6 @@
  * @param key The key of the attribute.
  * @discussion This can be useful when using Motis with Core Data, because Core Data will flag `NSManagedObject` instances as updated, triggering database work, even if no properties have meaningfully changed.
  **/
-- (BOOL)mts_checkValueOfKeyForEqualityBeforeAssignment:(NSString *)key;
+- (BOOL)mts_checkValueEqualityBeforeAssignmentForKey:(NSString *)key;
 
 @end

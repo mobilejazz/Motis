@@ -42,6 +42,9 @@
              @"number_array": mts_key(numbersArray),
              @"url_array": mts_key(urlsArray),
              @"date_array": mts_key(datesArray),
+             
+             @"unsigned_enum": mts_key(unsignedEnum),
+             @"signed_enum": mts_key(signedEnum),
              };
 }
 
@@ -53,6 +56,30 @@
              mts_key(urlsArray): NSURL.class,
              mts_key(datesArray): NSDate.class,
              };
+}
+
+ + (NSDictionary *)mts_valueMappingForKey:(NSString *)key
+{
+    if ([key isEqualToString:mts_key(unsignedEnum)])
+    {
+        return @{@"zero": @(MJUnsignedEnumZero),
+                 @"one": @(MJUnsignedEnumOne),
+                 @"two": @(MJUnsignedEnumTwo),
+                 @"three": @(MJUnsignedEnumThree),
+                 MTSDefaultValue: @(MJUnsignedEnumOne),
+                 };
+    }
+    else if ([key isEqualToString:mts_key(signedEnum)])
+    {
+        return @{@"zero": @(MJSignedEnumZero),
+                 @"one": @(MJSignedEnumOne),
+                 @"two": @(MJSignedEnumTwo),
+                 @"three": @(MJSignedEnumThree),
+                 MTSDefaultValue: @(MJSignedEnumTwo),
+                 };
+    }
+    
+    return nil;
 }
 
 #pragma mark Property Nillification
