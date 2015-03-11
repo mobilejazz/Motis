@@ -56,7 +56,7 @@ For example, if receiving the following JSON:
     "user_stats" : {
                      "views" : 431,
                      "ranking" : 12,
-                   } 
+                   }
   }
 }
 ```
@@ -114,6 +114,55 @@ This might be problematic if you have no control over your JSON dictionaries. Th
     return NO; 
 }
 ```
+###1.2 Value mapping 
+
+With the method `+mts_valueMappingForKey:` objects can define value mappings. This is very useful when a string value has to be mapped into a enum for example. Check the following example on how to implement this method:
+
+For the following JSON...
+```objective-c
+{
+  {
+    "user_name" : "john.doe",
+    "user_gender": "male",
+  }
+}
+```
+...we define the following class and Motis behaviour:
+```objective-c
+typedef NS_ENUM(NSUInteger, MJUserGender)
+{
+    MJUserGenderUndefined,
+    MJUserGenderMale,
+    MJUserGenderFemale,
+};
+
+@interface User : NSObject
+@property (nonatomic, strong) NSString *name;
+@property (nonatomic, assing) MJUserGender gender;
+@end
+
+@implementation User
++ (NSDictionary*)mts_mapping
+{
+    return @{"user_name": mts_key(name),
+             "user_gender": mts_key(gender),
+            };
+}
+
++ (NSDictionary*)mts_valueMappingForKey:(NSString*)key
+{
+    if ([key isEqualToString:mts_key(gender)])
+    {
+        return @{"male": @(MJUserGenderMale),
+                 "female": @(MJUserGenderFemale),
+                 MTSDefaultValue: @(MJUserGenderUndefined),
+                };
+    }
+    return nil;
+}
+@end
+```
+The above code will automatically translate the "male"/"female" values into the enum MJUserGender. Optionally, by using the `MTSDefaultValue` key, we can specify a default value when a value is not contained in the dictionary or is null. If we don't define the `MTSDefalutValue`, then Motis will attempt to set the original received value.
 
 ###2. Value Validation
 
