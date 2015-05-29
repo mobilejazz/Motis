@@ -247,7 +247,10 @@ static Class classFromString(NSString *string)
     {
         if ([self mts_checkValueEqualityBeforeAssignmentForKey:mappedKey])
         {
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
             if (![[self mts_valueForKey:key] isEqual:value])
+#pragma GCC diagnostic pop
             {
                 [self setValue:value forKey:mappedKey];
             }
