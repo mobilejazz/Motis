@@ -103,5 +103,4 @@
  **/
 @property (nonatomic, strong) NSString *privateVideoKey;
 
-
 @end

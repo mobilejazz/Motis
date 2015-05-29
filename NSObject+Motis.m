@@ -395,6 +395,115 @@ static Class classFromString(NSString *string)
     return description;
 }
 
+- (NSString*)mts_description
+{
+    return [self mts_descriptionWithIndentation:0];
+}
+
+- (NSString*)mts_descriptionWithIndentation:(NSInteger)indentation
+{
+    NSString *description = self.description;
+    NSArray *keys = [[self.class mts_cachedMapping] allValues];
+    
+    NSMutableString *mutableString = [NSMutableString string];
+    [mutableString appendString:description];
+    
+    if (keys.count > 0)
+    {
+        NSString* (^indentationBlock)(NSInteger) = ^NSString*(NSInteger level) {
+            
+            static NSMutableDictionary *dictionary = nil;
+            static dispatch_once_t onceToken;
+            dispatch_once(&onceToken, ^{
+                dictionary = [NSMutableDictionary dictionary];
+            });
+            
+            NSString *string = dictionary[@(level)];
+            if (!string)
+            {
+                NSString *indentationStep = @"    ";
+                NSMutableString *indentationString = [NSMutableString string];
+                for (NSInteger i=0; i<level; ++i)
+                    [indentationString appendString:indentationStep];
+                
+                string = [indentationString copy];
+                dictionary[@(level)] = string;
+            }
+            return string;
+        };
+        
+        [mutableString appendString:@":{\n"];
+        
+        [keys enumerateObjectsUsingBlock:^(NSString *key, NSUInteger idx, BOOL *stop) {
+            [mutableString appendFormat:@"%@%@=", indentationBlock(indentation+1), key];
+            
+            id value = [self valueForKey:key];
+            if (value == nil)
+                [mutableString appendString:@"nil"];
+            else
+            {
+                if ([value isKindOfClass:NSArray.class])
+                {
+                    [mutableString appendString:@"[\n"];
+                    NSArray *array = (id)value;
+                    
+                    [array enumerateObjectsUsingBlock:^(id obj, NSUInteger idx2, BOOL *stop) {
+                        [mutableString appendFormat:@"%@%@", indentationBlock(indentation+2), [obj mts_descriptionWithIndentation:indentation+2]];
+                        if (idx2 < array.count-1)
+                            [mutableString appendString:@","];
+                        [mutableString appendString:@"\n"];
+                    }];
+                    [mutableString appendFormat:@"%@]", indentationBlock(indentation+1)];
+                }
+                else if ([value isKindOfClass:NSSet.class])
+                {
+                    [mutableString appendString:@"(\n"];
+                    NSSet *set = (id)value;
+                    __block NSInteger idx2 = 0;
+                    [set enumerateObjectsUsingBlock:^(id obj, BOOL *stop) {
+                        [mutableString appendFormat:@"%@%@", indentationBlock(indentation+2), [obj mts_descriptionWithIndentation:indentation+2]];
+                        if (idx2 < set.count-1)
+                            [mutableString appendString:@","];
+                        [mutableString appendString:@"\n"];
+                    }];
+                    [mutableString appendFormat:@"%@)", indentationBlock(indentation+1)];
+                }
+                else if ([value isKindOfClass:NSDictionary.class])
+                {
+                    [mutableString appendString:@"{\n"];
+                    NSDictionary *dict = value;
+                    __block NSInteger idx2 = 0;
+                    [dict enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
+                        [mutableString appendFormat:@"%@%@:%@", indentationBlock(indentation+2), [key mts_descriptionWithIndentation:indentation+2], [obj mts_descriptionWithIndentation:indentation+2]];
+                        if (idx2 < dict.count-1)
+                            [mutableString appendString:@","];
+                        [mutableString appendString:@"\n"];
+                    }];
+                    
+                    [mutableString appendFormat:@"%@}", indentationBlock(indentation+1)];
+                }
+                else if ([value isKindOfClass:NSString.class])
+                {
+                    NSString *string = value;
+                    [mutableString appendFormat:@"\"%@\"", string];
+                }
+                else
+                {
+                    [mutableString appendString:[value mts_descriptionWithIndentation:indentation+1]];
+                }
+            }
+            
+            if (idx < keys.count-1)
+                [mutableString appendString:@","];
+            [mutableString appendString:@"\n"];
+        }];
+        
+        [mutableString appendFormat:@"%@}",indentationBlock(indentation)];
+    }
+    
+    return [mutableString copy];
+}
+
 #pragma mark Private Methods
 
 - (NSString*)mts_mapKey:(NSString*)key

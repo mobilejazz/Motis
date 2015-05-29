@@ -70,15 +70,17 @@
  * @param key The key (will be mapped)
  * @return The corresponding value for the given key if available, otherwise nil.
  **/
-- (id)mts_valueForKey:(NSString*)key;
+- (id)mts_valueForKey:(NSString*)key __attribute((deprecated("This method will be removed from Motis in a future version.")));
 
 /**
  * Returns a dictionary containing the given keys and the corresponding values.
  * @param keys An array with keys.
  * @return The dictionary with key-values.
- * @discussion This method uses the motis mapping to retrieve the values for the given keys. The keys used in the returned dictionary are the ones specified in the given array. WARNING: this method may not return a JSON serializable dictionary, just returns the object values.
+ * @discussion 
+ * This method uses the motis mapping to retrieve the values for the given keys. The keys used in the returned dictionary are the ones specified in the given array.
+ * WARNING: this method may not return a JSON serializable dictionary, just returns the object values.
  **/
-- (NSDictionary*)mts_dictionaryWithValuesForKeys:(NSArray *)keys;
+- (NSDictionary*)mts_dictionaryWithValuesForKeys:(NSArray *)keys __attribute((deprecated("This method will be removed from Motis in a future version.")));
 
 /** ---------------------------------------------- **
  * @name Logging objects
@@ -88,7 +90,14 @@
  * Returns the extended object description.
  * @return The custom extended object description.
  **/
-- (NSString*)mts_extendedObjectDescription;
+- (NSString*)mts_extendedObjectDescription __attribute((deprecated("Use mts_desription instead.")));
+
+/**
+ * Returns the Motis description of the object by enumerating all Motis values recursively.
+ * @return The Motis descripton of the object.
+ * @discussion This Method describes all objects as well as content of arrays, sets and dictionaries by calling mts_description recursively.
+ **/
+- (NSString*)mts_description;
 
 @end
 
