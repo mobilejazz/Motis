@@ -12,6 +12,7 @@
 
 #import "MJChildA.h"
 #import "MJChildB.h"
+#import "MJChildC.h"
 
 @interface MJHierarchyTest : XCTestCase
 
@@ -22,6 +23,7 @@
     MJParentObject *_parent;
     MJChildA *_childA;
     MJChildB *_childB;
+    MJChildC *_childC;
 }
 
 - (void)setUp
@@ -31,6 +33,7 @@
     _parent = [[MJParentObject alloc] init];
     _childA = [[MJChildA alloc] init];
     _childB = [[MJChildB alloc] init];
+    _childC = [[MJChildC alloc] init];
 }
 
 - (void)tearDown
@@ -57,6 +60,19 @@
     
     if (_childB.integerField != 7 || _childB.customField.count != 2)
         XCTFail(@"Incorrect values in Child B");
+    
 }
+
+- (void)testArrayIndexKeyPath {
+    NSDictionary *dictC = @{@"obj":@[@{@"bool": @YES}, @{@"field": @"Hello World"}]};
+    _childC.boolField = NO;
+    _childC.customField = nil;
+    [_childC mts_setValuesForKeysWithDictionary:dictC];
+    XCTAssert(_childC.boolField, @"Incorrect value for childC.boolField");
+    XCTAssertEqualObjects(@"Hello World", _childC.customField, @"Incorrect value for childC.customField");
+
+}
+
+
 
 @end

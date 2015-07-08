@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5279FDDD1B4D9C79003D2E58 /* MJChildC.m in Sources */ = {isa = PBXBuildFile; fileRef = 5279FDDC1B4D9C79003D2E58 /* MJChildC.m */; };
 		D21D6FB218D7470D000E620B /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = D21D6FB018D7470D000E620B /* InfoPlist.strings */; };
 		D21D6FB518D74717000E620B /* NSObject+Motis.m in Sources */ = {isa = PBXBuildFile; fileRef = D21D6FB418D74717000E620B /* NSObject+Motis.m */; };
 		D259644819017D670055799F /* Twitter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D259644719017D670055799F /* Twitter.framework */; };
@@ -51,6 +52,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		5279FDDB1B4D9C79003D2E58 /* MJChildC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MJChildC.h; path = "Hierarchy Test/MJChildC.h"; sourceTree = "<group>"; };
+		5279FDDC1B4D9C79003D2E58 /* MJChildC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MJChildC.m; path = "Hierarchy Test/MJChildC.m"; sourceTree = "<group>"; };
 		8758B81E18FD289C00666680 /* Motis.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Motis.h; path = ../../Motis.h; sourceTree = "<group>"; };
 		D21D6FB118D7470D000E620B /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = InfoPlist.strings; sourceTree = "<group>"; };
 		D21D6FB318D74717000E620B /* NSObject+Motis.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSObject+Motis.h"; path = "../../NSObject+Motis.h"; sourceTree = "<group>"; };
@@ -283,6 +286,8 @@
 				D2E3E037190E8DBF002BD141 /* MJChildA.m */,
 				D2E3E039190E8DCA002BD141 /* MJChildB.h */,
 				D2E3E03A190E8DCA002BD141 /* MJChildB.m */,
+				5279FDDB1B4D9C79003D2E58 /* MJChildC.h */,
+				5279FDDC1B4D9C79003D2E58 /* MJChildC.m */,
 			);
 			name = "Hierarchy Test";
 			sourceTree = "<group>";
@@ -387,6 +392,7 @@
 				D2DD9FD5192DF28400163C50 /* MJMotisObjectWithFormatter.m in Sources */,
 				D2C890251A0ABC2900E81A9D /* MJParser.m in Sources */,
 				D2A0544E18D8A5B80050DE68 /* MJValidationTest.m in Sources */,
+				5279FDDD1B4D9C79003D2E58 /* MJChildC.m in Sources */,
 				D2C890271A0ABC2900E81A9D /* MJProject.m in Sources */,
 				D2E3E03B190E8DCA002BD141 /* MJChildB.m in Sources */,
 				D2C890231A0ABC2900E81A9D /* MJCompany.m in Sources */,

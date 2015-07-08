@@ -51,12 +51,15 @@ For example, if receiving the following JSON:
   {
     "user_name" : "john.doe",
     "user_id" : 42,
-    "creation_date" :  "1979-11-07 17:23:51"
-    "webiste" : "http://www.domain.com"
+    "creation_date" :  "1979-11-07 17:23:51",
+    "webiste" : "http://www.domain.com",
     "user_stats" : {
                      "views" : 431,
                      "ranking" : 12,
-                   }
+                   },
+    "user_avatars": [{
+      "image_url": "http://www.avatars.com/john.doe"
+    }]
   }
 }
 ```
@@ -75,6 +78,7 @@ Then, in our `User` class entity (`NSObject` subclass) we would define the `+mts
 @property (nonatomic, strong) NSURL *website;
 @property (nonatomic, assing) NSInteger views;
 @property (nonatomic, assing) NSInteger ranking;
+@property (nonatomic, assing) NSURL *avatar;
 
 @end
 
@@ -90,13 +94,14 @@ Then, in our `User` class entity (`NSObject` subclass) we would define the `+mts
              @"website": mts_key(website),
              @"user_stats.views": mts_key(views),  // <-- KeyPath access
              @"user_stats.ranking": mts_key(ranking), // <-- KeyPath access
+             @"user_avatars.0.image_url": mts_key(avatar) // <-- KeyPath access using array index
             };
 }
 
 @end
 ```
 
-As shown in the example above, KeyPath access is supported to reference JSON content of dictionaries.
+As shown in the example above, KeyPath access is supported to reference JSON content of dictionaries. KeyPath access supports array index lookups when you need to map values into properties using a fixed array index.
 
 Also, as you might see, we are specifying custom types as `NSDate` or `NSURL`. Motis automatically attempt to convert JSON values to the object defined types. Check below for more information on automatic validation.
 
