@@ -80,9 +80,9 @@ Then, in our `User` class entity (`NSObject` subclass) we would define the `+mts
 @property (nonatomic, assign) NSIntger userId;
 @property (nonatomic, strong) NSDate *creationDate;
 @property (nonatomic, strong) NSURL *website;
-@property (nonatomic, assing) NSInteger views;
-@property (nonatomic, assing) NSInteger ranking;
-@property (nonatomic, assing) NSURL *avatar;
+@property (nonatomic, assign) NSInteger views;
+@property (nonatomic, assign) NSInteger ranking;
+@property (nonatomic, assign) NSURL *avatar;
 
 @end
 
