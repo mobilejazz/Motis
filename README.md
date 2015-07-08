@@ -58,7 +58,11 @@ For example, if receiving the following JSON:
                      "ranking" : 12,
                    },
     "user_avatars": [{
+      "avatar_type": "standard",
       "image_url": "http://www.avatars.com/john.doe"
+    }, {
+      "avatar_type": "large",
+      "image_url": "http://www.avatars.com/john.doe/large"
     }]
   }
 }
