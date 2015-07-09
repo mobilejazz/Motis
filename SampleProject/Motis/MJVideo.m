@@ -34,6 +34,8 @@
              @"uploader": mts_key(uploader),
              @"uploader.user_name": mts_key(uploaderUsername), // <-- KeyPath Access
              @"users_cast": mts_key(cast),
+             @"users_cast.1.user_name": mts_key(secondUserCastName),
+             @"users_cast.1": mts_key(secondUserCast),
              @"likes_count": mts_key(likesCount),
              @"stats.start_views": mts_key(startViews), // <-- KeyPath Access
              @"stats.end_views": mts_key(endViews), // <-- KeyPath Access

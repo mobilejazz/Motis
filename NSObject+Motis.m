@@ -327,13 +327,21 @@ static Class classFromString(NSString *string)
             for (NSInteger i=0; i<count; ++i)
             {
                 // For each keyPath component
-                
                 NSString *path = keyPath.components[i];
+                
                 // check if path is an index in an array
                 NSInteger index = [path integerValue];
-                if ((index > 0 || [path isEqualToString:@"0"]) && [value isKindOfClass:NSArray.class]) {
-                    value = [((NSArray *) value) objectAtIndex:index];
-                } else {
+                if (index >= 0 && [value isKindOfClass:NSArray.class])
+                {
+                    NSArray *array = value;
+                    
+                    if (index < array.count)
+                        value = array[index];
+                    else
+                        break;
+                }
+                else
+                {
                     value = [value valueForKey:path];
                 }
                 
