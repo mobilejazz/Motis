@@ -818,4 +818,107 @@
     XCTAssertNil(object.stringField, @"KeyPath acces failed");
 }
 
+- (void)testArrayKeyPathInteger
+{
+    MJMotisObject *object = [MJMotisObject new];
+    
+    NSDictionary *dictionary = @{@"array":@[@{@"integer":@0},
+                                            @{@"integer":@1},
+                                            @{@"integer":@2},
+                                            ]};
+    
+    [object mts_setValuesForKeysWithDictionary:dictionary];
+    
+    XCTAssertEqual(object.array0Integer, 0, @"Array key path on [0] integer failed");
+    XCTAssertEqual(object.array1Integer, 1, @"Array key path on [1] integer failed");
+    XCTAssertEqual(object.array2Integer, 2, @"Array key path on [2] integer failed");
+}
+
+- (void)testArrayKeyPathString
+{
+    MJMotisObject *object = [MJMotisObject new];
+    
+    NSDictionary *dictionary = @{@"array":@[@{@"string":@"0"},
+                                            @{@"string":@"1"},
+                                            @{@"string":@"2"},
+                                            ]};
+    
+    [object mts_setValuesForKeysWithDictionary:dictionary];
+    
+    XCTAssertEqualObjects(object.array0String, @"0", @"Array key path on [0] string failed");
+    XCTAssertEqualObjects(object.array1String, @"1", @"Array key path on [1] string failed");
+    XCTAssertEqualObjects(object.array2String, @"2", @"Array key path on [2] string failed");
+}
+
+- (void)testArrayKeyPathObject
+{
+    MJMotisObject *object = [MJMotisObject new];
+    object.stringField = nil;
+    
+    NSDictionary *dictionary = @{@"array":@[@{@"string": @"0",
+                                              @"integer": @0},
+                                            @{@"string": @"1",
+                                              @"integer": @1},
+                                            @{@"string": @"2",
+                                              @"integer": @2},
+                                            ]};
+    
+    [object mts_setValuesForKeysWithDictionary:dictionary];
+    
+    XCTAssertEqualObjects(object.array0Object.stringField, @"0", @"Array key path on [0] object string failed");
+    XCTAssertEqualObjects(object.array1Object.stringField, @"1", @"Array key path on [1] object string failed");
+    XCTAssertEqualObjects(object.array2Object.stringField, @"2", @"Array key path on [2] object string failed");
+    
+    XCTAssertEqual(object.array0Object.integerField, 0, @"Array key path on [0] object integer failed");
+    XCTAssertEqual(object.array1Object.integerField, 1, @"Array key path on [1] object integer failed");
+    XCTAssertEqual(object.array2Object.integerField, 2, @"Array key path on [2] object integer failed");
+}
+
+- (void)testArrayKeyPathOutOfBoundsNoneException
+{
+    MJMotisObject *object = [MJMotisObject new];
+    
+    object.array0Integer = -1;
+    object.array1Integer = -1;
+    object.array2Integer = -1;
+    
+    NSDictionary *dictionary = @{@"array":@[@{@"integer":@0},
+                                            @{@"integer":@1},
+                                            ]};
+    
+    [object mts_setValuesForKeysWithDictionary:dictionary];
+    
+    XCTAssertEqual(object.array0Integer, 0, @"Array key path on [0] integer failed");
+    XCTAssertEqual(object.array1Integer, 1, @"Array key path on [1] integer failed");
+    XCTAssertEqual(object.array2Integer, -1, @"Array key path on [2] integer failed");
+}
+
+- (void)testArrayKeyPathIntegerArray
+{
+    MJMotisObject *object = [MJMotisObject new];
+    object.stringField = nil;
+    
+    NSDictionary *dictionary = @{@"integerArray":@[@0,@1,@2]};
+    
+    [object mts_setValuesForKeysWithDictionary:dictionary];
+    
+    XCTAssertEqual(object.integerArray0, 0, @"Array key path on [0] integer failed");
+    XCTAssertEqual(object.integerArray1, 1, @"Array key path on [1] integer failed");
+    XCTAssertEqual(object.integerArray2, 2, @"Array key path on [2] integer failed");
+}
+
+- (void)testArrayKeyPathStringArray
+{
+    MJMotisObject *object = [MJMotisObject new];
+    object.stringField = nil;
+    
+    NSDictionary *dictionary = @{@"stringArray":@[@"0",@"1",@"2"]};
+    
+    [object mts_setValuesForKeysWithDictionary:dictionary];
+    
+    XCTAssertEqualObjects(object.stringArray0, @"0", @"Array key path on [0] string failed");
+    XCTAssertEqualObjects(object.stringArray1, @"1", @"Array key path on [1] string failed");
+    XCTAssertEqualObjects(object.stringArray2, @"2", @"Array key path on [2] string failed");
+}
+
 @end

@@ -45,6 +45,28 @@
              
              @"unsigned_enum": mts_key(unsignedEnum),
              @"signed_enum": mts_key(signedEnum),
+             
+             @"array.0.integer": mts_key(array0Integer),
+             @"array.1.integer": mts_key(array1Integer),
+             @"array.2.integer": mts_key(array2Integer),
+             
+             @"array.0.string": mts_key(array0String),
+             @"array.1.string": mts_key(array1String),
+             @"array.2.string": mts_key(array2String),
+             
+             @"array.0": mts_key(array0Object),
+             @"array.1": mts_key(array1Object),
+             @"array.2": mts_key(array2Object),
+             
+             @"integerArray.0": mts_key(integerArray0),
+             @"integerArray.1": mts_key(integerArray1),
+             @"integerArray.2": mts_key(integerArray2),
+             
+             @"stringArray.0": mts_key(stringArray0),
+             @"stringArray.1": mts_key(stringArray1),
+             @"stringArray.2": mts_key(stringArray2),
+             
+             
              };
 }
 

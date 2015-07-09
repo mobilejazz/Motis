@@ -92,6 +92,16 @@
  **/
 @property (nonatomic, strong) NSArray *cast;
 
+/**
+ * The second user cast name.
+ **/
+@property (nonatomic, strong) MJUser *secondUserCast;
+
+/**
+ * The second user cast name.
+ **/
+@property (nonatomic, strong) NSString *secondUserCastName;
+
 /** ********************************************************* **
  *  @name Other attributes
  ** ********************************************************* **/

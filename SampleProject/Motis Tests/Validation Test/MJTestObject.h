@@ -59,4 +59,24 @@ typedef NS_ENUM(NSInteger, MJSignedEnum)
 @property (nonatomic, assign) MJUnsignedEnum unsignedEnum;
 @property (nonatomic, assign) MJSignedEnum signedEnum;
 
+@property (nonatomic, assign) NSInteger array0Integer;
+@property (nonatomic, assign) NSInteger array1Integer;
+@property (nonatomic, assign) NSInteger array2Integer;
+
+@property (nonatomic, strong) NSString *array0String;
+@property (nonatomic, strong) NSString *array1String;
+@property (nonatomic, strong) NSString *array2String;
+
+@property (nonatomic, strong) MJMotisObject *array0Object;
+@property (nonatomic, strong) MJMotisObject *array1Object;
+@property (nonatomic, strong) MJMotisObject *array2Object;
+
+@property (nonatomic, assign) NSInteger integerArray0;
+@property (nonatomic, assign) NSInteger integerArray1;
+@property (nonatomic, assign) NSInteger integerArray2;
+
+@property (nonatomic, strong) NSString *stringArray0;
+@property (nonatomic, strong) NSString *stringArray1;
+@property (nonatomic, strong) NSString *stringArray2;
+
 @end
