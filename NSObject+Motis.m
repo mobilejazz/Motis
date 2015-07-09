@@ -329,11 +329,17 @@ static Class classFromString(NSString *string)
                 // For each keyPath component
                 
                 NSString *path = keyPath.components[i];
-                value = [value valueForKey:path];
+                // check if path is an index in an array
+                NSInteger index = [path integerValue];
+                if ((index > 0 || [path isEqualToString:@"0"]) && [value isKindOfClass:NSArray.class]) {
+                    value = [((NSArray *) value) objectAtIndex:index];
+                } else {
+                    value = [value valueForKey:path];
+                }
                 
                 if (i < count - 1)
                 {
-                    if (![value isKindOfClass:NSDictionary.class]) // <-- Checking that the KeyPath is only accessing dictionary objects.
+                    if (![value isKindOfClass:NSDictionary.class] && ![value isKindOfClass:NSArray.class])
                         break;
                 }
                 else
