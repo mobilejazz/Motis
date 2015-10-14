@@ -8,6 +8,6 @@
 
 #import "MJTestObject.h"
 
-@interface MJMotisObject : MJTestObject
+@interface MJTestMotisMappingObject : MJTestObject
 
 @end

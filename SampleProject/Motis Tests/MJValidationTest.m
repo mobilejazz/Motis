@@ -9,7 +9,7 @@
 #import <XCTest/XCTest.h>
 
 #import "NSObject+Motis.h"
-#import "MJMotisObject.h"
+#import "MJTestMotisMappingObject.h"
 #import "MJMotisObjectNonRestricted.h"
 #import "MJMotisObjectWithFormatter.h"
 
@@ -42,7 +42,7 @@
 {
     // check `-setNilValueForKey` method.
     
-    MJMotisObject *object = [MJMotisObject new];
+    MJTestMotisMappingObject *object = [MJTestMotisMappingObject new];
     object.boolField = YES;
     [object mts_setValue:[NSNull null] forKey:@"bool"];
 
@@ -52,7 +52,7 @@
 - (void)testNullToBasicTypeWithoutNullDefinition
 {
     // check `-setNilValueForKey` method.
-    MJMotisObject *object = [MJMotisObject new];
+    MJTestMotisMappingObject *object = [MJTestMotisMappingObject new];
     object.integerField = 42;
     [object mts_setValue:[NSNull null] forKey:@"integer"];
     
@@ -63,7 +63,7 @@
 
 - (void)testNullToObject
 {
-    MJMotisObject *object = [MJMotisObject new];
+    MJTestMotisMappingObject *object = [MJTestMotisMappingObject new];
     object.numberField = @(42);
     [object mts_setValue:[NSNull null] forKey:@"number"];
     
@@ -72,7 +72,7 @@
 
 - (void)testNilToObject
 {
-    MJMotisObject *object = [MJMotisObject new];
+    MJTestMotisMappingObject *object = [MJTestMotisMappingObject new];
     object.numberField = @(42);
     [object mts_setValue:nil forKey:@"number"];
     
@@ -107,7 +107,7 @@
 
 - (void)testYESBoolToBool
 {
-    MJMotisObject *object = [MJMotisObject new];
+    MJTestMotisMappingObject *object = [MJTestMotisMappingObject new];
     
     NSNumber *number = @YES;
     object.boolField = NO;
@@ -117,7 +117,7 @@
 
 - (void)testNOBoolToBool
 {
-    MJMotisObject *object = [MJMotisObject new];
+    MJTestMotisMappingObject *object = [MJTestMotisMappingObject new];
     NSNumber *number = @NO;
     object.boolField = YES;
     [object mts_setValue:number forKey:@"bool"];
@@ -126,7 +126,7 @@
 
 - (void)testNumberToBool
 {
-    MJMotisObject *object = [MJMotisObject new];
+    MJTestMotisMappingObject *object = [MJTestMotisMappingObject new];
     
     for (NSNumber *number in [self mts_arrayWithNumbers])
     {
@@ -138,7 +138,7 @@
 
 - (void)testNumberToInteger
 {
-    MJMotisObject *object = [MJMotisObject new];
+    MJTestMotisMappingObject *object = [MJTestMotisMappingObject new];
     for (NSNumber *number in [self mts_arrayWithNumbers])
     {
         object.integerField = 0;
@@ -149,7 +149,7 @@
 
 - (void)testNumberToUnsignedInteger
 {
-    MJMotisObject *object = [MJMotisObject new];
+    MJTestMotisMappingObject *object = [MJTestMotisMappingObject new];
     for (NSNumber *number in [self mts_arrayWithNumbers])
     {
         object.unsignedIntegerField = 0;
@@ -160,7 +160,7 @@
 
 - (void)testNumberToFloat
 {
-    MJMotisObject *object = [MJMotisObject new];
+    MJTestMotisMappingObject *object = [MJTestMotisMappingObject new];
     for (NSNumber *number in [self mts_arrayWithNumbers])
     {
         object.floatField = 0.0f;
@@ -171,7 +171,7 @@
 
 - (void)testNumberToDouble
 {
-    MJMotisObject *object = [MJMotisObject new];
+    MJTestMotisMappingObject *object = [MJTestMotisMappingObject new];
     for (NSNumber *number in [self mts_arrayWithNumbers])
     {
         object.doubleField = 0.0;
@@ -184,7 +184,7 @@
 
 - (void)testNumberToString
 {
-    MJMotisObject *object = [MJMotisObject new];
+    MJTestMotisMappingObject *object = [MJTestMotisMappingObject new];
     for (NSNumber *number in [self mts_arrayWithNumbers])
     {
         object.stringField = nil;
@@ -197,7 +197,7 @@
 
 - (void)testNumberToDate
 {
-    MJMotisObject *object = [MJMotisObject new];
+    MJTestMotisMappingObject *object = [MJTestMotisMappingObject new];
     
     NSTimeInterval timeInterval = 1398333352.0;
     
@@ -212,7 +212,7 @@
 
 - (void)testNumberToId
 {
-    MJMotisObject *object = [MJMotisObject new];
+    MJTestMotisMappingObject *object = [MJTestMotisMappingObject new];
     for (NSNumber *number in [self mts_arrayWithNumbers])
     {
         object.idField = nil;
@@ -223,7 +223,7 @@
 
 - (void)testNumberToIdProtocol
 {
-    MJMotisObject *object = [MJMotisObject new];
+    MJTestMotisMappingObject *object = [MJTestMotisMappingObject new];
     for (NSNumber *number in [self mts_arrayWithNumbers])
     {
         object.idField = nil;
@@ -260,7 +260,7 @@
 
 - (void)testStringNumbersToBool
 {
-    MJMotisObject *object = [MJMotisObject new];
+    MJTestMotisMappingObject *object = [MJTestMotisMappingObject new];
     for (NSNumber *originalNumber in [self mts_arrayWithNumbers])
     {
         if (originalNumber.integerValue == NSIntegerMin) // <-- Bug on NSIntegerMin with boolValue: [@(NSIntegerMin) boolValue] is 0, when is supposed to be 1.
@@ -276,7 +276,7 @@
 
 - (void)testFalseStringToBool
 {
-    MJMotisObject *object = [MJMotisObject new];
+    MJTestMotisMappingObject *object = [MJTestMotisMappingObject new];
     object.boolField = YES;
     [object mts_setValue:@"false" forKey:@"bool"];
     XCTAssertEqual(object.boolField, NO, @"Failed to map number value");
@@ -288,7 +288,7 @@
 
 - (void)testTrueStringToBool
 {
-    MJMotisObject *object = [MJMotisObject new];
+    MJTestMotisMappingObject *object = [MJTestMotisMappingObject new];
     object.boolField = NO;
     [object mts_setValue:@"true" forKey:@"bool"];
     XCTAssertEqual(object.boolField, YES, @"Failed to map number value");
@@ -300,7 +300,7 @@
 
 - (void)testStringNumbersToInteger
 {
-    MJMotisObject *object = [MJMotisObject new];
+    MJTestMotisMappingObject *object = [MJTestMotisMappingObject new];
     
     NSArray *numbers = @[@(NSIntegerMax), @(NSIntegerMin)];
     
@@ -316,7 +316,7 @@
 
 - (void)testStringNumbersToUnsignedInteger
 {
-    MJMotisObject *object = [MJMotisObject new];
+    MJTestMotisMappingObject *object = [MJTestMotisMappingObject new];
     
     NSArray *numbers = @[@(LONG_MAX), @(0)]; // <-- BUG: NSNumberFormatter fails to format numbers bigger than LONG_MAX.
     
@@ -334,7 +334,7 @@
 
 - (void)testStringNumbersToNumber
 {
-    MJMotisObject *object = [MJMotisObject new];
+    MJTestMotisMappingObject *object = [MJTestMotisMappingObject new];
     
     for (NSNumber *originalNumber in [self mts_arrayWithNumbers])
     {
@@ -348,7 +348,7 @@
 
 - (void)testFalseStringToBoolNumber
 {
-    MJMotisObject *object = [MJMotisObject new];
+    MJTestMotisMappingObject *object = [MJTestMotisMappingObject new];
     
     object.boolField = YES;
     [object mts_setValue:@"false" forKey:@"number"];
@@ -361,7 +361,7 @@
 
 - (void)testTrueStringToBoolNumber
 {
-    MJMotisObject *object = [MJMotisObject new];
+    MJTestMotisMappingObject *object = [MJTestMotisMappingObject new];
     
     object.boolField = NO;
     [object mts_setValue:@"true" forKey:@"number"];
@@ -376,7 +376,7 @@
 
 - (void)testStringToUrl
 {
-    MJMotisObject *object = [MJMotisObject new];
+    MJTestMotisMappingObject *object = [MJTestMotisMappingObject new];
     
     NSString *string = @"http://www.google.com";
     [object mts_setValue:string forKey:@"url"];
@@ -387,7 +387,7 @@
 
 - (void)testStringFormatToDate_Default
 {
-    MJMotisObject *object = [MJMotisObject new];
+    MJTestMotisMappingObject *object = [MJTestMotisMappingObject new];
     
     NSString *string = @"2014-04-23 12:00:00";
     [object mts_setValue:string forKey:@"date"];
@@ -396,7 +396,7 @@
 
 - (void)testStringTimeIntervalToDate_Default
 {
-    MJMotisObject *object = [MJMotisObject new];
+    MJTestMotisMappingObject *object = [MJTestMotisMappingObject new];
     
     NSTimeInterval timeInterval = 1398333352.0;
     NSString *string = [NSString stringWithFormat:@"%f", timeInterval];
@@ -432,7 +432,7 @@
 
 - (void)testStringToId
 {
-    MJMotisObject *object = [MJMotisObject new];
+    MJTestMotisMappingObject *object = [MJTestMotisMappingObject new];
     
     NSString *string = @"Hello World";
     [object mts_setValue:string forKey:@"id"];
@@ -441,7 +441,7 @@
 
 - (void)testStringToIdProtocol
 {
-    MJMotisObject *object = [MJMotisObject new];
+    MJTestMotisMappingObject *object = [MJTestMotisMappingObject new];
     
     NSString *string = @"Hello World";
     [object mts_setValue:string forKey:@"id_protocol"];
@@ -458,7 +458,7 @@
     NSArray *results = @[@(MJUnsignedEnumZero),@(MJUnsignedEnumOne),@(MJUnsignedEnumTwo),@(MJUnsignedEnumThree),@(MJUnsignedEnumOne),@(MJUnsignedEnumOne)];
 
     [array enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-        MJMotisObject *object = [MJMotisObject new];
+        MJTestMotisMappingObject *object = [MJTestMotisMappingObject new];
         [object mts_setValue:obj forKey:@"unsigned_enum"];
         
         XCTAssertEqual(object.unsignedEnum, [results[idx] integerValue], @"Failed to map unsigned enum value");
@@ -471,7 +471,7 @@
     NSArray *results = @[@(MJSignedEnumZero),@(MJSignedEnumOne),@(MJSignedEnumTwo),@(MJSignedEnumThree),@(MJSignedEnumTwo),@(MJSignedEnumTwo)];
     
     [array enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-        MJMotisObject *object = [MJMotisObject new];
+        MJTestMotisMappingObject *object = [MJTestMotisMappingObject new];
         [object mts_setValue:obj forKey:@"signed_enum"];
         
         XCTAssertEqual(object.signedEnum, [results[idx] integerValue], @"Failed to map unsigned enum value");
@@ -488,7 +488,7 @@
 
 - (void)testDictionaryToObject
 {
-    MJMotisObject *object = [MJMotisObject new];
+    MJTestMotisMappingObject *object = [MJTestMotisMappingObject new];
     
     NSDictionary *dict = @{@"string": @"hello world",
                            @"integer": @123,
@@ -510,7 +510,7 @@
 
 - (void)testArrayToArray
 {
-    MJMotisObject *object = [MJMotisObject new];
+    MJTestMotisMappingObject *object = [MJTestMotisMappingObject new];
     
     NSArray *array = @[@1, @"string"];
     [object mts_setValue:array forKey:@"array"];
@@ -519,7 +519,7 @@
 
 - (void)testEmptyArrayToArray
 {
-    MJMotisObject *object = [MJMotisObject new];
+    MJTestMotisMappingObject *object = [MJTestMotisMappingObject new];
     
     NSArray *array = @[];
     [object mts_setValue:array forKey:@"array"];
@@ -528,7 +528,7 @@
 
 - (void)testNullArrayToArray
 {
-    MJMotisObject *object = [MJMotisObject new];
+    MJTestMotisMappingObject *object = [MJTestMotisMappingObject new];
     
     NSArray *array = @[[NSNull null], [NSNull null], [NSNull null]];
     [object mts_setValue:array forKey:@"array"];
@@ -537,7 +537,7 @@
 
 - (void)testAllValuesArrayToArray
 {
-    MJMotisObject *object = [MJMotisObject new];
+    MJTestMotisMappingObject *object = [MJTestMotisMappingObject new];
     
     NSArray *array = @[@1, @"string", [NSNull null], @YES];
     [object mts_setValue:array forKey:@"array"];
@@ -549,7 +549,7 @@
 
 - (void)testObjectArrayToArray
 {
-    MJMotisObject *object = [MJMotisObject new];
+    MJTestMotisMappingObject *object = [MJTestMotisMappingObject new];
     
     NSDictionary *dict = @{@"string": @"Hello World",
                            @"integer": @42,
@@ -572,7 +572,7 @@
 
 - (void)testArrayToStringsArray
 {
-    MJMotisObject *object = [MJMotisObject new];
+    MJTestMotisMappingObject *object = [MJTestMotisMappingObject new];
     
     NSArray *array = @[@"string", @123, @YES, @NO];
     [object mts_setValue:array forKey:@"string_array"];
@@ -586,7 +586,7 @@
 
 - (void)testArrayToNumberArray
 {
-    MJMotisObject *object = [MJMotisObject new];
+    MJTestMotisMappingObject *object = [MJTestMotisMappingObject new];
     
     NSArray *array = @[@"42.5", @"asdf", @123, @YES, @NO];
     [object mts_setValue:array forKey:@"number_array"];
@@ -600,7 +600,7 @@
 
 - (void)testArrayToURLArray
 {
-    MJMotisObject *object = [MJMotisObject new];
+    MJTestMotisMappingObject *object = [MJTestMotisMappingObject new];
     
     NSArray *array = @[@"www.google.com", @"http://www.facebook.com"];
     [object mts_setValue:array forKey:@"url_array"];
@@ -614,7 +614,7 @@
 
 - (void)testArrayToDateArray
 {
-    MJMotisObject *object = [MJMotisObjectWithFormatter new];
+    MJTestMotisMappingObject *object = [MJMotisObjectWithFormatter new];
     
     NSTimeInterval timeInterval = 1398333352.0;
     NSString *string = @"2014-04-23 12:00:00";
@@ -668,7 +668,7 @@
 
 - (void)testUndefinedMappingWithUndefinedPropertyRestricted
 {
-    MJMotisObject *object = [MJMotisObject new];
+    MJTestMotisMappingObject *object = [MJTestMotisMappingObject new];
     
     @try
     {
@@ -695,7 +695,7 @@
 
 - (void)testUndefinedMappingWithDefinedPropertyRestricted
 {
-    MJMotisObject *object = [MJMotisObject new];
+    MJTestMotisMappingObject *object = [MJTestMotisMappingObject new];
     
     object.privateIntegerField = 42;
     [object mts_setValue:@0 forKey:@"privateIntegerField"];
@@ -722,7 +722,7 @@
 
 - (void)testDictionarySetForDefinedMapping
 {
-    MJMotisObject *object = [MJMotisObject new];
+    MJTestMotisMappingObject *object = [MJTestMotisMappingObject new];
     NSString *string = @"Hello World";
     
     [object mts_setValuesForKeysWithDictionary:@{@"string": string}];
@@ -768,7 +768,7 @@
  */
 - (void)testKeyPath
 {
-    MJMotisObject *object = [MJMotisObject new];
+    MJTestMotisMappingObject *object = [MJTestMotisMappingObject new];
     
     object.stringField = nil;
     
@@ -786,7 +786,7 @@
  */
 - (void)testKeyPathValidation
 {
-    MJMotisObject *object = [MJMotisObject new];
+    MJTestMotisMappingObject *object = [MJTestMotisMappingObject new];
     
     object.urlField = nil;
     
@@ -806,7 +806,7 @@
  */
 - (void)testKeyPathIncorrectAccess
 {
-    MJMotisObject *object = [MJMotisObject new];
+    MJTestMotisMappingObject *object = [MJTestMotisMappingObject new];
     
     object.stringField = nil;
     
@@ -820,7 +820,7 @@
 
 - (void)testArrayKeyPathInteger
 {
-    MJMotisObject *object = [MJMotisObject new];
+    MJTestMotisMappingObject *object = [MJTestMotisMappingObject new];
     
     NSDictionary *dictionary = @{@"array":@[@{@"integer":@0},
                                             @{@"integer":@1},
@@ -836,7 +836,7 @@
 
 - (void)testArrayKeyPathString
 {
-    MJMotisObject *object = [MJMotisObject new];
+    MJTestMotisMappingObject *object = [MJTestMotisMappingObject new];
     
     NSDictionary *dictionary = @{@"array":@[@{@"string":@"0"},
                                             @{@"string":@"1"},
@@ -852,7 +852,7 @@
 
 - (void)testArrayKeyPathObject
 {
-    MJMotisObject *object = [MJMotisObject new];
+    MJTestMotisMappingObject *object = [MJTestMotisMappingObject new];
     object.stringField = nil;
     
     NSDictionary *dictionary = @{@"array":@[@{@"string": @"0",
@@ -876,7 +876,7 @@
 
 - (void)testArrayKeyPathOutOfBoundsNoneException
 {
-    MJMotisObject *object = [MJMotisObject new];
+    MJTestMotisMappingObject *object = [MJTestMotisMappingObject new];
     
     object.array0Integer = -1;
     object.array1Integer = -1;
@@ -895,7 +895,7 @@
 
 - (void)testArrayKeyPathIntegerArray
 {
-    MJMotisObject *object = [MJMotisObject new];
+    MJTestMotisMappingObject *object = [MJTestMotisMappingObject new];
     object.stringField = nil;
     
     NSDictionary *dictionary = @{@"integerArray":@[@0,@1,@2]};
@@ -909,7 +909,7 @@
 
 - (void)testArrayKeyPathStringArray
 {
-    MJMotisObject *object = [MJMotisObject new];
+    MJTestMotisMappingObject *object = [MJTestMotisMappingObject new];
     object.stringField = nil;
     
     NSDictionary *dictionary = @{@"stringArray":@[@"0",@"1",@"2"]};

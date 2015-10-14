@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-@class MJMotisObject;
+@class MJTestMotisMappingObject;
 
 typedef NS_ENUM(NSUInteger, MJUnsignedEnum)
 {
@@ -47,7 +47,7 @@ typedef NS_ENUM(NSInteger, MJSignedEnum)
 @property (nonatomic, assign) NSInteger privateIntegerField;
 
 @property (nonatomic, strong) MJTestObject *testObject;
-@property (nonatomic, strong) MJMotisObject *motisObject;
+@property (nonatomic, strong) MJTestMotisMappingObject *motisObject;
 
 @property (nonatomic, strong) NSArray *array;
 @property (nonatomic, strong) NSArray *objectArray;
@@ -67,9 +67,9 @@ typedef NS_ENUM(NSInteger, MJSignedEnum)
 @property (nonatomic, strong) NSString *array1String;
 @property (nonatomic, strong) NSString *array2String;
 
-@property (nonatomic, strong) MJMotisObject *array0Object;
-@property (nonatomic, strong) MJMotisObject *array1Object;
-@property (nonatomic, strong) MJMotisObject *array2Object;
+@property (nonatomic, strong) MJTestMotisMappingObject *array0Object;
+@property (nonatomic, strong) MJTestMotisMappingObject *array1Object;
+@property (nonatomic, strong) MJTestMotisMappingObject *array2Object;
 
 @property (nonatomic, assign) NSInteger integerArray0;
 @property (nonatomic, assign) NSInteger integerArray1;
