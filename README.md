@@ -318,8 +318,8 @@ For example, if we have the following implementation:
 @interface User : MTSMotisObject
 
 @property (nonatomic, strong) NSString *name;
-@property (nonatomic, strong) NSDate *birthday;
-@property (nonatomic, strong) NSURL *webiste;
+@property (nonatomic, strong) NSDate *birthday;
+@property (nonatomic, strong) NSURL *webiste;
 
 @end
 
