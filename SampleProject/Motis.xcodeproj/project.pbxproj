@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		5279FDDD1B4D9C79003D2E58 /* MJChildC.m in Sources */ = {isa = PBXBuildFile; fileRef = 5279FDDC1B4D9C79003D2E58 /* MJChildC.m */; };
+		D203B79B1BCE3D510088C315 /* MTSMotisObject.m in Sources */ = {isa = PBXBuildFile; fileRef = D203B79A1BCE3D510088C315 /* MTSMotisObject.m */; settings = {ASSET_TAGS = (); }; };
 		D21D6FB218D7470D000E620B /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = D21D6FB018D7470D000E620B /* InfoPlist.strings */; };
 		D21D6FB518D74717000E620B /* NSObject+Motis.m in Sources */ = {isa = PBXBuildFile; fileRef = D21D6FB418D74717000E620B /* NSObject+Motis.m */; };
 		D259644819017D670055799F /* Twitter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D259644719017D670055799F /* Twitter.framework */; };
@@ -55,6 +56,8 @@
 		5279FDDB1B4D9C79003D2E58 /* MJChildC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MJChildC.h; path = "Hierarchy Test/MJChildC.h"; sourceTree = "<group>"; };
 		5279FDDC1B4D9C79003D2E58 /* MJChildC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MJChildC.m; path = "Hierarchy Test/MJChildC.m"; sourceTree = "<group>"; };
 		8758B81E18FD289C00666680 /* Motis.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Motis.h; path = ../../Motis.h; sourceTree = "<group>"; };
+		D203B7991BCE3D510088C315 /* MTSMotisObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MTSMotisObject.h; path = ../../MTSMotisObject.h; sourceTree = "<group>"; };
+		D203B79A1BCE3D510088C315 /* MTSMotisObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MTSMotisObject.m; path = ../../MTSMotisObject.m; sourceTree = "<group>"; };
 		D21D6FB118D7470D000E620B /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = InfoPlist.strings; sourceTree = "<group>"; };
 		D21D6FB318D74717000E620B /* NSObject+Motis.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSObject+Motis.h"; path = "../../NSObject+Motis.h"; sourceTree = "<group>"; };
 		D21D6FB418D74717000E620B /* NSObject+Motis.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSObject+Motis.m"; path = "../../NSObject+Motis.m"; sourceTree = "<group>"; };
@@ -173,6 +176,8 @@
 				8758B81E18FD289C00666680 /* Motis.h */,
 				D21D6FB318D74717000E620B /* NSObject+Motis.h */,
 				D21D6FB418D74717000E620B /* NSObject+Motis.m */,
+				D203B7991BCE3D510088C315 /* MTSMotisObject.h */,
+				D203B79A1BCE3D510088C315 /* MTSMotisObject.m */,
 			);
 			name = Motis;
 			sourceTree = "<group>";
@@ -412,6 +417,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D203B79B1BCE3D510088C315 /* MTSMotisObject.m in Sources */,
 				D2DF757E18D746A800163BA8 /* MJUser.m in Sources */,
 				D2DF757F18D746A800163BA8 /* MJVideo.m in Sources */,
 				D2DF758518D746C200163BA8 /* main.m in Sources */,

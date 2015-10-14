@@ -16,7 +16,7 @@ Check our blog post entry [Using KVC to parse JSON](http://blog.mobilejazz.cat/i
 
 ## Get Motis
 
-If you use Cocoa Pods, you can get Motis by adding to your podfile `pod 'Motis', '~>1.3.0'`. Otherwise, you will need to download the files `NSObject+Motis.h`, `NSObject+Motis.m` and `Motis.h`.
+If you use Cocoa Pods, you can get Motis by adding to your podfile `pod 'Motis', '~>1.4.0'`. Otherwise, you will need to download the files `NSObject+Motis.h`, `NSObject+Motis.m` and `Motis.h`.
 
 ##Using Motis
 
@@ -306,7 +306,58 @@ To manually validate array content you must override the following method:
 }
 ```
 
+##The Motis Object
 
+You can subclass `MTSMotisObject` to obtain an object that automatically implements `NSCoding` and `NSCopying` by reusing Motis definitions.
+
+Mainly, `MTSMotisObject` uses all defined properties inside the `+mts_mapping` dictionaries to implement `NSCopying` and `NSCoding`. Properties are get/set via Key-Value-Coding.
+
+For example, if we have the following implementation:
+
+```objective-c
+@interface User : MTSMotisObject
+
+@property (nonatomic, strong) NSString *name;
+@property (nonatomic, strong) NSDate *birthday;
+@property (nonatomic, strong) NSURL *webiste;
+
+@end
+
+@implementation MTSMotisObject
+
++ (NSDictionary*)mts_mapping 
+{
+	return @{@"user_name": mts_key(name),
+	     	 @"birth_day": mts_key(birthday),
+	         @"website_url": mts_key(website),
+	        };
+}
+
+@end
+```
+
+Then we can do as follows:
+
+```objective-c
+- (void)foo
+{
+    User *user1 = [[User alloc] init];
+    user1.name = @"John Doe";
+    user1.birthday = [NSDate date];
+    user1.website = [NSURL URLWithString:@"http://www.google.com"];
+    
+    // Create a copy of user1
+    User *user2 = [user1 copy];
+    
+    // Transform user into NSData
+    NSData *data = [NSKeyedArchiver archivedDataWithRootObject:user1];
+    
+    // Transform the data into a User instance
+    User *user3 = [NSKeyedUnarchiver unarchiveObjectWithData:data];
+}
+```
+
+Subclasses can also configure the list of property names by overriding the method `+mts_motisPropertyNames` and returning a different subset of property names. By default this method returns the Motis-defined property names.
 
 ---
 ## Appendix
