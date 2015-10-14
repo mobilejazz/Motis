@@ -353,7 +353,7 @@ Then we can do as follows:
     NSData *data = [NSKeyedArchiver archivedDataWithRootObject:user1];
     
     // Transform the data into a User instance
-    User *user3 = [NSKeyedUnarchiver unarchiveObjectWithData:data];
+    User *user3 = [NSKeyedUnarchiver unarchiveObjectWithData:data];
 }
 ```
 
