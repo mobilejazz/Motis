@@ -7,6 +7,7 @@
 //
 
 #import "MJMotisObject.h"
+#import "NSObject+Motis.h"
 
 @implementation MJMotisObject
 
