@@ -15,7 +15,6 @@
 //  limitations under the License.
 
 #import <Foundation/Foundation.h>
-#import "Motis.h"
 
 /**
  * This class is a helper that allow to use NSCoding and NSCopying reusing the Motis mapping definitions.

@@ -15,6 +15,7 @@
 //  limitations under the License.
 
 #import "MTSMotisObject.h"
+#import "NSObject+Motis.h"
 
 @implementation MTSMotisObject
 
