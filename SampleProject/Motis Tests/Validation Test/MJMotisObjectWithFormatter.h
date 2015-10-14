@@ -6,8 +6,8 @@
 //  Copyright (c) 2014 Mobile Jazz. All rights reserved.
 //
 
-#import "MJMotisObject.h"
+#import "MJTestMotisMappingObject.h"
 
-@interface MJMotisObjectWithFormatter : MJMotisObject
+@interface MJMotisObjectWithFormatter : MJTestMotisMappingObject
 
 @end

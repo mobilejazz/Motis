@@ -6,11 +6,11 @@
 //  Copyright (c) 2014 Mobile Jazz. All rights reserved.
 //
 
-#import "MJMotisObject.h"
+#import "MJTestMotisMappingObject.h"
 
 #import "NSObject+Motis.h"
 
-@implementation MJMotisObject
+@implementation MJTestMotisMappingObject
 
 + (NSDictionary*)mts_mapping
 {
@@ -72,7 +72,7 @@
 
 + (NSDictionary*)mts_arrayClassMapping
 {
-    return @{mts_key(objectArray): MJMotisObject.class,
+    return @{mts_key(objectArray): MJTestMotisMappingObject.class,
              mts_key(stringsArray): NSString.class,
              mts_key(numbersArray): NSNumber.class,
              mts_key(urlsArray): NSURL.class,
