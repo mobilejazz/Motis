@@ -20,7 +20,7 @@
  * This class is a helper that allow to use NSCoding and NSCopying reusing the Motis mapping definitions.
  * This behavior will only apply to properties defined inside a Motis mapping (`+mts_mapping`).
  *
- * NOTE: This class is not needed to perform JSON mapping as the category NSObject+Motis can do it over any NSObject.
+ * NOTE: This class is not needed to perform JSON mapping.The category NSObject+Motis can do it on any NSObject.
  *
  * To use it, subclass this class and define the Motis mapping.
  * List of used properties can be extended by subclassing the method `+mts_motisPropertyNames`.
@@ -36,10 +36,8 @@
 
 /**
  * Returns the list of Motis properties that will be used for NSCoding and NSCopying.
- *
- * @discussion
- * Subclasses can override this method and return a different subset of properties.
- * Default implementation return property names defined in the Motis Mapping (`+mts_mapping`).
+ * @return Default implementation returns property names defined in the Motis Mapping (`+mts_mapping`).
+ * @discussion Subclasses can override this method and return a different subset of properties.
  **/
 + (NSArray*)mts_motisPropertyNames;
 

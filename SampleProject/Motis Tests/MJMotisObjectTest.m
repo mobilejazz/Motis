@@ -19,7 +19,8 @@
     MJMotisObject *_motisObject;
 }
 
-- (void)setUp {
+- (void)setUp
+{
     [super setUp];
     
     _motisObject = [[MJMotisObject alloc] init];
@@ -39,7 +40,6 @@
 {
     NSData *data = [NSKeyedArchiver archivedDataWithRootObject:_motisObject];
     MJMotisObject *motisObject = [NSKeyedUnarchiver unarchiveObjectWithData:data];
-    
     XCTAssertEqualObjects(_motisObject, motisObject);
 }
 

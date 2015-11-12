@@ -8,11 +8,11 @@
 
 /* Begin PBXBuildFile section */
 		5279FDDD1B4D9C79003D2E58 /* MJChildC.m in Sources */ = {isa = PBXBuildFile; fileRef = 5279FDDC1B4D9C79003D2E58 /* MJChildC.m */; };
-		D203B79B1BCE3D510088C315 /* MTSMotisObject.m in Sources */ = {isa = PBXBuildFile; fileRef = D203B79A1BCE3D510088C315 /* MTSMotisObject.m */; settings = {ASSET_TAGS = (); }; };
-		D203B7A01BCE68B30088C315 /* MJMotisObjectTest.m in Sources */ = {isa = PBXBuildFile; fileRef = D203B79F1BCE68B30088C315 /* MJMotisObjectTest.m */; settings = {ASSET_TAGS = (); }; };
-		D203B7A41BCE691A0088C315 /* MJMotisObject.m in Sources */ = {isa = PBXBuildFile; fileRef = D203B7A31BCE691A0088C315 /* MJMotisObject.m */; settings = {ASSET_TAGS = (); }; };
-		D203B7A51BCE6BC70088C315 /* MTSMotisObject.m in Sources */ = {isa = PBXBuildFile; fileRef = D203B79A1BCE3D510088C315 /* MTSMotisObject.m */; settings = {ASSET_TAGS = (); }; };
-		D203B7A61BCE6BCF0088C315 /* NSObject+Motis.m in Sources */ = {isa = PBXBuildFile; fileRef = D21D6FB418D74717000E620B /* NSObject+Motis.m */; settings = {ASSET_TAGS = (); }; };
+		D203B79B1BCE3D510088C315 /* MTSMotisObject.m in Sources */ = {isa = PBXBuildFile; fileRef = D203B79A1BCE3D510088C315 /* MTSMotisObject.m */; };
+		D203B7A01BCE68B30088C315 /* MJMotisObjectTest.m in Sources */ = {isa = PBXBuildFile; fileRef = D203B79F1BCE68B30088C315 /* MJMotisObjectTest.m */; };
+		D203B7A41BCE691A0088C315 /* MJMotisObject.m in Sources */ = {isa = PBXBuildFile; fileRef = D203B7A31BCE691A0088C315 /* MJMotisObject.m */; };
+		D203B7A51BCE6BC70088C315 /* MTSMotisObject.m in Sources */ = {isa = PBXBuildFile; fileRef = D203B79A1BCE3D510088C315 /* MTSMotisObject.m */; };
+		D203B7A61BCE6BCF0088C315 /* NSObject+Motis.m in Sources */ = {isa = PBXBuildFile; fileRef = D21D6FB418D74717000E620B /* NSObject+Motis.m */; };
 		D21D6FB218D7470D000E620B /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = D21D6FB018D7470D000E620B /* InfoPlist.strings */; };
 		D21D6FB518D74717000E620B /* NSObject+Motis.m in Sources */ = {isa = PBXBuildFile; fileRef = D21D6FB418D74717000E620B /* NSObject+Motis.m */; };
 		D259644819017D670055799F /* Twitter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D259644719017D670055799F /* Twitter.framework */; };
@@ -360,7 +360,7 @@
 			isa = PBXProject;
 			attributes = {
 				CLASSPREFIX = MJ;
-				LastUpgradeCheck = 0510;
+				LastUpgradeCheck = 0710;
 				ORGANIZATIONNAME = "Mobile Jazz";
 				TargetAttributes = {
 					D2A0544218D8A5B80050DE68 = {
@@ -439,12 +439,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D21D6FB518D74717000E620B /* NSObject+Motis.m in Sources */,
 				D203B79B1BCE3D510088C315 /* MTSMotisObject.m in Sources */,
 				D2DF757E18D746A800163BA8 /* MJUser.m in Sources */,
 				D2DF757F18D746A800163BA8 /* MJVideo.m in Sources */,
-				D2DF758518D746C200163BA8 /* main.m in Sources */,
 				D2DF757D18D746A800163BA8 /* MJAppDelegate.m in Sources */,
-				D21D6FB518D74717000E620B /* NSObject+Motis.m in Sources */,
+				D2DF758518D746C200163BA8 /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -483,8 +483,8 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Motis.app/Motis";
 				FRAMEWORK_SEARCH_PATHS = (
-					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
+					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(DEVELOPER_FRAMEWORKS_DIR)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -496,6 +496,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				INFOPLIST_FILE = "Motis Tests/Motis Tests-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				PRODUCT_BUNDLE_IDENTIFIER = "cat.mobilejazz.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = xctest;
@@ -507,8 +508,8 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Motis.app/Motis";
 				FRAMEWORK_SEARCH_PATHS = (
-					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
+					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(DEVELOPER_FRAMEWORKS_DIR)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -516,6 +517,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				INFOPLIST_FILE = "Motis Tests/Motis Tests-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				PRODUCT_BUNDLE_IDENTIFIER = "cat.mobilejazz.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = xctest;
@@ -574,6 +576,7 @@
 				);
 				INFOPLIST_FILE = "Motis/Motis-Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.mobilejazz.Motis;
 				PRODUCT_NAME = Motis;
 				SWIFT_OBJC_BRIDGING_HEADER = "Motis/Motis-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -586,8 +589,8 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Motis.app/Motis";
 				FRAMEWORK_SEARCH_PATHS = (
-					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
+					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(DEVELOPER_FRAMEWORKS_DIR)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -599,6 +602,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				INFOPLIST_FILE = "Motis Tests/Motis Tests-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				PRODUCT_BUNDLE_IDENTIFIER = "cat.mobilejazz.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = xctest;
@@ -623,6 +627,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
+				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -685,6 +690,7 @@
 				GCC_PREFIX_HEADER = "Motis/Motis-Prefix.pch";
 				INFOPLIST_FILE = "Motis/Motis-Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.mobilejazz.Motis;
 				PRODUCT_NAME = Motis;
 				SWIFT_OBJC_BRIDGING_HEADER = "Motis/Motis-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -702,6 +708,7 @@
 				GCC_PREFIX_HEADER = "Motis/Motis-Prefix.pch";
 				INFOPLIST_FILE = "Motis/Motis-Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.mobilejazz.Motis;
 				PRODUCT_NAME = Motis;
 				SWIFT_OBJC_BRIDGING_HEADER = "Motis/Motis-Bridging-Header.h";
 				WRAPPER_EXTENSION = app;
