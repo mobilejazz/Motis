@@ -17,7 +17,7 @@
 #import <Foundation/Foundation.h>
 
 /**
- * This class is a helper that allow to use NSCoding and NSCopying reusing the Motis mapping definitions.
+ * This class is a helper that allow to use NSCoding and NSCopying reusing the Motis mapping definitions.
  * This behavior will only apply to properties defined inside a Motis mapping (`+mts_mapping`).
  *
  * NOTE: This class is not needed to perform JSON mapping.The category NSObject+Motis can do it on any NSObject.

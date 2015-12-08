@@ -106,4 +106,11 @@
     return keys;
 }
 
+#pragma mark Debug Description
+
+- (NSString*)debugDescription
+{
+    return [self mts_description];
+}
+
 @end
