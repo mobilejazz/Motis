@@ -629,6 +629,61 @@
     XCTAssertEqual(array.count, object.datesArray.count, @"Date array conversion failed");
 }
 
+- (void)testMutableArray
+{
+    MJTestMotisMappingObject *object = [MJTestMotisMappingObject new];
+    
+    NSArray *array = @[@1, @"string"];
+    [object mts_setValue:array forKey:@"mutable_array"];
+    
+    XCTAssert([object.mutableArray isKindOfClass:NSMutableArray.class], @"Failed to create mutable array");
+    XCTAssertEqualObjects(array, object.mutableArray, @"Failed to map mutable array %@", array.description);
+}
+
+- (void)testSet
+{
+    MJTestMotisMappingObject *object = [MJTestMotisMappingObject new];
+    
+    NSArray *array = @[@1, @"string"];
+    [object mts_setValue:array forKey:@"set"];
+    
+    XCTAssert([object.set isKindOfClass:NSSet.class], @"Failed to create set");
+    XCTAssertEqualObjects([NSSet setWithArray:array], object.set, @"Failed to map set %@", array.description);
+}
+
+- (void)testMutableSet
+{
+    MJTestMotisMappingObject *object = [MJTestMotisMappingObject new];
+    
+    NSArray *array = @[@1, @"string"];
+    [object mts_setValue:array forKey:@"mutable_set"];
+    
+    XCTAssert([object.mutableSet isKindOfClass:NSMutableSet.class], @"Failed to create mutable set");
+    XCTAssertEqualObjects([NSSet setWithArray:array], object.mutableSet, @"Failed to map mutable set %@", array.description);
+}
+
+- (void)testOrderedSet
+{
+    MJTestMotisMappingObject *object = [MJTestMotisMappingObject new];
+    
+    NSArray *array = @[@1, @"string"];
+    [object mts_setValue:array forKey:@"ordered_set"];
+    
+    XCTAssert([object.orderedSet isKindOfClass:NSOrderedSet.class], @"Failed to create ordered set");
+    XCTAssertEqualObjects([NSOrderedSet orderedSetWithArray:array], object.orderedSet, @"Failed to map ordered set %@", array.description);
+}
+
+- (void)testMutableOrderedSet
+{
+    MJTestMotisMappingObject *object = [MJTestMotisMappingObject new];
+    
+    NSArray *array = @[@1, @"string"];
+    [object mts_setValue:array forKey:@"mutable_ordered_set"];
+    
+    XCTAssert([object.mutableOrderedSet isKindOfClass:NSMutableOrderedSet.class], @"Failed to create mutable ordered set");
+    XCTAssertEqualObjects([NSMutableOrderedSet orderedSetWithArray:array], object.mutableOrderedSet, @"Failed to map mutable ordered set %@", array.description);
+}
+
 #pragma mark - UNDEFINED MAPPINGS
 
 // ------------------------------------------------------------------------------------------------------------------------ //
