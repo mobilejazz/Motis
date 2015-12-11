@@ -1030,11 +1030,8 @@ static void mts_motisInitialization()
 - (BOOL)mts_validateAutomaticallyValue:(inout __autoreleasing id *)ioValue toClass:(Class)typeClass forKey:(NSString*)key
 {
     // If types match, just return
-    if ([*ioValue isKindOfClass:typeClass])
+    if ([*ioValue isKindOfClass:typeClass] && ![*ioValue isKindOfClass:NSArray.class])
     {
-        if ([*ioValue isKindOfClass:NSArray.class])
-            [self mts_validateArrayContent:ioValue forArrayKey:key];
-        
         return YES;
     }
     
@@ -1157,6 +1154,7 @@ static void mts_motisInitialization()
             *ioValue = [NSOrderedSet orderedSetWithArray:*ioValue];
             return *ioValue != nil;
         }
+        return *ioValue != nil;
     }
     else if ([*ioValue isKindOfClass:NSDictionary.class]) // <-- DICTIONARIES
     {
