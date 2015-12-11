@@ -56,6 +56,12 @@ typedef NS_ENUM(NSInteger, MJSignedEnum)
 @property (nonatomic, strong) NSArray *urlsArray;
 @property (nonatomic, strong) NSArray *datesArray;
 
+@property (nonatomic, strong) NSMutableArray *mutableArray;
+@property (nonatomic, strong) NSSet *set;
+@property (nonatomic, strong) NSMutableSet *mutableSet;
+@property (nonatomic, strong) NSOrderedSet *orderedSet;
+@property (nonatomic, strong) NSMutableOrderedSet *mutableOrderedSet;
+
 @property (nonatomic, assign) MJUnsignedEnum unsignedEnum;
 @property (nonatomic, assign) MJSignedEnum signedEnum;
 

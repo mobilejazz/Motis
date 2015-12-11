@@ -1134,6 +1134,11 @@ static void mts_motisInitialization()
             *ioValue = [NSMutableArray arrayWithArray:*ioValue];
             return *ioValue != nil;
         }
+        else if ([typeClass isSubclassOfClass:NSArray.class])
+        {
+            *ioValue = [NSArray arrayWithArray:*ioValue];
+            return *ioValue != nil;
+        }
         else if ([typeClass isSubclassOfClass:NSMutableSet.class])
         {
             *ioValue = [NSMutableSet setWithArray:*ioValue];
@@ -1154,7 +1159,6 @@ static void mts_motisInitialization()
             *ioValue = [NSOrderedSet orderedSetWithArray:*ioValue];
             return *ioValue != nil;
         }
-        return *ioValue != nil;
     }
     else if ([*ioValue isKindOfClass:NSDictionary.class]) // <-- DICTIONARIES
     {

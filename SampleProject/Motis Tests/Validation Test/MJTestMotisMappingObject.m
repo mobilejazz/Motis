@@ -43,6 +43,12 @@
              @"url_array": mts_key(urlsArray),
              @"date_array": mts_key(datesArray),
              
+             @"mutable_array": mts_key(mutableArray),
+             @"set": mts_key(set),
+             @"mutable_set": mts_key(mutableSet),
+             @"ordered_set": mts_key(orderedSet),
+             @"mutable_ordered_set": mts_key(mutableOrderedSet),
+             
              @"unsigned_enum": mts_key(unsignedEnum),
              @"signed_enum": mts_key(signedEnum),
              
