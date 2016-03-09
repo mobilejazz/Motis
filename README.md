@@ -1,11 +1,11 @@
-![Mobile Jazz Motis](https://raw.githubusercontent.com/mobilejazz/metadata/master/images/banners/mobile-jazz-motis-banner.png)
-
-# ![Mobile Jazz Badge](https://raw.githubusercontent.com/mobilejazz/metadata/master/images/icons/mj-40x40.png) Motis Object Mapping
-
 [![Version](https://cocoapod-badges.herokuapp.com/v/Motis/badge.png)](http://cocoadocs.org/docsets/Motis)
 [![Platform](https://cocoapod-badges.herokuapp.com/p/Motis/badge.png)](http://cocoadocs.org/docsets/Motis)
 [![Build Status](https://travis-ci.org/mobilejazz/Motis.png)](https://travis-ci.org/mobilejazz/Motis)
 [![CocoaDocs](https://img.shields.io/badge/docs-%E2%9C%93-blue.svg)](http://cocoadocs.org/docsets/Motis)
+
+![Mobile Jazz Motis](https://raw.githubusercontent.com/mobilejazz/metadata/master/images/banners/mobile-jazz-motis-banner.png)
+
+#Motis Object Mapping
 
 > Easy JSON to NSObject mapping using Cocoa's key value coding (KVC)
 
@@ -471,7 +471,7 @@ The following table indicates the supported validations in the current Motis ver
 
 ## Project Maintainer
 
-Joan Martin
+This open source project is maintained by [Joan Martin](https://github.com/vilanovi).
 
 ## License
 
