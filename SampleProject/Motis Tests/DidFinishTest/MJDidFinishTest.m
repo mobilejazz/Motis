@@ -17,13 +17,15 @@
 
 @implementation MJDidFinishTest
 
-- (void)setUp {
+- (void)setUp
+{
     [super setUp];
 }
 
-- (void)testDidFinishSum {
-
-    NSDictionary *dict = @{@"a": @3, @"b": @5};
+- (void)testDidFinishSum
+{
+    NSDictionary *dict = @{ @"a" : @3,
+                            @"b" : @5 };
 
     MJCalculatedObject *object = [MJCalculatedObject new];
     [object mts_setValuesForKeysWithDictionary:dict];

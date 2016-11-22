@@ -12,14 +12,14 @@
 
 @implementation MJCalculatedObject
 
-+ (NSDictionary *)mts_mapping {
-
++ (NSDictionary *)mts_mapping
+{
     return @{ @"a" : mts_key(a),
               @"b" : mts_key(b) };
 }
 
-- (void)mts_setValuesForKeysWithDictionaryDidFinish {
-
+- (void)mts_setValuesForKeysWithDictionaryDidFinish
+{
     self.c = self.a + self.b;
 }
 
