@@ -22,18 +22,12 @@
 - (void)setUp
 {
     [super setUp];
-    
+
     _motisObject = [[MJMotisObject alloc] init];
     _motisObject.string = @"test";
     _motisObject.integer = 42;
     _motisObject.date = [NSDate date];
     _motisObject.url = [NSURL URLWithString:@"http://www.google.com"];
-}
-
-- (void)tearDown
-{
-    // Put teardown code here. This method is called after the invocation of each test method in the class.
-    [super tearDown];
 }
 
 - (void)testCoding

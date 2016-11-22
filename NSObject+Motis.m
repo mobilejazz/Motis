@@ -370,6 +370,8 @@ static Class classFromString(NSString *string)
         if (!attemptedToSetOriginalKey)
             [self mts_setValue:keyedValues[key] forKey:key];
     }
+
+    [self mts_setValuesForKeysWithDictionaryDidFinish];
 }
 
 - (id)mts_valueForKey:(NSString*)key
@@ -623,6 +625,11 @@ static Class classFromString(NSString *string)
 {
     // Subclasses might override.
     return NO;
+}
+
+- (void)mts_setValuesForKeysWithDictionaryDidFinish
+{
+    // No implementation required in base class.
 }
 
 @end
