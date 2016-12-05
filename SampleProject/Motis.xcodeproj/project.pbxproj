@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		114A48DF1DE4CC8400015594 /* MJDidFinishTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 114A48DE1DE4CC8400015594 /* MJDidFinishTest.m */; };
+		114A48E21DE4CCE800015594 /* MJCalculatedObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 114A48E11DE4CCE800015594 /* MJCalculatedObject.m */; };
 		5279FDDD1B4D9C79003D2E58 /* MJChildC.m in Sources */ = {isa = PBXBuildFile; fileRef = 5279FDDC1B4D9C79003D2E58 /* MJChildC.m */; };
 		D203B79B1BCE3D510088C315 /* MTSMotisObject.m in Sources */ = {isa = PBXBuildFile; fileRef = D203B79A1BCE3D510088C315 /* MTSMotisObject.m */; };
 		D203B7A01BCE68B30088C315 /* MJMotisObjectTest.m in Sources */ = {isa = PBXBuildFile; fileRef = D203B79F1BCE68B30088C315 /* MJMotisObjectTest.m */; };
@@ -57,6 +59,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		114A48DE1DE4CC8400015594 /* MJDidFinishTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MJDidFinishTest.m; sourceTree = "<group>"; };
+		114A48E01DE4CCE800015594 /* MJCalculatedObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MJCalculatedObject.h; sourceTree = "<group>"; };
+		114A48E11DE4CCE800015594 /* MJCalculatedObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MJCalculatedObject.m; sourceTree = "<group>"; };
 		5279FDDB1B4D9C79003D2E58 /* MJChildC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MJChildC.h; path = "Hierarchy Test/MJChildC.h"; sourceTree = "<group>"; };
 		5279FDDC1B4D9C79003D2E58 /* MJChildC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MJChildC.m; path = "Hierarchy Test/MJChildC.m"; sourceTree = "<group>"; };
 		8758B81E18FD289C00666680 /* Motis.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Motis.h; path = ../../Motis.h; sourceTree = "<group>"; };
@@ -144,6 +149,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		114A48DD1DE4CC6500015594 /* DidFinishTest */ = {
+			isa = PBXGroup;
+			children = (
+				114A48DE1DE4CC8400015594 /* MJDidFinishTest.m */,
+				114A48E01DE4CCE800015594 /* MJCalculatedObject.h */,
+				114A48E11DE4CCE800015594 /* MJCalculatedObject.m */,
+			);
+			path = DidFinishTest;
+			sourceTree = "<group>";
+		};
 		D203B7A11BCE68BF0088C315 /* MotisObject Test */ = {
 			isa = PBXGroup;
 			children = (
@@ -173,6 +188,7 @@
 				D203B79F1BCE68B30088C315 /* MJMotisObjectTest.m */,
 				D203B7A11BCE68BF0088C315 /* MotisObject Test */,
 				D2E3E031190E8D88002BD141 /* Hierarchy Test */,
+				114A48DD1DE4CC6500015594 /* DidFinishTest */,
 				D2A0544818D8A5B80050DE68 /* Supporting Files */,
 			);
 			path = "Motis Tests";
@@ -427,8 +443,10 @@
 				D2C890261A0ABC2900E81A9D /* MJPerson.m in Sources */,
 				D2E3E038190E8DBF002BD141 /* MJChildA.m in Sources */,
 				D203B7A61BCE6BCF0088C315 /* NSObject+Motis.m in Sources */,
+				114A48E21DE4CCE800015594 /* MJCalculatedObject.m in Sources */,
 				D2DD9FD3192DF28400163C50 /* MJTestMotisMappingObject.m in Sources */,
 				D2E3E034190E8D9E002BD141 /* MJParentObject.m in Sources */,
+				114A48DF1DE4CC8400015594 /* MJDidFinishTest.m in Sources */,
 				D2DD9FD4192DF28400163C50 /* MJMotisObjectNonRestricted.m in Sources */,
 				D2E3E030190E8D82002BD141 /* MJHierarchyTest.m in Sources */,
 				D2C890151A0ABBD700E81A9D /* MJPerformanceTest.m in Sources */,

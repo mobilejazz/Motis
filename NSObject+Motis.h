@@ -307,4 +307,11 @@
  **/
 - (BOOL)mts_checkValueEqualityBeforeAssignmentForKey:(NSString *)key;
 
+/**
+ * Sublclasses may override this method to fill up itself after mapping is done.
+ * For example if property C is sum of properties A and B it may be calculated
+ * in this method.
+ **/
+- (void)mts_setValuesForKeysWithDictionaryDidFinish;
+
 @end
