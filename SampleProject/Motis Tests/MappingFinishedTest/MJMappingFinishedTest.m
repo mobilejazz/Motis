@@ -17,7 +17,7 @@
 
 @implementation MJMappingFinishedTest
 
-- (void)testExample
+- (void)testCustomActionAfterMappingFinished
 {
     NSDictionary *dataDictionary = @{@"a" : @4,
                                      @"b" : @5};
