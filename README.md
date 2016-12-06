@@ -306,6 +306,32 @@ To manually validate array content you must override the following method:
 }
 ```
 
+#### 2.3 Adding Custom Actions After Mapping Finished
+
+Sometimes you need to perform a custom action after mapping ended. For example you receive integer properties `a` and `b` in JSON and need calculate property `c` as sum of `a` and `b`. For this case you have to override `mts_setValuesForKeysWithDictionary:` method in your custom class.
+
+```
+ @implementation MyCustomObject
+ 
+ // Override Motis method
+ - (void) mts_setValuesForKeysWithDictionary:(NSDictionary*)dictionary
+ {
+ // Call super
+ [super mts_setValuesForKeysWithDictionary:dictionary];
+ 
+ // After mapping has been done, call custom method
+ [self prefix_objectDidFinishMapping];
+ }
+ 
+ // Custom method to notify objects that mapping has finished
+ - (void)prefix_objectDidFinishMapping
+ {
+ // Do any actions after mapping is finished.
+ self.c = self.a + self.b;
+ }
+ @end
+```
+
 ## The Motis Object
 
 You can subclass `MTSMotisObject` to obtain an object that automatically implements `NSCoding` and `NSCopying` by reusing Motis definitions.
