@@ -15,7 +15,11 @@ Check our blog post entry [Using KVC to parse JSON](http://blog.mobilejazz.cat/i
 
 ## How To Get Motis
 
-If you use CocoaPods, you can get Motis by adding to your podfile `pod 'Motis', '~>1.4.0'`. Otherwise, you will need to download the files `NSObject+Motis.h`, `NSObject+Motis.m` and `Motis.h`.
+If you use CocoaPods, you can get Motis by adding to your podfile:
+
+```
+pod 'Motis', '~>1.4.0'
+``` 
 
 ## Using Motis
 
@@ -308,29 +312,44 @@ To manually validate array content you must override the following method:
 
 #### 2.3 Adding Custom Actions After Mapping Finished
 
-Sometimes you need to perform a custom action after mapping ended. For example you receive integer properties `a` and `b` in JSON and need calculate property `c` as sum of `a` and `b`. For this case you have to override `mts_setValuesForKeysWithDictionary:` method in your custom class.
+Custom validations can be added after Motis finishes permorming the mapping. To implement it, override the `mts_setValuesForKeysWithDictionary:` method in your custom class.
+
+In the example below, we are mapping the JSON dictionary:
 
 ```
- @implementation MyCustomObject
- 
- // Override Motis method
- - (void) mts_setValuesForKeysWithDictionary:(NSDictionary*)dictionary
- {
- // Call super
- [super mts_setValuesForKeysWithDictionary:dictionary];
- 
- // After mapping has been done, call custom method
- [self prefix_objectDidFinishMapping];
- }
- 
- // Custom method to notify objects that mapping has finished
- - (void)prefix_objectDidFinishMapping
- {
- // Do any actions after mapping is finished.
- self.c = self.a + self.b;
- }
- @end
+{
+    "a": 2,
+    "b": 5
+}
+``` 
+to the following object:
+
 ```
+@interface MyCustomObject : NSObject
+@property (nonatomic, assign) NSInteger a; // JSON property
+@property (nonatomic, assign) NSInteger b; // JSON property
+@property (nonatomic, assign) NSInteger c; // Computed property
+@end
+
+@implementation MyCustomObject
+- (void) mts_setValuesForKeysWithDictionary:(NSDictionary*)dictionary
+{
+   // Call the Motis mapping method
+   [super mts_setValuesForKeysWithDictionary:dictionary];
+ 
+    // After mapping has finished, call the validation method
+    [self pfx_objectDidFinishMapping];
+}
+ 
+- (void)pfx_objectDidFinishMapping
+{
+    // Perform validations after mapping is finished.
+    self.c = self.a + self.b;
+}
+@end
+```
+
+Furthermore, you can create an generic method in your model superclass to then heritate it in all the subclasses.
 
 ## The Motis Object
 
