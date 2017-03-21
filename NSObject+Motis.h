@@ -256,7 +256,7 @@
  * Method called by `-mts_setValue:forKey:` to validate manually each value. The default implementation fires KVC validation.
  * @param ioValue The value to be validated. You can replace the value by assigning a new object to the pointer.
  * @param inKey The key of the value.
- * @param error The validation error.
+ * @param outError The validation error.
  * @return YES if value is accepted, otherwise NO.
  * @discussion Subclasses may override in order to not perform KVC validation. For example, when using CoreData you must override this method and not do KVC validation (as KVC validation is implemented by NSManagedObject and used by NSManagedObjectContext).
  **/
